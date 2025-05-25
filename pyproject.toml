@@ -1,0 +1,7 @@
+[project]
+name = "product_api"
+version = "0.1.0"
+description = "商品管理 API - Cursor ハンズオン"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
