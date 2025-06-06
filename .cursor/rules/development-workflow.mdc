@@ -89,7 +89,7 @@ uv add fastapi uvicorn pydantic
 uv remove パッケージ名
 
 # テストの実行
-uv run pytest tests/ -v
+uv run --frozen pytest tests/ -v
 
 # アプリケーションの起動
 uv run uvicorn product_api.main:app --reload
