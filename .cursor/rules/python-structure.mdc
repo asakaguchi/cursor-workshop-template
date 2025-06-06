@@ -1,8 +1,9 @@
 ---
 description: 
-globs: **/*.py,**/pyproject.toml
-alwaysApply: false
+globs: 
+alwaysApply: true
 ---
+
 # Pythonプロジェクト構造ガイドライン
 
 ## 推奨構造
