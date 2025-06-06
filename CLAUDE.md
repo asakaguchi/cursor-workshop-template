@@ -42,8 +42,8 @@ APIは以下を実装する必要があります：
 # 依存関係のインストール（禁止: uv pip install）
 uv add fastapi uvicorn pytest
 
-# 開発モードでプロジェクトをインストール
-uv pip install -e .
+# プロジェクトの同期（推奨）
+uv sync
 ```
 
 ### アプリケーションの実行
@@ -98,6 +98,35 @@ markdownlint *.md
 - **エラーハンドリング**: 適切なバリデーションとHTTPステータスコードの実装
 - **認証なし**: このワークショップのスコープ外
 
+## 開発フロー
+
+### Issue駆動開発
+
+このプロジェクトでは Issue 駆動開発を採用しています：
+
+1. **要件確認**: docs/requirements.md などの要件を確認
+2. **タスク分解**: 要件を15-30分で完了可能なタスクに分解
+3. **Issue登録**: GitHub CLI で各タスクを Issue として登録
+4. **開発実施**: Issue ごとにブランチを作成してTDDアプローチで実装
+5. **PR作成**: テスト通過確認後、PR作成してレビュー依頼
+
+#### ブランチ名規則
+
+- `feature/task-{issue番号}-{簡潔な説明}`
+- 例: `feature/task-1-project-setup`
+
+#### GitHub CLI使用例
+
+```bash
+# Issue作成（改行を含む場合は $'...' 構文を使用）
+gh issue create -t "タイトル" -b $'## 概要\n実装内容の説明\n\n## 実装内容\n- [ ] 項目1\n- [ ] 項目2'
+
+# PR作成
+gh pr create \
+  --title "feat: 機能名" \
+  --body $'## 概要\n変更内容の説明\n\n## 関連Issue\nFixes #1'
+```
+
 ## 開発ガイドライン
 
 ### コード品質要件
@@ -112,8 +141,10 @@ markdownlint *.md
 ### パッケージ管理ルール
 
 - **必須**: uvのみ使用、pipは禁止
-- **インストール**: `uv add package`
-- **実行**: `uv run tool`
+- **プロジェクト同期**: `uv sync`（pyproject.tomlから自動認識）
+- **パッケージ追加**: `uv add package`
+- **開発用パッケージ**: `uv add --dev package`
+- **ツール実行**: `uv run tool`
 - **禁止**: `uv pip install`、`@latest`構文
 
 ### テスト要件
@@ -190,3 +221,9 @@ NEVER proactively create documentation files (*.md) or README files.
 Only create documentation files if explicitly requested by the User.
 （ユーザーから明示的に要求されない限り、ドキュメントファイル（*.md）や
 READMEファイルは積極的に作成しない。）
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
