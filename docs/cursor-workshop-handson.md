@@ -60,6 +60,46 @@ uv --version
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
+**📋 インストール中の操作手順**：
+
+1. **パスワード入力が求められます**：
+
+   ```text
+   Password:
+   ```
+
+   👉 **macOS のログインパスワードを入力してください**（入力中は文字が表示されません）。
+
+2. **確認メッセージが表示されます**：
+
+   ```text
+   Press RETURN/ENTER to continue or any other key to abort:
+   ```
+
+   👉 **Enter キーを押して続行してください**。
+
+3. **インストールが進行します**（数分かかる場合があります）
+
+4. **インストール完了後**、Homebrew が表示する指示に従ってパス設定を行ってください。
+
+   通常、以下のような指示が表示されます。
+
+   ```text
+   Next steps:
+   - Run these commands in your terminal to add Homebrew to your PATH:
+   ```
+
+   お使いの Mac に応じて上記のパス設定コマンドを実行してください。
+
+⚠️ **注意**：
+
+- **Mac の種類の確認**：`uname -m` コマンドで確認できます
+  - `arm64` → Apple Silicon Mac
+  - `x86_64` → Intel Mac
+- **コマンド順序**：`echo >>` で空行追加→`echo 'eval...'` でパス設定追加→`eval` で現在のセッションに適用
+- `.zprofile` は macOS のターミナル設定ファイルです。ここにパス設定を書くことで、新しいターミナルウィンドウでも `brew` コマンドが使えるようになります。
+- パスワード入力時は、セキュリティ上の理由で文字が画面に表示されませんが、正常に入力されています。
+
 **インストール後、パスを通す設定**：
 
 **Apple Silicon Mac（M1/M2/M3）の場合**：
@@ -90,45 +130,6 @@ eval "$(/usr/local/bin/brew shellenv)"
 brew --version
 ```
 
-**📋 インストール中の操作手順**：
-
-1. **パスワード入力が求められます**：
-
-   ```text
-   Password:
-   ```
-
-   👉 **macOS のログインパスワードを入力してください**（入力中は文字が表示されません）
-
-2. **確認メッセージが表示されます**：
-
-   ```text
-   Press RETURN/ENTER to continue or any other key to abort:
-   ```
-
-   👉 **Enter キーを押して続行してください**
-
-3. **インストールが進行します**（数分かかる場合があります）
-
-4. **インストール完了後**、Homebrew が表示する指示に従ってパス設定を行ってください
-   - 通常、以下のような指示が表示されます：
-
-   ```text
-   Next steps:
-   - Run these commands in your terminal to add Homebrew to your PATH:
-   ```
-
-   - お使いの Mac に応じて上記のパス設定コマンドを実行してください
-
-⚠️ **注意**：
-
-- **Mac の種類の確認**：`uname -m` コマンドで確認できます
-  - `arm64` → Apple Silicon Mac
-  - `x86_64` → Intel Mac
-- **コマンド順序**：`echo >>`で空行追加 → `echo 'eval...'`でパス設定追加 → `eval`で現在のセッションに適用
-- `.zprofile` は macOS のターミナル設定ファイルです。ここにパス設定を書くことで、新しいターミナルウィンドウでも `brew` コマンドが使えるようになります。
-- パスワード入力時は、セキュリティ上の理由で文字が画面に表示されませんが、正常に入力されています。
-
 ### 1.3 Git と GitHub CLI のセットアップ
 
 **macOS の場合**：
@@ -147,18 +148,10 @@ gh auth login
 
 `gh auth login` の詳細手順：
 
-1. **GitHub.com** を選択
-2. **HTTPS** を選択  
-3. **Y**（ブラウザで認証）を選択
-4. **認証方法選択画面が表示されます**：
-
-   ```text
-   > Login with a web browser
-     Paste an authentication token
-   ```
-
-   👉 **そのまま Enter キーを押してください**（Login with a web browser が選択されている状態）
-
+1. **GitHub.com** を選択し、Enter キーを押してください
+2. **HTTPS** を選択し、Enter キーを押してください
+3. **Y**（ブラウザで認証）を入力し、Enter キーを押してください
+4. **Login with a web browser** を選択し、Enter キーを押してください
 5. **ワンタイムコードが表示されます**：
 
    ```text
