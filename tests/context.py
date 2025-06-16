@@ -1,12 +1,14 @@
 """
 テストモジュールが product_api パッケージをインポートできるようにするヘルパー。
-uv pip install -e . を実行せずに、開発中のコードをテストできます。
+
+srcレイアウトに対応したパス設定を行います。
 """
 import os
 import sys
 
-# プロジェクトルートをPythonパスに追加
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# srcディレクトリをPythonパスに追加
+src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src'))
+sys.path.insert(0, src_path)
 
 # アプリケーションモジュールをインポート
 import product_api

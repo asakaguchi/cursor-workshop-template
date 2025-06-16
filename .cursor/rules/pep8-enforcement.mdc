@@ -1,6 +1,6 @@
 ---
 description: 
-globs: product_api/**/*.py,tests/**/*.py
+globs: src/product_api/**/*.py,tests/**/*.py
 alwaysApply: false
 ---
 # Python コーディングガイドライン

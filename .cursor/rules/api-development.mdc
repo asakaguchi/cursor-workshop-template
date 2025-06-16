@@ -1,6 +1,6 @@
 ---
 description: 
-globs: product_api/**/*.py
+globs: src/product_api/**/*.py
 alwaysApply: false
 ---
 # API 開発ガイドライン
@@ -43,11 +43,12 @@ alwaysApply: false
 ## プロジェクト構造
 
 ```
-product_api/       # アプリケーションコード
-├── __init__.py
-├── main.py        # FastAPI アプリケーション
-├── models.py      # Pydantic モデル
-└── storage.py     # データストレージ
+src/
+└── product_api/   # アプリケーションコード（srcレイアウト）
+    ├── __init__.py
+    ├── main.py    # FastAPI アプリケーション
+    ├── models.py  # Pydantic モデル
+    └── storage.py # データストレージ
 ```
 
 ## パッケージ管理

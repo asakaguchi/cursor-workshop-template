@@ -46,7 +46,7 @@ uv run pytest tests/ -v
 uv run pytest tests/test_basic.py -v
 
 # カバレッジ付きで実行
-uv run pytest tests/ --cov=product_api --cov-report=html
+uv run pytest tests/ --cov=src/product_api --cov-report=html
 
 # 特定のテスト関数のみ実行
 uv run pytest tests/test_basic.py::test_create_product -v
@@ -70,7 +70,7 @@ uv add --dev pytest pytest-cov httpx
 
 ```python
 from fastapi.testclient import TestClient
-from product_api.main import app
+from product_api.main import app  # context.py経由でインポート
 
 client = TestClient(app)
 

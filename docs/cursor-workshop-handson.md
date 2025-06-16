@@ -291,7 +291,9 @@ API って何ですか？もっと簡単に説明してください。
 箇条書きでまとめてください。
 ```
 
-**💡 ポイント**：AI は常にこれらのルールに従って回答してくれます。
+**💡 ポイント**：
+- AI は常にこれらのルールに従って回答してくれます
+- このプロジェクトはモダンな**srcレイアウト**を採用しています（コードは `src/product_api/` に配置）
 
 ---
 
@@ -354,7 +356,7 @@ Task 1 を開始してください
 AI が以下の作業を自動で進めます。
 
 1. 新しいブランチを作成
-2. 必要なファイルを作成
+2. 必要なファイルを作成（`src/product_api/` 配下に配置）
 3. テストを先に書く（TDD）
 
 ### 4.2 TDD のサイクルを体験
@@ -406,7 +408,7 @@ AI が以下の作業を自動で進めます。
 uv sync
 
 # API サーバーを起動
-uv run uvicorn product_api.main:app --reload --port 8000
+uv run uvicorn src.product_api.main:app --reload --port 8000
 
 # 別のターミナルで商品を作成
 curl -X POST "http://localhost:8000/items" \
@@ -487,7 +489,7 @@ source ~/.zshrc  # または source ~/.bashrc
 
 ```bash
 # 別のポートで起動
-uv run uvicorn product_api.main:app --reload --port 8001
+uv run uvicorn src.product_api.main:app --reload --port 8001
 ```
 
 #### Q：テストが失敗する

@@ -5,6 +5,7 @@
 **注意**: Cursorエディタを使用する場合は、`.cursor/rules/`ディレクトリの
 ルールファイルも参照してください。特に以下が重要です：
 
+- `python-structure.mdc`: モダンなPythonプロジェクト構造（srcレイアウト）
 - `code-quality-enforcement.mdc`: コード品質・開発ガイドライン
 - `development-workflow.mdc`: 開発フローとGitHub連携
 - `pep8-enforcement.mdc`: Pythonコーディング規約
@@ -50,7 +51,7 @@ uv sync
 
 ```bash
 # FastAPIサーバーの起動
-uvicorn product_api.main:app --reload
+uvicorn src.product_api.main:app --reload
 
 # Swagger UIにアクセス: http://localhost:8000/docs
 ```
@@ -94,7 +95,7 @@ markdownlint *.md
 
 - **インメモリストレージ**: データベースなし - データはアプリケーション実行中のみ保持
 - **テストコンテキスト**: インストールなしで`product_api`をインポートするために`tests/context.py`を使用
-- **プロジェクト構造**: メインAPIコードは`product_api/`、テストは`tests/`
+- **プロジェクト構造**: メインAPIコードは`src/product_api/`、テストは`tests/`（srcレイアウト採用）
 - **エラーハンドリング**: 適切なバリデーションとHTTPステータスコードの実装
 - **認証なし**: このワークショップのスコープ外
 
