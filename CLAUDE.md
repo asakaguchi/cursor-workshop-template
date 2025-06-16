@@ -40,11 +40,12 @@ APIは以下を実装する必要があります：
 **重要**: 必ずuvを使用し、pipは使用しない
 
 ```bash
-# 依存関係のインストール（禁止: uv pip install）
-uv add fastapi uvicorn pytest
-
-# プロジェクトの同期（推奨）
+# プロジェクトの同期（推奨 - pyproject.tomlから自動認識）
 uv sync
+
+# 必要に応じて新しい依存関係を追加する場合のみ
+# uv add package_name
+# uv add --dev dev_package_name
 ```
 
 ### アプリケーションの実行
@@ -142,11 +143,13 @@ gh pr create \
 ### パッケージ管理ルール
 
 - **必須**: uvのみ使用、pipは禁止
-- **プロジェクト同期**: `uv sync`（pyproject.tomlから自動認識）
-- **パッケージ追加**: `uv add package`
-- **開発用パッケージ**: `uv add --dev package`
+- **基本操作**: まず `uv sync` でプロジェクト同期（pyproject.tomlから自動認識）
+- **新規追加**: 必要な場合のみ `uv add package` / `uv add --dev package`
 - **ツール実行**: `uv run tool`
-- **禁止**: `uv pip install`、`@latest`構文
+- **禁止**: `uv pip install`、既存依存関係の重複追加、`@latest`構文
+
+**重要**: pyproject.tomlに依存関係が既に定義されている場合は、
+`uv add` で重複追加せず、`uv sync` のみを使用する
 
 ### テスト要件
 
@@ -196,6 +199,8 @@ gh pr create \
 
 - **行長制限**: 文字列は括弧で分割、関数呼び出しは複数行、インポートは分割
 - **型エラー**: Optionalのチェック、型の絞り込み、関数シグネチャの確認
+- **pytest実行失敗**: まず `uv sync` を実行、既存依存関係を重複追加しない
+- **カバレッジ計測失敗**: pyproject.tomlに設定済み、追加設定ファイル不要
 - **Pytest**: anyio pytest markが見つからない場合は `PYTEST_DISABLE_PLUGIN_AUTOLOAD=""` を追加
 
 ### ベストプラクティス

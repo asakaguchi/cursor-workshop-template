@@ -34,7 +34,7 @@ dev = [
 ]
 
 [project.scripts]
-product-api = "product_api.main:main"
+product-api = "product_api.main:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/product_api"]
@@ -68,7 +68,8 @@ explicit_package_bases = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --tb=short"
+pythonpath = ["src"]
+addopts = "-v --tb=short --cov=src/product_api --cov-report=term-missing"
 
 [tool.coverage.run]
 source = ["src/product_api"]

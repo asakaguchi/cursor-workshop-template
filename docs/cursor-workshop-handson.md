@@ -51,14 +51,23 @@ uv --version
 
 **💡 ポイント**：uv があれば、Python を個別にインストールする必要はありません。プロジェクトに必要な Python バージョンは自動的に管理されます。
 
+⚠️ **警告メッセージが表示される場合**：
+
+```text
+WARN: The following commands are shadowed by other commands in your PATH: uv uvx
+```
+
+この警告は、既に uv がインストールされていることを示しています。**問題ありません**。そのまま続行してください。
+
 ### 1.2 Homebrew のインストール
 
 まず、パッケージマネージャーの Homebrew をインストールします。
 
 ```bash
-# Homebrew のインストール
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
+
+**💡 ポイント**: 上記コマンドをそのまま実行してください。コメント行（`#` で始まる行）は実行しないでください。
 
 **📋 インストール中の操作手順**：
 
@@ -80,16 +89,16 @@ uv --version
 
 3. **インストールが進行します**（数分かかる場合があります）
 
-4. **インストール完了後**、Homebrew が表示する指示に従ってパス設定を行ってください。
+4. **インストール完了後**、Homebrew が表示する指示を確認してください。
 
-   通常、以下のような指示が表示されます。
+   **パス設定が必要な場合**、以下のような指示が表示されます：
 
    ```text
    Next steps:
    - Run these commands in your terminal to add Homebrew to your PATH:
    ```
 
-   お使いの Mac に応じて上記のパス設定コマンドを実行してください。
+   この指示が表示された場合のみ、次のパス設定を実行してください。表示されない場合は、パスが自動的に設定されています。
 
 ⚠️ **注意**：
 
@@ -134,17 +143,23 @@ brew --version
 
 **macOS の場合**：
 
-```bash
-# Git のバージョン確認（macOS には標準でインストール済み）
-git --version
+1. **Git のバージョン確認**（macOS には標準でインストール済み）：
+   ```bash
+   git --version
+   ```
 
-# Homebrew を最新に更新してから GitHub CLI をインストール
-brew update
-brew install gh
+2. **GitHub CLI のインストール**：
+   ```bash
+   brew update
+   brew install gh
+   ```
 
-# GitHub にログイン
-gh auth login
-```
+3. **GitHub にログイン**：
+   ```bash
+   gh auth login
+   ```
+
+⚠️ **注意**: 手順通りに1つずつ実行してください。特に `brew install gh` は `gh` であり、`sh` ではありません。
 
 `gh auth login` の詳細手順：
 
@@ -310,12 +325,7 @@ API って何ですか？もっと簡単に説明してください。
 各タスクは 15-30 分で完了できる粒度にしてください。
 ```
 
-⚠️ **トラブルシューティング**：task-breakdown.md ファイルがない場合は、以下で代用してください。
-
-```text
-@requirements.md を読んで、2 時間で完成できるようにタスクを分解してください。
-各タスクは 15-30 分で完了できる粒度にしてください。
-```
+**💡 ポイント**: `@.cursor/prompts/task-breakdown.md` ファイルは、タスク分解の具体的なガイドラインを提供します。このファイルを参照することで、AI がより適切にタスクを分解してくれます。
 
 AI がタスク一覧を提示してくれます。
 
@@ -372,11 +382,14 @@ AI がこのサイクルを実践して見せてくれます。
 ### 4.3 テストの実行
 
 ```bash
-# テストを実行
-uv run pytest tests/ -v
+# テストを実行（カバレッジ付き）
+uv run pytest
+
+# 詳細出力でテスト実行
+uv run pytest -v
 
 # 特定のテストだけ実行
-uv run pytest tests/test_basic.py -v
+uv run pytest tests/test_specific.py -v
 ```
 
 **💡 ポイント**：最初は赤い文字（失敗）が表示され、コードを書くと緑（成功）になります。
@@ -478,6 +491,39 @@ curl -X GET "http://localhost:8000/items/1"
 
 ### よくある問題と解決法
 
+#### Q：コメント行でエラーが出る
+
+```text
+zsh: command not found: #
+```
+
+**解決法**: コメント行（`#` で始まる行）は実行しないでください。コードブロック内のコマンドのみ実行してください。
+
+#### Q：「brew install sh」でエラーが出る
+
+```text
+Warning: No available formula with the name "sh". Did you mean shc?
+```
+
+**解決法**: 正しくは `brew install gh` です。`sh` ではなく `gh` (GitHub CLI) をインストールしてください。
+
+#### Q：警告メッセージが表示される
+
+```text
+WARN: The following commands are shadowed by other commands in your PATH: uv uvx
+```
+
+**解決法**: 既存のツールがあることを示す警告です。問題ありません。そのまま続行してください。
+
+#### Q：GitHub CLI の更新通知が表示される
+
+```text
+A new release of gh is available: 2.74.0 → 2.74.1
+To upgrade, run: brew upgrade gh
+```
+
+**解決法**: 更新は任意です。ハンズオン中は無視して構いません。後で `brew upgrade gh` で更新できます。
+
 #### Q：uv コマンドが見つからない
 
 ```bash
@@ -495,8 +541,11 @@ uv run uvicorn src.product_api.main:app --reload --port 8001
 #### Q：テストが失敗する
 
 ```bash
-# 依存関係を再同期
-uv sync --dev
+# 依存関係を同期（開発用依存関係も含む）
+uv sync
+
+# パッケージが見つからない場合は、一度クリーンアップ
+uv sync --reinstall
 ```
 
 ---
