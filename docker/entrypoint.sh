@@ -12,7 +12,7 @@ if ! getent group appuser >/dev/null 2>&1; then
 fi
 
 if ! getent passwd appuser >/dev/null 2>&1; then
-    useradd -u $USER_ID -g $GROUP_ID -m -s /bin/bash appuser
+    useradd -u $USER_ID -g $GROUP_ID -m -s /bin/zsh appuser
 fi
 
 # Add user to sudo group

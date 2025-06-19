@@ -1,0 +1,43 @@
+2025-06-19 18:44:22.888 [info] [devcontainer up][stderr]: #28 64.74 Preparing to unpack .../libudev1_255.4-1ubuntu8.8_amd64.deb ...
+2025-06-19 18:44:22.888 [info] [devcontainer up][stderr]: #28 64.75 Unpacking libudev1:amd64 (255.4-1ubuntu8.8) over (255.4-1ubuntu8.6) ...
+2025-06-19 18:44:22.889 [info] [devcontainer up][stderr]: #28 64.81 Setting up libudev1:amd64 (255.4-1ubuntu8.8) ...
+2025-06-19 18:44:22.889 [info] [devcontainer up][stderr]: #28 64.84 Processing triggers for man-db (2.12.0-4build2) ...
+2025-06-19 18:44:22.990 [info] [devcontainer up][stderr]: [2025-06-19T09:44:22.990Z] #28 64.94 Processing triggers for libc-bin (2.39-0ubuntu8.4) ...
+2025-06-19 18:44:23.194 [info] [devcontainer up][stderr]: [2025-06-19T09:44:23.194Z] #28 64.99 Reading package lists...
+2025-06-19 18:44:24.180 [info] [devcontainer up][stderr]: [2025-06-19T09:44:24.179Z]
+2025-06-19 18:44:24.353 [info] [devcontainer up][stderr]: [2025-06-19T09:44:24.353Z] #28 66.15 Building dependency tree...
+2025-06-19 18:44:24.499 [info] [devcontainer up][stderr]: [2025-06-19T09:44:24.499Z]
+2025-06-19 18:44:24.499 [info] [devcontainer up][stderr]: #28 66.45 Reading state information...
+2025-06-19 18:44:24.650 [info] [devcontainer up][stderr]: [2025-06-19T09:44:24.649Z]
+2025-06-19 18:44:24.943 [info] [devcontainer up][stderr]: [2025-06-19T09:44:24.943Z] #28 66.89 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+2025-06-19 18:44:25.138 [info] [devcontainer up][stderr]: [2025-06-19T09:44:25.137Z] #28 66.91 Generating locales (this might take a while)...
+2025-06-19 18:44:25.138 [info] [devcontainer up][stderr]: #28 66.94   en_US.UTF-8...
+2025-06-19 18:44:27.052 [info] [devcontainer up][stderr]: [2025-06-19T09:44:27.051Z]  done
+2025-06-19 18:44:27.237 [info] [devcontainer up][stderr]: [2025-06-19T09:44:27.236Z] #28 69.00 Generation complete.
+2025-06-19 18:44:27.237 [info] [devcontainer up][stderr]: #28 69.03 groupadd: GID '1000' already exists
+2025-06-19 18:44:27.237 [info] [devcontainer up][stderr]: #28 69.04 ERROR: Feature "Common Utilities" (ghcr.io/devcontainers/features/common-utils) failed to install! Look at the documentation at https://github.com/devcontainers/features/tree/main/src/common-utils for help troubleshooting this error.
+2025-06-19 18:44:27.443 [info] [devcontainer up][stderr]: [2025-06-19T09:44:27.443Z] #28 ERROR: process "/bin/sh -c cp -ar /tmp/build-features-src/common-utils_0 /tmp/dev-container-features  && chmod -R 0755 /tmp/dev-container-features/common-utils_0  && cd /tmp/dev-container-features/common-utils_0  && chmod +x ./devcontainer-features-install.sh  && ./devcontainer-features-install.sh  && rm -rf /tmp/dev-container-features/common-utils_0" did not complete successfully: exit code: 4
+2025-06-19 18:44:27.519 [info] [devcontainer up][stderr]: [2025-06-19T09:44:27.519Z] ------
+2025-06-19 18:44:27.520 [info] [devcontainer up][stderr]: > [app dev_containers_target_stage 4/6] RUN --mount=type=bind,from=dev_containers_feature_content_source,source=common-utils_0,target=/tmp/build-features-src/common-utils_0     cp -ar /tmp/build-features-src/common-utils_0 /tmp/dev-container-features  && chmod -R 0755 /tmp/dev-container-features/common-utils_0  && cd /tmp/dev-container-features/common-utils_0  && chmod +x ./devcontainer-features-install.sh  && ./devcontainer-features-install.sh  && rm -rf /tmp/dev-container-features/common-utils_0:
+2025-06-19 18:44:27.520 [info] [devcontainer up][stderr]: 64.81 Setting up libudev1:amd64 (255.4-1ubuntu8.8) ...
+2025-06-19 18:44:27.521 [info] [devcontainer up][stderr]: 64.84 Processing triggers for man-db (2.12.0-4build2) ...
+2025-06-19 18:44:27.521 [info] [devcontainer up][stderr]: 64.94 Processing triggers for libc-bin (2.39-0ubuntu8.4) ...
+2025-06-19 18:44:27.521 [info] [devcontainer up][stderr]: 66.89 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+2025-06-19 18:44:27.521 [info] [devcontainer up][stderr]: done
+2025-06-19 18:44:27.521 [info] [devcontainer up][stderr]: 69.00 Generation complete.
+2025-06-19 18:44:27.521 [info] [devcontainer up][stderr]: 69.03 groupadd: GID '1000' already exists
+2025-06-19 18:44:27.521 [info] [devcontainer up][stderr]: 69.04 ERROR: Feature "Common Utilities" (ghcr.io/devcontainers/features/common-utils) failed to install! Look at the documentation at https://github.com/devcontainers/features/tree/main/src/common-utils for help troubleshooting this error.
+2025-06-19 18:44:27.522 [info] [devcontainer up][stderr]: ------
+2025-06-19 18:44:27.543 [info] [devcontainer up][stderr]: [2025-06-19T09:44:27.542Z] failed to solve: process "/bin/sh -c cp -ar /tmp/build-features-src/common-utils_0 /tmp/dev-container-features  && chmod -R 0755 /tmp/dev-container-features/common-utils_0  && cd /tmp/dev-container-features/common-utils_0  && chmod +x ./devcontainer-features-install.sh  && ./devcontainer-features-install.sh  && rm -rf /tmp/dev-container-features/common-utils_0" did not complete successfully: exit code: 4
+2025-06-19 18:44:27.557 [info] [devcontainer up][stderr]: [2025-06-19T09:44:27.557Z] Stop (85692 ms): Run: docker compose --project-name my-cursor-workshop -f /Users/a-sakaguchi/Projects/my-cursor-workshop/compose.yml -f /var/folders/8d/9psfgc955ds3bsy6hp3khtth0000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.build-1750326181860.yml build
+2025-06-19 18:44:27.558 [info] [devcontainer up][stderr]: [2025-06-19T09:44:27.557Z] Exit code 1
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: Error: Command failed: docker compose --project-name my-cursor-workshop -f /Users/a-sakaguchi/Projects/my-cursor-workshop/compose.yml -f /var/folders/8d/9psfgc955ds3bsy6hp3khtth0000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.build-1750326181860.yml build
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: at cw (/Users/a-sakaguchi/.cursor/extensions/anysphere.remote-containers-1.0.7/dist/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:2:1574644)
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: at async c6 (/Users/a-sakaguchi/.cursor/extensions/anysphere.remote-containers-1.0.7/dist/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:2:1576599)
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: at async u6 (/Users/a-sakaguchi/.cursor/extensions/anysphere.remote-containers-1.0.7/dist/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:2:1570987)
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: at async H6 (/Users/a-sakaguchi/.cursor/extensions/anysphere.remote-containers-1.0.7/dist/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:2:1600450)
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: at async BC (/Users/a-sakaguchi/.cursor/extensions/anysphere.remote-containers-1.0.7/dist/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:2:1601238)
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: at async d7 (/Users/a-sakaguchi/.cursor/extensions/anysphere.remote-containers-1.0.7/dist/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:2:1674755)
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: at async f7 (/Users/a-sakaguchi/.cursor/extensions/anysphere.remote-containers-1.0.7/dist/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:2:1674413)
+2025-06-19 18:44:27.559 [info] [devcontainer up][stderr]: at async /Users/a-sakaguchi/.cursor/extensions/anysphere.remote-containers-1.0.7/dist/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:2:1597484
+2025-06-19 18:44:27.592 [error] Error resolving dev container authority [devcontainer up] Command failed with exit code 1: stdout: {"outcome":"error","message":"Command failed: docker compose --project-name my-cursor-workshop -f /Users/a-sakaguchi/Projects/my-cursor-workshop/compose.yml -f /var/folders/8d/9psfgc955ds3bsy6hp3khtth0000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.build-1750326181860.yml build","description":"An error occurred building the Docker Compose images."}

@@ -41,7 +41,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         curl \
         git \
         sudo \
-        gosu && \
+        gosu \
+        zsh && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
