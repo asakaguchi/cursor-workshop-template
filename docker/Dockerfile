@@ -49,7 +49,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Add uv to PATH
-ENV PATH="/root/.local/bin:$PATH"
+ENV PATH="/root/.local/bin:/app/.venv/bin:$PATH"
 
 # Configure environment
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -58,10 +58,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
     UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy
 
-WORKDIR /workspace
+WORKDIR /app
 
 # Copy virtual environment from builder
-COPY --from=builder /app/.venv /workspace/.venv
+COPY --from=builder /app/.venv /app/.venv
 
 # Copy source code
 COPY . .

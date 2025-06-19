@@ -2,20 +2,11 @@
   "name": "Product API Development",
   "dockerComposeFile": "../compose.yml",
   "service": "app",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/app",
   
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": true,
-      "configureZshAsDefaultShell": true,
-      "installOhMyZsh": true,
-      "upgradePackages": true,
-      "username": "vscode",
-      "userUid": "1000",
-      "userGid": "1000"
-    },
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts"
+      "configureZshAsDefaultShell": true
     },
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
@@ -35,7 +26,7 @@
         "EditorConfig.EditorConfig"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
+        "python.defaultInterpreterPath": "/app/.venv/bin/python",
         "python.linting.enabled": false,
         "python.formatting.provider": "none",
         "[python]": {
@@ -46,7 +37,7 @@
             "source.organizeImports": "explicit"
           }
         },
-        "ruff.path": ["/workspace/.venv/bin/ruff"],
+        "ruff.path": ["/app/.venv/bin/ruff"],
         "ruff.organizeImports": true,
         "ruff.fixAll": true,
         "python.analysis.typeCheckingMode": "strict",
@@ -90,11 +81,7 @@
   "postCreateCommand": "sudo npm install -g markdownlint-cli && uv sync --extra dev",
   "postStartCommand": "echo '🚀 Product API development environment is ready!'",
 
-  "remoteUser": "vscode",
 
-  "mounts": [
-    "source=${localWorkspaceFolder}/.cache,target=/home/vscode/.cache,type=bind,consistency=cached"
-  ],
 
   "runArgs": [
     "--init"
@@ -102,10 +89,6 @@
 
   "containerEnv": {
     "PYTHONUNBUFFERED": "1",
-    "PYTHONDONTWRITEBYTECODE": "1",
-    "UV_CACHE_DIR": "/home/vscode/.cache/uv",
-    "UV_LINK_MODE": "copy",
-    "UV_PROJECT_ENVIRONMENT": "/workspace/.venv",
-    "UV_COMPILE_BYTECODE": "1"
+    "PYTHONDONTWRITEBYTECODE": "1"
   }
 }
