@@ -15,8 +15,11 @@
 このプロジェクトは以下の資料を参考にして構築されています：
 
 - **記事**: [モダンなPython開発環境をDockerで構築する](https://zenn.dev/mjun0812/articles/0ae2325d40ed20)
-- **テンプレート**: [mjun0812/python-project-template](https://github.com/mjun0812/python-project-template)
-  - 特に [CLAUDE.md](https://github.com/mjun0812/python-project-template/blob/main/CLAUDE.md) の構成を参考
+- **テンプレート**: [mjun0812/python-project-template](
+  https://github.com/mjun0812/python-project-template)
+  - 特に [CLAUDE.md](
+    https://github.com/mjun0812/python-project-template/blob/main/CLAUDE.md)
+    の構成を参考
 
 Docker設定、uv使用方法、プロジェクト構造など、多くの要素が上記資料に基づいています。
 
@@ -238,8 +241,10 @@ Only create documentation files if explicitly requested by the User.
 （ユーザーから明示的に要求されない限り、ドキュメントファイル（*.md）や
 READMEファイルは積極的に作成しない。）
 
-# important-instruction-reminders
+## important-instruction-reminders
+
 Do what has been asked; nothing more, nothing less.
 NEVER create files unless they're absolutely necessary for achieving your goal.
 ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+NEVER proactively create documentation files (*.md) or README files.
+Only create documentation files if explicitly requested by the User.
