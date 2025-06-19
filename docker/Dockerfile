@@ -3,7 +3,12 @@ ARG RUNNER_IMAGE=ubuntu:24.04
 
 FROM ${BUILDER_IMAGE} AS builder
 
-RUN --mount=type=cache,target=/var/cache/apt \
+ENV DEBIAN_FRONTEND=noninteractive \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -28,9 +33,11 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM ${RUNNER_IMAGE} AS production
 
 # Install runtime dependencies
-RUN --mount=type=cache,target=/var/cache/apt \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     apt-get install -y --no-install-recommends \
+        ca-certificates \
         curl \
         git \
         sudo \
@@ -45,8 +52,11 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
 # Configure environment
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
 
 WORKDIR /workspace
 

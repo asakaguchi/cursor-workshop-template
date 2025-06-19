@@ -6,6 +6,9 @@ services:
     working_dir: /workspace
     volumes:
       - .:/workspace
+      # Use anonymous volumes to avoid sharing host's .venv
+      # Renew volumes when you change packages with
+      # `docker compose up --renew-anon-volumes`
       - /workspace/.venv
     restart: unless-stopped
     command: sleep infinity
