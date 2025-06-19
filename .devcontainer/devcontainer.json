@@ -14,10 +14,6 @@
       "userUid": "1000",
       "userGid": "1000"
     },
-    "ghcr.io/devcontainers/features/python:1": {
-      "version": "3.12",
-      "installTools": false
-    },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "lts"
     },
@@ -39,7 +35,7 @@
         "EditorConfig.EditorConfig"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "/workspace/.venv/bin/python",
         "python.linting.enabled": false,
         "python.formatting.provider": "none",
         "[python]": {
@@ -50,7 +46,7 @@
             "source.organizeImports": "explicit"
           }
         },
-        "ruff.path": ["/usr/local/bin/ruff"],
+        "ruff.path": ["/workspace/.venv/bin/ruff"],
         "ruff.organizeImports": true,
         "ruff.fixAll": true,
         "python.analysis.typeCheckingMode": "strict",
@@ -91,7 +87,7 @@
     }
   },
 
-  "postCreateCommand": "npm install -g markdownlint-cli && uv sync && uv run pre-commit install",
+  "postCreateCommand": "sudo npm install -g markdownlint-cli && uv sync --extra dev",
   "postStartCommand": "echo '🚀 Product API development environment is ready!'",
 
   "remoteUser": "vscode",
@@ -101,12 +97,15 @@
   ],
 
   "runArgs": [
-    "--init",
-    "--network=host"
+    "--init"
   ],
 
   "containerEnv": {
+    "PYTHONUNBUFFERED": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
     "UV_CACHE_DIR": "/home/vscode/.cache/uv",
-    "UV_SYSTEM_PYTHON": "true"
+    "UV_LINK_MODE": "copy",
+    "UV_PROJECT_ENVIRONMENT": "/workspace/.venv",
+    "UV_COMPILE_BYTECODE": "1"
   }
 }

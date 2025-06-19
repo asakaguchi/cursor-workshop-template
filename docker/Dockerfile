@@ -73,9 +73,9 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Install project in development mode (if main.py exists)
 RUN --mount=type=cache,target=/root/.cache/uv \
     if [ -f "src/product_api/main.py" ]; then \
-        uv sync; \
+        uv sync --extra dev; \
     else \
-        uv sync --no-install-project; \
+        uv sync --no-install-project --extra dev; \
     fi
 
 EXPOSE 8000
