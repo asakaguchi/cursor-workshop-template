@@ -10,6 +10,16 @@
 - `development-workflow.mdc`: 開発フローとGitHub連携
 - `pep8-enforcement.mdc`: Pythonコーディング規約
 
+## 参考資料
+
+このプロジェクトは以下の資料を参考にして構築されています：
+
+- **記事**: [モダンなPython開発環境をDockerで構築する](https://zenn.dev/mjun0812/articles/0ae2325d40ed20)
+- **テンプレート**: [mjun0812/python-project-template](https://github.com/mjun0812/python-project-template)
+  - 特に [CLAUDE.md](https://github.com/mjun0812/python-project-template/blob/main/CLAUDE.md) の構成を参考
+
+Docker設定、uv使用方法、プロジェクト構造など、多くの要素が上記資料に基づいています。
+
 ## プロジェクト概要
 
 これはPythonとFastAPIを使用して**商品管理API**を構築するための
