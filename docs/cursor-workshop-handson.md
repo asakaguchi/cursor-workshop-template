@@ -479,7 +479,7 @@ bind: address already in use
 docker compose down
 
 # または別のポートを使用
-# docker-compose.yml を編集して "8000:8000" を "8001:8000" に変更
+# compose.yml を編集して "8000:8000" を "8001:8000" に変更
 ```
 
 #### Q：Cursor で "Reopen in Container" が表示されない

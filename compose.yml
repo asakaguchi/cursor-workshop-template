@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - /workspace/.venv
+    restart: unless-stopped
+    command: sleep infinity
+    ports:
+      - "8000:8000"
