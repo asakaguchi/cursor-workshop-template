@@ -75,7 +75,7 @@
     }
   },
 
-  "postCreateCommand": "sudo npm install -g markdownlint-cli && uv sync --extra dev",
+  "postCreateCommand": "uv sync --extra dev",
   "postStartCommand": "echo '🚀 Product API development environment is ready!'",
 
 

@@ -42,12 +42,17 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         git \
         sudo \
         gosu \
-        zsh && \
+        zsh \
+        nodejs \
+        npm && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install markdownlint-cli globally
+RUN npm install -g markdownlint-cli
 
 # Add uv to PATH
 ENV PATH="/root/.local/bin:/app/.venv/bin:$PATH"
