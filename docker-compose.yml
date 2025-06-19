@@ -1,0 +1,124 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+      args:
+        PYTHON_VERSION: "3.12"
+        UV_VERSION: "0.5.23"
+      cache_from:
+        - python:3.12-slim
+    image: product-api:dev
+    container_name: product-api-dev
+    
+    volumes:
+      # ソースコードのマウント（ホットリロード対応）
+      - .:/workspace:cached
+      # uvキャッシュの永続化
+      - uv-cache:/home/vscode/.cache/uv
+      # pre-commitキャッシュの永続化
+      - pre-commit-cache:/home/vscode/.cache/pre-commit
+      # Pythonキャッシュの除外
+      - /workspace/.venv
+      - /workspace/__pycache__
+      - /workspace/.pytest_cache
+      - /workspace/.ruff_cache
+      # Git設定の共有（オプション）
+      - ~/.gitconfig:/home/vscode/.gitconfig:ro
+      - ~/.ssh:/home/vscode/.ssh:ro
+    
+    environment:
+      # Python環境変数
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      # uv環境変数
+      UV_CACHE_DIR: "/home/vscode/.cache/uv"
+      UV_SYSTEM_PYTHON: "true"
+      # 開発環境フラグ
+      ENVIRONMENT: "development"
+      # ログレベル
+      LOG_LEVEL: "DEBUG"
+    
+    ports:
+      # FastAPIサーバー
+      - "8000:8000"
+      # デバッグポート（VSCode用）
+      - "5678:5678"
+    
+    networks:
+      - product-api-network
+    
+    # 開発時はサーバーを起動しない（VSCodeから制御）
+    command: sleep infinity
+    
+    # リソース制限（開発環境向け）
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    
+    # ヘルスチェック
+    healthcheck:
+      test: ["CMD", "uv", "run", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 本番環境用設定（オプション）
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        PYTHON_VERSION: "3.12"
+        UV_VERSION: "0.5.23"
+    image: product-api:prod
+    container_name: product-api-prod
+    
+    environment:
+      PYTHONUNBUFFERED: "1"
+      ENVIRONMENT: "production"
+      LOG_LEVEL: "INFO"
+    
+    ports:
+      - "8001:8000"
+    
+    networks:
+      - product-api-network
+    
+    restart: unless-stopped
+    
+    # リソース制限（本番環境向け）
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # ヘルスチェック
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  product-api-network:
+    driver: bridge
+
+volumes:
+  uv-cache:
+    driver: local
+  pre-commit-cache:
+    driver: local

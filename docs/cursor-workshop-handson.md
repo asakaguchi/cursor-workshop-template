@@ -33,154 +33,13 @@
 
 **📝 対象OS**：このワークショップは macOS を対象としています。
 
-### 1.1 uv のインストール（オールインワン開発ツール）
+**🐳 開発環境**：このワークショップでは Docker を使用します。
 
-uv は最新の Python 開発ツールです。Python のインストールからパッケージ管理まで、すべてを一括で扱えます。
+- 環境差異がなく、確実に動作
+- 依存関係の問題が起こらない
+- VS Code Dev Container で快適な開発体験
 
-ターミナル（Terminal.app）を開いて、以下のコマンドを実行しましょう。
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-インストール後、新しいターミナルウィンドウを開いて確認します。
-
-```bash
-uv --version
-```
-
-**💡 ポイント**：uv があれば、Python を個別にインストールする必要はありません。プロジェクトに必要な Python バージョンは自動的に管理されます。
-
-⚠️ **警告メッセージが表示される場合**：
-
-```text
-WARN: The following commands are shadowed by other commands in your PATH: uv uvx
-```
-
-この警告は、既に uv がインストールされていることを示しています。**問題ありません**。そのまま続行してください。
-
-### 1.2 Homebrew のインストール
-
-まず、パッケージマネージャーの Homebrew をインストールします。
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-**💡 ポイント**: 上記コマンドをそのまま実行してください。コメント行（`#` で始まる行）は実行しないでください。
-
-**📋 インストール中の操作手順**：
-
-1. **パスワード入力が求められます**：
-
-   ```text
-   Password:
-   ```
-
-   👉 **macOS のログインパスワードを入力してください**（入力中は文字が表示されません）。
-
-2. **確認メッセージが表示されます**：
-
-   ```text
-   Press RETURN/ENTER to continue or any other key to abort:
-   ```
-
-   👉 **Enter キーを押して続行してください**。
-
-3. **インストールが進行します**（数分かかる場合があります）
-
-4. **インストール完了後**、Homebrew が表示する指示を確認してください。
-
-   **パス設定が必要な場合**、以下のような指示が表示されます：
-
-   ```text
-   Next steps:
-   - Run these commands in your terminal to add Homebrew to your PATH:
-   ```
-
-   この指示が表示された場合のみ、次のパス設定を実行してください。表示されない場合は、パスが自動的に設定されています。
-
-⚠️ **注意**：
-
-- **Mac の種類の確認**：`uname -m` コマンドで確認できます
-  - `arm64` → Apple Silicon Mac
-  - `x86_64` → Intel Mac
-- **コマンド順序**：`echo >>` で空行追加→`echo 'eval...'` でパス設定追加→`eval` で現在のセッションに適用
-- `.zprofile` は macOS のターミナル設定ファイルです。ここにパス設定を書くことで、新しいターミナルウィンドウでも `brew` コマンドが使えるようになります。
-- パスワード入力時は、セキュリティ上の理由で文字が画面に表示されませんが、正常に入力されています。
-
-**インストール後、パスを通す設定**：
-
-**Apple Silicon Mac（M1/M2/M3）の場合**：
-
-```bash
-# 設定ファイルに空行を追加
-echo >> ~/.zprofile
-# 設定ファイルにパスを追加
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-# 現在のセッションにパスを適用
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-**Intel Mac の場合**：
-
-```bash
-# 設定ファイルに空行を追加
-echo >> ~/.zprofile
-# 設定ファイルにパスを追加
-echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
-# 現在のセッションにパスを適用
-eval "$(/usr/local/bin/brew shellenv)"
-```
-
-**Homebrew が正常にインストールされたか確認**：
-
-```bash
-brew --version
-```
-
-### 1.3 Git と GitHub CLI のセットアップ
-
-**macOS の場合**：
-
-1. **Git のバージョン確認**（macOS には標準でインストール済み）：
-   ```bash
-   git --version
-   ```
-
-2. **GitHub CLI のインストール**：
-   ```bash
-   brew update
-   brew install gh
-   ```
-
-3. **GitHub にログイン**：
-   ```bash
-   gh auth login
-   ```
-
-⚠️ **注意**: 手順通りに1つずつ実行してください。特に `brew install gh` は `gh` であり、`sh` ではありません。
-
-`gh auth login` の詳細手順：
-
-1. **GitHub.com** を選択し、Enter キーを押してください
-2. **HTTPS** を選択し、Enter キーを押してください
-3. **Y**（ブラウザで認証）を入力し、Enter キーを押してください
-4. **Login with a web browser** を選択し、Enter キーを押してください
-5. **ワンタイムコードが表示されます**：
-
-   ```text
-   ! First copy your one-time code: XXXX-XXXX
-   Press Enter to open https://github.com/login/device in your browser...
-   ```
-
-   👉 **コードをメモして、Enter キーを押してください**
-
-6. **ブラウザが開いて認証ページが表示されます**
-   - コードを入力して GitHub アカウントでログイン
-   - 認証完了後、ターミナルに戻って「Authentication complete!」が表示されます
-
-### 1.4 Cursor のインストール
+### 1.1 Cursor のインストール
 
 #### インストール手順
 
@@ -222,6 +81,54 @@ brew --version
 - 初期設定は後から変更可能
 - VS Code の設定や拡張機能も移行可能
 
+### 1.2 Docker Desktop のインストール
+
+1. [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/) にアクセス
+2. 「Download for Mac」をクリック
+   - Apple Silicon Mac（M1/M2/M3）: 「Mac with Apple silicon」を選択
+   - Intel Mac: 「Mac with Intel chip」を選択
+3. ダウンロードした `.dmg` ファイルを開いてインストール
+4. Docker Desktop を起動し、初期設定を完了
+
+**動作確認**：
+
+```bash
+# Docker が正しくインストールされたか確認
+docker --version
+docker compose version
+```
+
+### 1.3 Git と GitHub CLI のセットアップ
+
+1. **Git のバージョン確認**（macOS には標準でインストール済み）：
+
+   ```bash
+   git --version
+   ```
+
+2. **Homebrew のインストール**：
+
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+
+   インストール後、表示される指示に従ってパスを設定してください。
+
+3. **GitHub CLI のインストール**：
+
+   ```bash
+   brew update
+   brew install gh
+   ```
+
+4. **GitHub にログイン**：
+
+   ```bash
+   gh auth login
+   ```
+
+   ブラウザで認証を選択し、表示されるワンタイムコードを使用してログインしてください。
+
 ### 1.5 プロジェクトの準備
 
 テンプレートリポジトリから自分のプロジェクトを作成します。
@@ -245,7 +152,7 @@ GitHub ページで以下の手順を実行します。
 
 ⚠️ **注意**：リポジトリの作成には数秒かかる場合があります。
 
-次に、作成したリポジトリをローカルにクローンします。
+次に、作成したリポジトリをローカルにクローンし、Cursor で開きます。
 
 **💡 ベストプラクティス**：開発プロジェクトは `~/Projects` ディレクトリで管理しましょう。デスクトップではなく専用ディレクトリを使うことで、プロジェクトの整理と管理が容易になります。
 
@@ -258,14 +165,25 @@ cd ~/Projects
 git clone https://github.com/YOUR_USERNAME/my-product-api.git
 cd my-product-api
 
-# 依存関係を同期（uv が必要な Python も自動インストール）
-uv sync
-
 # Cursor で開く
 cursor .
 ```
 
-**💡 ポイント**：テンプレートリポジトリを使うことで、必要なファイルがすべて揃った状態から始められます。`uv sync` で Python と全パッケージが自動的にセットアップされます。
+### 1.6 VS Code Dev Container で開く
+
+1. Cursor でプロジェクトを開いた状態で、左下の「><」アイコンをクリック
+   （ステータスバーの右端にあります）
+2. 「Reopen in Container」を選択
+3. 初回は Docker イメージのビルドに数分かかります
+4. 完了すると、完全に設定された開発環境が利用可能に！
+
+**💡 Dev Container の利点**：
+
+- Python、uv、必要なツールがすべてインストール済み
+- Cursor の拡張機能も自動でインストール
+- チーム全員が同じ環境で開発可能
+
+**💡 ポイント**：テンプレートリポジトリを使うことで、必要なファイルがすべて揃った状態から始められます。Docker を使用することで、Python と全パッケージが自動的にセットアップされます。
 
 ---
 
@@ -283,7 +201,7 @@ Cursor には主に 3 つの AI 機能があります：
 
 ### 2.2 最初のAIとの対話
 
-1. **Cmd+L** を押してチャットパネルを開く
+1. **Cmd+L**（Windows: Ctrl+L）を押してチャットパネルを開く
 2. 以下のメッセージを入力してみましょう。
 
 ```text
@@ -307,6 +225,7 @@ API って何ですか？もっと簡単に説明してください。
 ```
 
 **💡 ポイント**：
+
 - AI は常にこれらのルールに従って回答してくれます
 - このプロジェクトはモダンな**srcレイアウト**を採用しています（コードは `src/product_api/` に配置）
 
@@ -325,7 +244,10 @@ API って何ですか？もっと簡単に説明してください。
 各タスクは 15-30 分で完了できる粒度にしてください。
 ```
 
-**💡 ポイント**: `@.cursor/prompts/task-breakdown.md` ファイルは、タスク分解の具体的なガイドラインを提供します。このファイルを参照することで、AI がより適切にタスクを分解してくれます。
+**💡 ポイント**: `@.cursor/prompts/task-breakdown.md` ファイルは、
+タスク分解の具体的なガイドラインを提供します。
+このファイルを参照することで、AI がより適切にタスクを
+分解してくれます。
 
 AI がタスク一覧を提示してくれます。
 
@@ -383,14 +305,18 @@ AI がこのサイクルを実践して見せてくれます。
 
 ```bash
 # テストを実行（カバレッジ付き）
-uv run pytest
+docker compose exec app uv run pytest
 
 # 詳細出力でテスト実行
-uv run pytest -v
+docker compose exec app uv run pytest -v
 
 # 特定のテストだけ実行
-uv run pytest tests/test_specific.py -v
+docker compose exec app uv run pytest tests/test_specific.py -v
 ```
+
+**💡 ヒント**: VS Code Dev Container を使用している場合は、
+ターミナルが自動的にコンテナ内で実行されるため、`docker compose exec app` を
+省略して `uv run pytest` と直接入力できます。
 
 **💡 ポイント**：最初は赤い文字（失敗）が表示され、コードを書くと緑（成功）になります。
 
@@ -417,11 +343,12 @@ AI が以下の作業を自動で進めます。
 全てのタスクが完了したら、実際に API を動かしてみましょう。
 
 ```bash
-# 依存関係を同期
-uv sync
+# コンテナが起動していることを確認
+docker compose ps
 
 # API サーバーを起動
-uv run uvicorn src.product_api.main:app --reload --port 8000
+docker compose exec app uv run uvicorn \
+  src.product_api.main:app --reload --host 0.0.0.0 --port 8000
 
 # 別のターミナルで商品を作成
 curl -X POST "http://localhost:8000/items" \
@@ -524,29 +451,58 @@ To upgrade, run: brew upgrade gh
 
 **解決法**: 更新は任意です。ハンズオン中は無視して構いません。後で `brew upgrade gh` で更新できます。
 
-#### Q：uv コマンドが見つからない
+### Docker 関連のトラブルシューティング
 
-```bash
-# パスを通す
-source ~/.zshrc  # または source ~/.bashrc
+#### Q：Docker Desktop が起動していない
+
+```text
+Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
 ```
 
-#### Q：ポート 8000 が使用中
+**解決法**: Docker Desktop アプリケーションを起動してください。
+メニューバーに Docker アイコンが表示されます。
 
-```bash
-# 別のポートで起動
-uv run uvicorn src.product_api.main:app --reload --port 8001
+#### Q：Docker コンテナのポートが使用中
+
+```text
+bind: address already in use
 ```
 
-#### Q：テストが失敗する
+**解決法**:
 
 ```bash
-# 依存関係を同期（開発用依存関係も含む）
-uv sync
+# 使用中のコンテナを停止
+docker compose down
 
-# パッケージが見つからない場合は、一度クリーンアップ
-uv sync --reinstall
+# または別のポートを使用
+# docker-compose.yml を編集して "8000:8000" を "8001:8000" に変更
 ```
+
+#### Q：VS Code で "Reopen in Container" が表示されない
+
+**解決法**:
+
+1. VS Code に Dev Containers 拡張機能をインストール
+2. 拡張機能を検索："ms-vscode-remote.remote-containers"
+3. インストール後、VS Code を再起動
+
+#### Q：Docker コンテナ内でコマンドが実行できない
+
+```bash
+# コンテナに入る
+docker compose exec app bash
+
+# または直接コマンドを実行
+docker compose exec app uv run pytest
+```
+
+#### Q：Docker イメージのビルドが遅い
+
+**解決法**:
+
+- 初回ビルドは時間がかかります（約5-10分）
+- 2回目以降はキャッシュが利用されるため高速化されます
+- Docker Desktop の設定でメモリを増やすことで改善する場合があります
 
 ---
 
