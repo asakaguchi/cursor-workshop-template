@@ -48,11 +48,11 @@
    - 「ダウンロード MacOS」ボタンをクリック
    - ファイル名やダウンロード先を確認（必要に応じて変更）して「保存」ボタンをクリック
 
-2. **インストール実行**
+1. **インストール実行**
    - ダウンロードしたファイルを開く
    - Cursor アイコンを Application アイコンにドラッグ＆ドロップ
 
-3. **Cursor の起動**
+1. **Cursor の起動**
    - Launchpad から Cursor を起動
 
 #### 初期設定
@@ -62,7 +62,7 @@
 1. **ログイン方法の選択**
    - **GitHub アカウントで**サインイン
 
-2. **エディター設定**
+1. **エディター設定**
    - テーマのカスタマイズ
    - キーバインドの設定
    - データ共有事項についての内容を確認し、チェックボックスをオンにし、「Continue」ボタンをクリック
@@ -72,7 +72,7 @@
      - Open from Terminal → `cursor` command → 「Install」ボタンをクリック
      - 「Continue」ボタンをクリック
 
-3. **プライバシー設定**
+1. **プライバシー設定**
    - 右上の歯車アイコンをクリック
    - 「General」→「Privacy」→「Privacy Mode with Storage」に変更
 
@@ -85,11 +85,18 @@
 ### 1.2 Docker Desktop のインストール
 
 1. [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/) にアクセス
-2. 「Download for Mac」をクリック
-   - Apple Silicon Mac（M1/M2/M3）: 「Mac with Apple silicon」を選択
-   - Intel Mac: 「Mac with Intel chip」を選択
-3. ダウンロードした `.dmg` ファイルを開いてインストール
-4. Docker Desktop を起動し、初期設定を完了
+1. 「Download Docker Desktop」にマウスカーソルを合わせる
+   - Apple Silicon Mac（M1/M2/M3）：「Download for Mac - Apple Silicon」をクリック
+   - Intel Mac：「Download for Mac - Intel Chip」をクリック
+1. ファイル名やダウンロード先を確認（必要に応じて変更）して「保存」ボタンをクリック
+1. ダウンロードしたファイルを開く
+1. Docker アイコンを Application アイコンにドラッグ＆ドロップ
+1. Launchpad から Docker を起動
+1. Docker Subscription Service Agreement の画面で、「Accept」ボタンをクリック
+1. 「Use recommended settings (requires password)」を選択し、「Finish」ボタンをクリック
+   - macOS アカウントのパスワードを入力
+1. Welcome to Docker の画面で、「Skip」リンクをクリック
+1. Welcome Survey の画面で、「Skip」リンクをクリック
 
 **動作確認**：
 
@@ -107,7 +114,7 @@ docker compose version
    git --version
    ```
 
-2. **Homebrew のインストール**：
+1. **Homebrew のインストール**：
 
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -115,14 +122,14 @@ docker compose version
 
    インストール後、表示される指示に従ってパスを設定してください。
 
-3. **GitHub CLI のインストール**：
+1. **GitHub CLI のインストール**：
 
    ```bash
    brew update
    brew install gh
    ```
 
-4. **GitHub にログイン**：
+1. **GitHub にログイン**：
 
    ```bash
    gh auth login
@@ -130,7 +137,7 @@ docker compose version
 
    ブラウザで認証を選択し、表示されるワンタイムコードを使用してログインしてください。
 
-### 1.5 プロジェクトの準備
+### 1.4 プロジェクトの準備
 
 テンプレートリポジトリから自分のプロジェクトを作成します。
 
@@ -144,12 +151,12 @@ open https://github.com/asakaguchi/cursor-workshop-template
 GitHub ページで以下の手順を実行します。
 
 1. **「Use this template」ボタンをクリック**（緑色のボタン）
-2. **「Create a new repository」を選択**
-3. **Repository name**：`my-product-api`（またはお好きな名前）
-4. **Description**：「Cursor workshop - Product API」（任意）
-5. **Public/Private**：Public を推奨（学習目的のため）
-6. **「Include all branches」**：チェックしない（デフォルト）
-7. **「Create repository」をクリック**
+1. **「Create a new repository」を選択**
+1. **Repository name**：`my-product-api`（またはお好きな名前）
+1. **Description**：「Cursor workshop - Product API」（任意）
+1. **Public/Private**：Public を推奨（学習目的のため）
+1. **「Include all branches」**：チェックしない（デフォルト）
+1. **「Create repository」をクリック**
 
 **⚠️ 注意**：リポジトリの作成には数秒かかる場合があります。
 
@@ -170,13 +177,14 @@ cd my-product-api
 cursor .
 ```
 
-### 1.6 VS Code Dev Container で開く
+### 1.5 Dev Container で開く
 
-1. Cursor でプロジェクトを開いた状態で、左下の「><」アイコンをクリック
-   （ステータスバーの右端にあります）
-2. 「Reopen in Container」を選択
-3. 初回は Docker イメージのビルドに数分かかります
-4. 完了すると、完全に設定された開発環境が利用可能に！
+1. Cursor でプロジェクトを開くと、「Dev Containers」拡張機能のインストールを推奨するポップアップが表示されます
+   - 「Install」ボタンをクリックしてインストール
+1. コマンドパレットを開く（Cmd+Shift+P / Windows: Ctrl+Shift+P）
+1. 「Dev Containers: Reopen in Container」と入力して選択
+1. 初回は Docker イメージのビルドに数分かかります
+1. 完了すると、完全に設定された開発環境が利用可能に！
 
 **💡 Dev Container の利点**：
 
@@ -184,7 +192,7 @@ cursor .
 - Cursor の拡張機能も自動でインストール
 - チーム全員が同じ環境で開発可能
 
-**💡 ポイント**：テンプレートリポジトリを使うことで、必要なファイルがすべて揃った状態から始められます。Docker を使用することで、Python とすべてのパッケージが自動的にセットアップされます。
+**💡 ポイント**：テンプレートリポジトリを使うことで、必要なファイルがすべて揃った状態から始められます。Dev Container を使用することで、Python とすべての開発ツールが自動的にセットアップされます。
 
 ---
 
@@ -195,15 +203,15 @@ cursor .
 Cursor には主に 3 つの AI 機能があります：
 
 1. **チャット（Cmd+L）**：AI と対話しながら開発
-2. **インライン編集（Cmd+K）**：コードを直接編集
-3. **Composer（Cmd+I）**：複数ファイルの同時編集
+1. **インライン編集（Cmd+K）**：コードを直接編集
+1. **Composer（Cmd+I）**：複数ファイルの同時編集
 
 今日は主に**チャット機能**を使います。
 
 ### 2.2 最初のAIとの対話
 
 1. **Cmd+L**（Windows: Ctrl+L）を押してチャットパネルを開く
-2. 以下のメッセージを入力してみましょう。
+1. 以下のメッセージを入力してみましょう。
 
 ```text
 @requirements.md を読んで、どんなアプリを作るのか教えてください。
@@ -245,10 +253,7 @@ API って何ですか？もっと簡単に説明してください。
 各タスクは 15-30 分で完了できる粒度にしてください。
 ```
 
-**💡 ポイント**: `@.cursor/prompts/task-breakdown.md` ファイルは、
-タスク分解の具体的なガイドラインを提供します。
-このファイルを参照することで、AI がより適切にタスクを
-分解してくれます。
+**💡 ポイント**: `@.cursor/prompts/task-breakdown.md` ファイルは、タスク分解の具体的なガイドラインを提供します。このファイルを参照することで、AI がより適切にタスクを分解してくれます。
 
 AI がタスクの一覧を提示してくれます。
 
@@ -289,18 +294,18 @@ Task 1 を開始してください
 AI が以下の作業を自動で進めます。
 
 1. 新しいブランチを作成
-2. 必要なファイルを作成（`src/product_api/` 配下に配置）
-3. テストを先に書く（TDD）
+1. 必要なファイルを作成（`src/product_api/` 配下に配置）
+1. テストを先に書く（TDD）
 
 ### 4.2 TDD のサイクルを体験
 
 TDD（テスト駆動開発）は以下の 3 ステップで進めます。
 
 1. **Red**：失敗するテストを書く
-2. **Green**：テストを通す最小限のコード
-3. **Refactor**：コードを改善
+1. **Green**：テストを通す最小限のコード
+1. **Refactor**：コードを改善
 
-AI がこのサイクルを実践して見せてくれます。
+AI がこのサイクルを実践しながら開発を進めます。
 
 ### 4.3 テストの実行
 
@@ -315,9 +320,7 @@ docker compose exec app uv run pytest -v
 docker compose exec app uv run pytest tests/test_specific.py -v
 ```
 
-**💡 ヒント**: VS Code Dev Container を使用している場合は、
-ターミナルが自動的にコンテナ内で実行されるため、`docker compose exec app` を
-省略して `uv run pytest` と直接入力できます。
+**💡 ヒント**: Dev Container を使用している場合は、ターミナルが自動的にコンテナ内で実行されるため、`docker compose exec app` を省略して `uv run pytest` と直接入力できます。
 
 **💡 ポイント**：最初は赤い文字（テスト失敗）が表示され、実装を進めると緑（テスト成功）に変わります。
 
@@ -332,8 +335,8 @@ Task 1 が完了しました。PR を作成してください。
 AI が以下の作業を自動で進めます。
 
 1. コードをコミット
-2. GitHub にプッシュ
-3. プルリクエストを作成
+1. GitHub にプッシュ
+1. プルリクエストを作成
 
 ---
 
@@ -360,7 +363,7 @@ curl -X POST "http://localhost:8000/items" \
 curl -X GET "http://localhost:8000/items/1"
 ```
 
-### 5.2 Swagger UI で確認
+### 5.2 Swagger UI での確認
 
 ブラウザで <http://localhost:8000/docs> にアクセスすると、API の仕様が視覚的に確認できます。
 
@@ -383,7 +386,7 @@ curl -X GET "http://localhost:8000/items/1"
 - バグの少ないコード
 - 安心して修正できる
 
-✅ **プロ同様の開発フロー**
+✅ **実践的な開発フロー**
 
 - Git/GitHub でバージョン管理
 - プルリクエストでコードレビュー
@@ -399,11 +402,11 @@ curl -X GET "http://localhost:8000/items/1"
    - 商品の削除（DELETE）
    - 商品一覧の取得（GET /items）
 
-2. **データベース連携**
+1. **データベース連携**
    - SQLite を使った永続化
    - SQLAlchemy の導入
 
-3. **認証機能の追加**
+1. **認証機能の追加**
    - JWT トークン認証
    - ユーザー管理
 
@@ -479,13 +482,13 @@ docker compose down
 # docker-compose.yml を編集して "8000:8000" を "8001:8000" に変更
 ```
 
-#### Q：VS Code で "Reopen in Container" が表示されない
+#### Q：Cursor で "Reopen in Container" が表示されない
 
 **解決法**:
 
-1. VS Code に Dev Containers 拡張機能をインストール
-2. 拡張機能を検索："ms-vscode-remote.remote-containers"
-3. インストール後、VS Code を再起動
+1. Cursor に Dev Containers 拡張機能をインストール
+1. 拡張機能を検索："ms-vscode-remote.remote-containers"
+1. インストール後、Cursor を再起動
 
 #### Q：Docker コンテナ内でコマンドが実行できない
 
@@ -501,8 +504,8 @@ docker compose exec app uv run pytest
 
 **解決法**:
 
-- 初回ビルドは時間がかかります（約5-10分）
-- 2回目以降はキャッシュが利用されるため高速化されます
+- 初回ビルドは時間がかかります（約 5-10 分）
+- 2 回目以降はキャッシュが利用されるため高速化されます
 - Docker Desktop の設定でメモリを増やすことで改善する場合があります
 
 ---
