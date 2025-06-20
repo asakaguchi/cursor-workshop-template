@@ -31,6 +31,8 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.0",
     "httpx>=0.24.0",
+    "pre-commit>=3.5.0",
+    "pyright>=1.1.0",
 ]
 
 [project.scripts]
@@ -50,11 +52,26 @@ select = [
     "B",  # flake8-bugbear
     "C4", # flake8-comprehensions
     "UP", # pyupgrade
+    "ANN", # flake8-annotations
+    "D",  # pydocstyle
+    "PTH", # flake8-use-pathlib
+    "RUF", # Ruff-specific rules
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "D100", # Missing docstring in public module
+    "D104", # Missing docstring in public package
+    "D107", # Missing docstring in __init__
+    "ANN101", # Missing type annotation for self
+    "ANN102", # Missing type annotation for cls
 ]
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.ruff.pydocstyle]
+convention = "google"
 
 [tool.mypy]
 python_version = "3.12"
@@ -83,3 +100,12 @@ exclude_lines = [
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
 ]
+
+[tool.pyright]
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"
+strict = ["src"]
+include = ["src", "tests"]
+exclude = ["**/node_modules", "**/__pycache__", ".venv"]
+reportMissingTypeStubs = false

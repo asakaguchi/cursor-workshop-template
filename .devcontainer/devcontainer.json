@@ -12,15 +12,12 @@
     "vscode": {
       "extensions": [
         "ms-python.python",
-        "ms-python.vscode-pylance",
-        "ms-python.debugpy",
         "charliermarsh.ruff",
         "DavidAnson.vscode-markdownlint",
         "redhat.vscode-yaml",
         "ms-azuretools.vscode-docker",
-        "GitHub.vscode-pull-request-github",
         "eamodio.gitlens",
-        "EditorConfig.EditorConfig"
+        "tamasfe.even-better-toml"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/app/.venv/bin/python",
@@ -86,6 +83,10 @@
 
   "containerEnv": {
     "PYTHONUNBUFFERED": "1",
-    "PYTHONDONTWRITEBYTECODE": "1"
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "UV_CACHE_DIR": "/app/.cache/uv",
+    "UV_TOOL_DIR": "/app/.local/share/uv/tools",
+    "UV_TOOL_BIN_DIR": "/app/.local/bin",
+    "UV_PYTHON_INSTALL_DIR": "/app/.local/share/uv/python"
   }
 }

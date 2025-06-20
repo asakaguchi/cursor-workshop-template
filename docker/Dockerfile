@@ -16,7 +16,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         git
 
 # Install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN --mount=type=cache,target=/root/.cache/uv \
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Add uv to PATH
 ENV PATH="/root/.local/bin:$PATH"

@@ -31,8 +31,8 @@ docker run \
     -e DISPLAY=$DISPLAY \
     -e USER_ID=$USER_ID \
     -e GROUP_ID=$GROUP_ID \
-    -v "$PWD":/workspace \
+    -v "$PWD":/app \
     -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
-    -w /workspace \
+    -w /app \
     "$IMAGE_NAME:latest" \
     "${@:-bash}"
