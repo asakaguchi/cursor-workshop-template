@@ -152,10 +152,7 @@ GitHub ページで以下の手順を実行します。
 
 1. **「Use this template」ボタンをクリック**（緑色のボタン）
 1. **「Create a new repository」を選択**
-1. **Repository name**：`my-product-api`（またはお好きな名前）
-1. **Description**：「Cursor workshop - Product API」（任意）
-1. **Public/Private**：Public を推奨（学習目的のため）
-1. **「Include all branches」**：チェックしない（デフォルト）
+1. **Repository name**：`my-cursor-workshop`（またはお好きな名前）
 1. **「Create repository」をクリック**
 
 **⚠️ 注意**：リポジトリの作成には数秒かかる場合があります。
@@ -170,8 +167,8 @@ mkdir -p ~/Projects
 cd ~/Projects
 
 # 自分のリポジトリをクローン（YOUR_USERNAME は自分の GitHub ユーザー名）
-git clone https://github.com/YOUR_USERNAME/my-product-api.git
-cd my-product-api
+git clone https://github.com/YOUR_USERNAME/my-cursor-workshop.git
+cd my-cursor-workshop
 
 # Cursor で開く
 cursor .
@@ -181,9 +178,12 @@ cursor .
 
 1. Cursor でプロジェクトを開くと、「Dev Containers」拡張機能のインストールを推奨するポップアップが表示されます
    - 「Install」ボタンをクリックしてインストール
-1. コマンドパレットを開く（Cmd+Shift+P / Windows: Ctrl+Shift+P）
+1. コマンドパレットを開く（`Cmd`+`Shift`+`P`）
 1. 「Dev Containers: Reopen in Container」と入力して選択
+   一部入力すると候補が表示されるので、候補の中に「Dev Containers: Reopen in Container」が表示されたらそれをクリック
 1. 初回は Docker イメージのビルドに数分かかります
+   ネットワーク環境やマシンスペックにより 5-15 分程度かかる場合があります。
+   コーヒーでも飲みながら待ちましょう ☕
 1. 完了すると、完全に設定された開発環境が利用可能に！
 
 **💡 Dev Container の利点**：
@@ -194,13 +194,18 @@ cursor .
 
 **💡 ポイント**：テンプレートリポジトリを使うことで、必要なファイルがすべて揃った状態から始められます。Dev Container を使用することで、Python とすべての開発ツールが自動的にセットアップされます。
 
+🎉 **できたこと**：
+
+- ✅ 開発環境の構築が完了
+- ✅ AI と一緒に開発する準備が整った
+
 ---
 
 ## 🤝 Part 2：Human-in-the-Loop 開発を体験（15 分）
 
 ### 2.1 Cursor の AI 機能を理解しよう
 
-Cursor には主に 3 つの AI 機能があります：
+Cursor には主に 3 つの AI 機能があります。
 
 1. **チャット（Cmd+L）**：AI と対話しながら開発
 1. **インライン編集（Cmd+K）**：コードを直接編集
@@ -208,10 +213,9 @@ Cursor には主に 3 つの AI 機能があります：
 
 今日は主に**チャット機能**を使います。
 
-### 2.2 最初のAIとの対話
+### 2.2 最初の AI との対話
 
-1. **Cmd+L**（Windows: Ctrl+L）を押してチャットパネルを開く
-1. 以下のメッセージを入力してみましょう。
+画面右側のチャットパネルに以下のメッセージを入力してみましょう。
 
 ```text
 @requirements.md を読んで、どんなアプリを作るのか教えてください。
@@ -226,7 +230,7 @@ API って何ですか？もっと簡単に説明してください。
 
 ### 2.3 Cursor Rulesの確認
 
-プロジェクトには「Cursor Rules」という開発ルールが設定されています：
+プロジェクトには「Cursor Rules」という開発ルールが設定されています。
 
 ```text
 .cursor/rules/ にあるファイルを見て、このプロジェクトの開発ルールを
@@ -236,7 +240,15 @@ API って何ですか？もっと簡単に説明してください。
 **💡 ポイント**：
 
 - AI は常にこれらのルールに従って回答してくれます
-- このプロジェクトはモダンな**srcレイアウト**を採用しています（コードは `src/product_api/` に配置）
+- このプロジェクトはモダンな **src レイアウト**を採用しています（コードは `src/product_api/` に配置）
+
+これらのルールにより、AI は常に：
+
+- 一貫したコーディングスタイルを維持
+- ベストプラクティスに従った実装
+- プロジェクト固有の規約を遵守
+
+してくれます。
 
 ---
 
@@ -279,9 +291,16 @@ gh repo view --web
 
 **💡 ポイント**：各 Issue には番号（#1、#2 など）が付いており、これがタスクの識別子になります。
 
+🎉 **できたこと**：
+
+- ✅ タスクの分解と可視化が完了
+- ✅ GitHub でプロジェクト管理の準備が整った
+
 ---
 
 ## 🧪 Part 4：TDD で API 開発（30 分）
+
+**📝 Dev Container 使用時の注意**: 以降のコマンドは Dev Container 内で実行されるため、`docker compose exec app` を省略して直接コマンドを実行できます。
 
 ### 4.1 最初のタスク開始
 
@@ -326,6 +345,12 @@ docker compose exec app uv run pytest tests/test_specific.py -v
 
 ### 4.4 プルリクエストの作成
 
+**✅ タスク完了の目安**：
+
+- すべてのテストが緑色（成功）になった
+- コードが期待通りに動作している
+- リファクタリングが必要なら完了している
+
 タスクが完了したら、AI に伝えましょう。
 
 ```text
@@ -337,6 +362,11 @@ AI が以下の作業を自動で進めます。
 1. コードをコミット
 1. GitHub にプッシュ
 1. プルリクエストを作成
+
+🎉 **できたこと**：
+
+- ✅ TDD で品質の高いコードを実装
+- ✅ GitHub でコードレビューの準備が完了
 
 ---
 
@@ -419,6 +449,9 @@ curl -X GET "http://localhost:8000/items/1"
 ---
 
 ## 💡 トラブルシューティング
+
+**💡 エラーは学習のチャンス**：
+プログラミングではエラーは日常茶飯事です。エラーメッセージは「何が問題か」を教えてくれる大切な情報です。焦らず、以下の解決法を試してみましょう。
 
 ### よくある問題と解決法
 
