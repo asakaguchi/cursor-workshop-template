@@ -1,251 +1,249 @@
 # CLAUDE.md
 
-This file provides guidance for Claude Code (claude.ai/code) when working with code in this repository.
+このファイルは、このリポジトリのコードを扱う際のClaude Code (claude.ai/code)のためのガイダンスを提供します。
 
-## Language Processing Instructions
+## 言語処理の指示
 
-**IMPORTANT**: Even when receiving instructions in Japanese, always think and process in English internally. However, respond to the user in Japanese when they communicate in Japanese.
+**注意**: Cursorエディタを使用する場合は、`.cursor/rules/`ディレクトリのルールファイルも参照してください。特に以下が重要です：
 
-**Note**: When using the Cursor editor, also refer to the rule files in the `.cursor/rules/` directory. The following are particularly important:
+- `python-structure.mdc`: モダンなPythonプロジェクト構造（srcレイアウト）
+- `code-quality-enforcement.mdc`: コード品質と開発ガイドライン
+- `development-workflow.mdc`: 開発フローとGitHub統合
+- `pep8-enforcement.mdc`: Pythonコーディング標準
 
-- `python-structure.mdc`: Modern Python project structure (src layout)
-- `code-quality-enforcement.mdc`: Code quality and development guidelines
-- `development-workflow.mdc`: Development flow and GitHub integration
-- `pep8-enforcement.mdc`: Python coding standards
+## 参考資料
 
-## References
+このプロジェクトは以下のリソースに基づいて構築されています：
 
-This project is built based on the following resources:
-
-- **Article**: [Building a Modern Python Development Environment with Docker](https://zenn.dev/mjun0812/articles/0ae2325d40ed20)
-- **Template**: [mjun0812/python-project-template](
+- **記事**: [DockerでモダンなPython開発環境を構築する](https://zenn.dev/mjun0812/articles/0ae2325d40ed20)
+- **テンプレート**: [mjun0812/python-project-template](
   https://github.com/mjun0812/python-project-template)
-  - Particularly referencing the structure of [CLAUDE.md](
-    https://github.com/mjun0812/python-project-template/blob/main/CLAUDE.md)
+  - 特に[CLAUDE.md](
+    https://github.com/mjun0812/python-project-template/blob/main/CLAUDE.md)の構造を参考にしています
 
-Many elements including Docker configuration, uv usage, and project structure are based on the above resources.
+Docker設定、uvの使用、プロジェクト構造など多くの要素が上記のリソースに基づいています。
 
-## Project Overview
+## プロジェクト概要
 
-This is a Cursor workshop template for building a **Product Management API** using Python and FastAPI. It implements a simple REST API for product management using in-memory storage.
+これはPythonとFastAPIを使用して**商品管理API**を構築するためのCursorワークショップテンプレートです。インメモリストレージを使用したシンプルなREST APIを実装します。
 
-## Key Requirements
+## 主要な要件
 
-The API must implement:
+APIは以下を実装する必要があります：
 
-- Create product (POST /items)
-- Get product (GET /items/{id})
-- Health check (GET /health)
-- TDD approach using pytest
-- FastAPI framework with automatic Swagger UI generation
+- 商品作成（POST /items）
+- 商品取得（GET /items/{id}）
+- ヘルスチェック（GET /health）
+- pytestを使用したTDDアプローチ
+- 自動Swagger UI生成を備えたFastAPIフレームワーク
 
-### Product Data Structure
+### 商品データ構造
 
-- id: Integer (auto-generated)
-- name: String (required, at least 1 character)
-- price: Float (required, greater than 0)
-- created_at: Datetime (auto-set)
+- id: 整数（自動生成）
+- name: 文字列（必須、最低1文字）
+- price: 浮動小数点数（必須、0より大きい）
+- created_at: 日時（自動設定）
 
-## Development Commands
+## 開発コマンド
 
-### Package Management
+### パッケージ管理
 
-**Important**: Always use uv, never use pip
+**重要**: 常にuvを使用し、pipは決して使用しないでください
 
 ```bash
-# Sync project (recommended - automatically recognizes from pyproject.toml)
+# プロジェクトの同期（推奨 - pyproject.tomlから自動認識）
 uv sync
 
-# Only when adding new dependencies as needed
+# 必要に応じて新しい依存関係を追加する場合のみ
 # uv add package_name
 # uv add --dev dev_package_name
 ```
 
-### Running the Application
+### アプリケーションの実行
 
 ```bash
-# Start FastAPI server
+# FastAPIサーバーの起動
 uvicorn src.product_api.main:app --reload
 
-# Access Swagger UI: http://localhost:8000/docs
+# Swagger UIへのアクセス: http://localhost:8000/docs
 ```
 
-### Testing
+### テスト
 
 ```bash
-# Run all tests
+# すべてのテストを実行
 uv run --frozen pytest
 
-# Run specific test file
+# 特定のテストファイルを実行
 uv run --frozen pytest tests/test_filename.py
 
-# Run tests with verbose output
+# 詳細出力でテストを実行
 uv run --frozen pytest -v
 
-# If there are anyio plugin issues
+# anyioプラグインの問題がある場合
 PYTEST_DISABLE_PLUGIN_AUTOLOAD="" uv run --frozen pytest
 ```
 
-### Code Quality Checks
+### コード品質チェック
 
 ```bash
-# Code formatting
+# コードフォーマット
 uv run --frozen ruff format .
 
-# Lint check
+# Lintチェック
 uv run --frozen ruff check .
 
-# Fix lint issues
+# Lint問題の修正
 uv run --frozen ruff check . --fix
 
-# Type checking
+# 型チェック
 uv run --frozen pyright
 
-# Check Markdown files (required)
+# Markdownファイルのチェック（必須）
 markdownlint *.md
 
-# Install pre-commit hooks (first time only)
+# pre-commitフックのインストール（初回のみ）
 uv run --frozen pre-commit install
 
-# Run pre-commit manually
+# pre-commitの手動実行
 uv run --frozen pre-commit run --all-files
 ```
 
-## Architecture Notes
+## アーキテクチャに関する注意
 
-- **In-memory storage**: No database - data persists only during application runtime
-- **Test context**: Use `tests/context.py` to import `product_api` without installation
-- **Project structure**: Main API code in `src/product_api/`, tests in `tests/` (src layout adopted)
-- **Error handling**: Proper validation and HTTP status code implementation
-- **No authentication**: Out of scope for this workshop
+- **インメモリストレージ**: データベースなし - データはアプリケーション実行時のみ保持
+- **テストコンテキスト**: インストールなしで`product_api`をインポートするために`tests/context.py`を使用
+- **プロジェクト構造**: メインAPIコードは`src/product_api/`、テストは`tests/`（srcレイアウト採用）
+- **エラーハンドリング**: 適切なバリデーションとHTTPステータスコードの実装
+- **認証なし**: このワークショップの範囲外
 
-## Development Flow
+## 開発フロー
 
-### Issue-Driven Development
+### Issue駆動開発
 
-This project adopts issue-driven development:
+このプロジェクトはissue駆動開発を採用しています：
 
-1. **Requirements review**: Review requirements in docs/requirements.md etc.
-2. **Task breakdown**: Break down requirements into tasks completable in 15-30 minutes
-3. **Issue registration**: Register each task as an issue using GitHub CLI
-4. **Development**: Create a branch for each issue and implement with TDD approach
-5. **PR creation**: Create PR after confirming tests pass and request review
+1. **要件確認**: docs/requirements.mdなどで要件を確認
+2. **タスク分解**: 15-30分で完了可能なタスクに分解
+3. **Issue登録**: GitHub CLIを使用して各タスクをissueとして登録
+4. **開発**: 各issueごとにブランチを作成し、TDDアプローチで実装
+5. **PR作成**: テストの通過を確認後、PRを作成してレビューを依頼
 
-#### Branch Naming Convention
+#### ブランチ命名規則
 
 - `feature/task-{issue-number}-{brief-description}`
-- Example: `feature/task-1-project-setup`
+- 例: `feature/task-1-project-setup`
 
-#### GitHub CLI Usage Examples
+#### GitHub CLI使用例
 
 ```bash
-# Create issue (use $'...' syntax for line breaks)
-gh issue create -t "Title" -b $'## Summary\nImplementation description\n\n## Implementation\n- [ ] Item 1\n- [ ] Item 2'
+# Issueの作成（改行には$'...'構文を使用）
+gh issue create -t "タイトル" -b $'## 概要\n実装の説明\n\n## 実装内容\n- [ ] 項目1\n- [ ] 項目2'
 
-# Create PR
+# PRの作成
 gh pr create \
-  --title "feat: feature name" \
-  --body $'## Summary\nDescription of changes\n\n## Related Issue\nFixes #1'
+  --title "feat: 機能名" \
+  --body $'## 概要\n変更内容の説明\n\n## 関連Issue\nFixes #1'
 ```
 
-## Development Guidelines
+## 開発ガイドライン
 
-### Code Quality Requirements
+### コード品質要件
 
-- **Type hints**: Required for all code
-- **Documentation**: Required for public APIs
-- **Function design**: Small, focused functions
-- **Line length limit**: Maximum 88 characters
-- **Tests**: Required for new features and bug fixes
-- **Markdown**: Always check with markdownlint after editing files and ensure zero errors
+- **型ヒント**: すべてのコードで必須
+- **ドキュメント**: パブリックAPIで必須
+- **関数設計**: 小さく、焦点を絞った関数
+- **行長制限**: 最大88文字
+- **テスト**: 新機能とバグ修正で必須
+- **Markdown**: ファイル編集後は常にmarkdownlintでチェックし、エラーがゼロであることを確認
 
-### Package Management Rules
+### パッケージ管理ルール
 
-- **Required**: Use only uv, pip is prohibited
-- **Basic operation**: First `uv sync` to sync project (auto-recognizes from pyproject.toml)
-- **Add new**: Only when needed `uv add package` / `uv add --dev package`
-- **Run tools**: `uv run tool`
-- **Prohibited**: `uv pip install`, duplicate addition of existing dependencies, `@latest` syntax
+- **必須**: uvのみを使用、pipは禁止
+- **基本操作**: まず`uv sync`でプロジェクトを同期（pyproject.tomlから自動認識）
+- **新規追加**: 必要な場合のみ`uv add package` / `uv add --dev package`
+- **ツール実行**: `uv run tool`
+- **禁止**: `uv pip install`、既存の依存関係の重複追加、`@latest`構文
 
-**Important**: If dependencies are already defined in pyproject.toml,
-do not duplicate with `uv add`, use only `uv sync`
+**重要**: pyproject.tomlで依存関係がすでに定義されている場合は、
+`uv add`で重複追加せず、`uv sync`のみを使用してください
 
-### Testing Requirements
+### テスト要件
 
-- **Framework**: `uv run --frozen pytest`
-- **Async tests**: Use anyio, asyncio prohibited
-- **Coverage**: Edge cases and error cases
+- **フレームワーク**: `uv run --frozen pytest`
+- **非同期テスト**: anyioを使用、asyncioは禁止
+- **カバレッジ**: エッジケースとエラーケース
 
-## Technical Constraints
+## 技術的制約
 
-- Python 3.12 or higher required
-- No external database
-- No authentication/authorization
-- No update/delete operations (create and read only)
-- FastAPI for REST API with auto-generated documentation
+- Python 3.12以上が必要
+- 外部データベースなし
+- 認証/認可なし
+- 更新/削除操作なし（作成と読み取りのみ）
+- 自動生成ドキュメントを備えたREST API用のFastAPI
 
-## Git Commit Guidelines
+## Gitコミットガイドライン
 
-- When bug fixes or features are based on user reports:
+- ユーザーレポートに基づくバグ修正や機能の場合：
 
   ```bash
   git commit --trailer "Reported-by:<name>"
   ```
 
-- When related to GitHub issues:
+- GitHub Issueに関連する場合：
 
   ```bash
   git commit --trailer "Github-Issue:#<number>"
   ```
 
-- **Prohibited**: Absolutely avoid mentioning `co-authored-by` or tool usage
+- **禁止**: `co-authored-by`やツール使用への言及は絶対に避ける
 
-## Pull Requests
+## プルリクエスト
 
-- Include detailed description of changes
-- Focus on the problem being solved and how it's solved
-- **Prohibited**: Absolutely avoid mentioning `co-authored-by` or tool usage
+- 変更の詳細な説明を含める
+- 解決される問題とその解決方法に焦点を当てる
+- **禁止**: `co-authored-by`やツール使用への言及は絶対に避ける
 
-## Error Resolution
+## エラー解決
 
-### CI Failure Resolution Order
+### CI失敗の解決順序
 
-1. Fix formatting
-2. Fix type errors
-3. Fix lint errors
+1. フォーマットの修正
+2. 型エラーの修正
+3. Lintエラーの修正
 
-### Common Issues
+### 一般的な問題
 
-- **Line length limit**: Split strings with parentheses, multi-line function calls, split imports
-- **Type errors**: Check Optional, type narrowing, verify function signatures
-- **pytest execution failure**: First run `uv sync`, don't duplicate existing dependencies
-- **Coverage measurement failure**: Already configured in pyproject.toml, no additional config files needed
-- **Pytest**: If anyio pytest mark not found, add `PYTEST_DISABLE_PLUGIN_AUTOLOAD=""`
+- **行長制限**: 括弧で文字列を分割、複数行の関数呼び出し、インポートの分割
+- **型エラー**: Optional、型の絞り込み、関数シグネチャの確認をチェック
+- **pytest実行失敗**: まず`uv sync`を実行、既存の依存関係を重複させない
+- **カバレッジ測定失敗**: pyproject.tomlですでに設定済み、追加の設定ファイルは不要
+- **Pytest**: anyio pytestマークが見つからない場合は、`PYTEST_DISABLE_PLUGIN_AUTOLOAD=""`を追加
 
-### Best Practices
+### ベストプラクティス
 
-- Check git status before committing
-- Run formatter before type checking
-- Always run markdownlint after editing Markdown files
-- Keep changes minimal
-- Follow existing patterns
-- Always document public APIs
+- コミット前にgit statusをチェック
+- 型チェック前にフォーマッタを実行
+- Markdownファイル編集後は常にmarkdownlintを実行
+- 変更を最小限に保つ
+- 既存のパターンに従う
+- パブリックAPIは常にドキュメント化
 
-## Important Instruction Reminders
+## 重要な指示のリマインダー
 
-Do what has been asked; nothing more, nothing less.
+求められたことだけを行い、それ以上でも以下でもありません。
 
-NEVER create files unless they're absolutely necessary for achieving your goal.
+目標を達成するために絶対に必要でない限り、決してファイルを作成しないでください。
 
-ALWAYS prefer editing an existing file to creating a new one.
+常に新しいファイルを作成するよりも既存のファイルを編集することを優先してください。
 
-NEVER proactively create documentation files (*.md) or README files.
-Only create documentation files if explicitly requested by the User.
+決して積極的にドキュメントファイル（*.md）やREADMEファイルを作成しないでください。
+ユーザーから明示的に要求された場合にのみドキュメントファイルを作成してください。
 
 ## important-instruction-reminders
 
-Do what has been asked; nothing more, nothing less.
-NEVER create files unless they're absolutely necessary for achieving your goal.
-ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (*.md) or README files.
-Only create documentation files if explicitly requested by the User.
+求められたことだけを行い、それ以上でも以下でもありません。
+目標を達成するために絶対に必要でない限り、決してファイルを作成しないでください。
+常に新しいファイルを作成するよりも既存のファイルを編集することを優先してください。
+決して積極的にドキュメントファイル（*.md）やREADMEファイルを作成しないでください。
+ユーザーから明示的に要求された場合にのみドキュメントファイルを作成してください。
