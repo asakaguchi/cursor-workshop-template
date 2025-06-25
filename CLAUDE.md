@@ -146,6 +146,71 @@ gh pr create \
   --body $'## 概要\n変更内容の説明\n\n## 関連Issue\nFixes #1'
 ```
 
+## TDD（テスト駆動開発）実践ガイド
+
+### t-wada方式TDDの黄金律
+
+**実装コードを書く前に、必ず失敗するテストを書く。**
+
+この原則は絶対に破ってはいけません。
+
+### TDDサイクル
+
+#### 1. Red（失敗するテストを書く）
+
+- 失敗するテストを**1つだけ**書く
+- テストの意図が明確になるよう命名する
+- 実行して失敗を確認（エラーメッセージを読む）
+
+#### 2. Green（テストを通す）
+
+- テストを通すための**最小限**のコードを書く
+- 実装戦略：
+  - **仮実装（Fake It）**: まず固定値を返す
+  - **三角測量（Triangulation）**: 複数のテストから一般化
+  - **明白な実装（Obvious Implementation）**: 自信がある場合のみ
+
+#### 3. Refactor（リファクタリング）
+
+- すべてのテストが通る状態を保つ（グリーンキープ）
+- 重複を除去し、設計を改善
+- 小さなステップで進める
+
+### TDD実践の重要原則
+
+1. **TODOリストの活用**
+   - 実装すべきテストケースをリストとして管理
+   - 1つずつ順番に実装
+
+2. **1テスト1アサーション**
+   - アサーションルーレットを避ける
+   - 複数の検証が必要なら、テストを分割
+
+3. **段階的な実装**
+   - 仮実装 → 三角測量 → 一般化の順で進める
+
+### 実践例
+
+```python
+# ステップ1: Red（失敗するテスト）
+def test_create_product_returns_201():
+    response = client.post("/items", json={"name": "商品", "price": 100})
+    assert response.status_code == 201  # 失敗
+
+# ステップ2: Green（最小限の実装）
+@app.post("/items", status_code=201)
+def create_item():
+    return {}  # 仮実装
+
+# ステップ3: 次のテストを追加してリファクタリング
+```
+
+### コミット戦略
+
+- Red: `git commit -m "test: add test for ..."`
+- Green: `git commit -m "feat: implement minimal ..."`  
+- Refactor: `git commit -m "refactor: extract ..."`
+
 ## 開発ガイドライン
 
 ### コード品質要件
@@ -173,6 +238,7 @@ gh pr create \
 - **フレームワーク**: `uv run --frozen pytest`
 - **非同期テスト**: anyioを使用、asyncioは禁止
 - **カバレッジ**: エッジケースとエラーケース
+- **TDD実践**: t-wada氏推奨の方式を厳格に適用（詳細は下記TDDセクション参照）
 
 ## 技術的制約
 

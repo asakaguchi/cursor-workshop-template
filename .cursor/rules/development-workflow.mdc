@@ -23,9 +23,13 @@ alwaysApply: true
    - GitHub CLI を使用して各タスクを Issue として登録
    - 全 Issue 登録完了を報告
 
-4. **開発実施**
+4. **開発実施（t-wada方式TDD）**
    - Issue ごとにブランチを作成
-   - TDD アプローチで実装
+   - **必ずTDDサイクルに従う**：
+     1. Red: 失敗するテストを1つ書く
+     2. Green: テストを通す最小限のコードを書く
+     3. Refactor: グリーンキープでリファクタリング
+   - 小さなコミットを頻繁に行う（各サイクルごと）
    - 適切なコミットメッセージで記録
 
 5. **PR作成とマージ**
@@ -96,6 +100,54 @@ uv run uvicorn src.product_api.main:app --reload
 ```
 
 **注意**：プロジェクトに pyproject.toml があれば、Python のインストールも含めてすべて自動化されます。
+
+## TDD実践の具体的フロー
+
+### 1. テストリストの作成
+Issueを開始する前に、実装すべきテストケースをリストアップ：
+```bash
+# TODOコメントとしてテストファイルに記載
+# TODO: test_create_product_returns_201
+# TODO: test_create_product_with_valid_data_returns_product
+# TODO: test_create_product_with_empty_name_returns_400
+# TODO: test_create_product_with_negative_price_returns_400
+```
+
+### 2. TDDサイクルの実行
+各テストケースに対して以下を繰り返す：
+
+```bash
+# 1. Red: テストを書いて失敗を確認
+uv run --frozen pytest tests/test_product.py::test_create_product_returns_201 -v
+# AssertionError を確認
+
+# 2. Green: 最小限の実装
+# 仮実装 → 三角測量 → 一般化の順で進める
+
+# 3. テストが通ることを確認
+uv run --frozen pytest tests/test_product.py::test_create_product_returns_201 -v
+
+# 4. コミット（各サイクルごと）
+git add .
+git commit -m "test: add test for product creation returns 201"
+git commit -m "feat: implement minimal product creation endpoint"
+
+# 5. Refactor: 必要に応じてリファクタリング
+# すべてのテストが通ることを確認しながら進める
+uv run --frozen pytest tests/ -v
+```
+
+### 3. コミットメッセージの規則（TDD用）
+- `test:` テストの追加・修正
+- `feat:` 機能の実装（テストを通すため）
+- `refactor:` リファクタリング（テストは変更しない）
+
+例：
+```bash
+git commit -m "test: add test for product creation with empty name"
+git commit -m "feat: add name validation to product creation"
+git commit -m "refactor: extract validation logic to separate function"
+```
 
 ## ブランチ名の規則
 
