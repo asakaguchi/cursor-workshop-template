@@ -13,7 +13,7 @@
       "userGid": "automatic"
     },
     "ghcr.io/devcontainers-contrib/features/apt-packages:1": {
-      "packages": "curl,wget,git,sudo,zsh,gnupg,openssh-client,socat,fzf,ripgrep,nodejs,npm,markdownlint"
+      "packages": "curl,wget,git,jq,ca-certificates,build-essential,ripgrep"
     },
     "ghcr.io/devcontainers-contrib/features/uv:1": {
       "version": "latest",
