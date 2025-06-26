@@ -527,6 +527,20 @@ docker compose down
 1. 拡張機能を検索："ms-vscode-remote.remote-containers"
 1. インストール後、Cursor を再起動
 
+#### Q：Cursor Pyright 設定のインポートについて
+
+Dev Container 起動時に「Would you like Cursor Pyright to import your settings from Pylance?」というダイアログが表示される場合があります。
+
+**推奨回答**：**「No」を選択**
+
+**理由**：
+
+- このプロジェクトには既に最適化された Pyright 設定が `pyproject.toml` で定義済み
+- Pylance からの設定をインポートすると、プロジェクト固有の設定が上書きされる可能性がある
+- プロジェクトの一貫性を保ち、トラブルシューティングを簡素化するため
+
+**追加推奨**：「Never ask again」もチェックして、今後同様のダイアログを非表示にすることを推奨します。
+
 #### Q：Docker コンテナ内でコマンドが実行できない
 
 **Dev Container を使用している場合**：
