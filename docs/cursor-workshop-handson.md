@@ -300,7 +300,7 @@ gh repo view --web
 
 ## 🧪 Part 4：TDD で API 開発（30 分）
 
-**📝 Dev Container 使用時の注意**: 以降のコマンドは Dev Container 内で実行されるため、`docker compose exec app` を省略して直接コマンドを実行できます。
+**📝 Dev Container 使用時の注意**: 以降のコマンドは Dev Container 内で実行されるため、`docker compose exec app` を省略して直接コマンドを実行できます。Dev Container のターミナルは、すでにコンテナ内部で動作しています。
 
 ### 4.1 最初のタスク開始
 
@@ -328,18 +328,20 @@ AI がこのサイクルを実践しながら開発を進めます。
 
 ### 4.3 テストの実行
 
+Dev Container 内では以下のコマンドを直接実行できます：
+
 ```bash
 # テストを実行（カバレッジ付き）
-docker compose exec app uv run pytest
+uv run pytest
 
 # 詳細出力でテスト実行
-docker compose exec app uv run pytest -v
+uv run pytest -v
 
 # 特定のテストだけ実行
-docker compose exec app uv run pytest tests/test_specific.py -v
+uv run pytest tests/test_specific.py -v
 ```
 
-**💡 ヒント**: Dev Container を使用している場合は、ターミナルが自動的にコンテナ内で実行されるため、`docker compose exec app` を省略して `uv run pytest` と直接入力できます。
+**💡 ポイント**: Dev Container 環境では、すでにコンテナ内にいるため `docker compose exec app` は不要です。
 
 **💡 ポイント**：最初は赤い文字（テスト失敗）が表示され、実装を進めると緑（テスト成功）に変わります。
 
@@ -376,15 +378,17 @@ AI が以下の作業を自動で進めます。
 
 全てのタスクが完了したら、実際に API を動かしてみましょう。
 
+Dev Container 内で実行：
+
 ```bash
-# コンテナが起動していることを確認
-docker compose ps
-
 # API サーバーを起動
-docker compose exec app uv run uvicorn \
-  src.product_api.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.product_api.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-# 別のターミナルで商品を作成
+別のターミナルタブを開いて（Cursor のターミナルで `+` ボタンをクリック）：
+
+```bash
+# 商品を作成
 curl -X POST "http://localhost:8000/items" \
   -H "Content-Type: application/json" \
   -d '{"name": "テスト商品", "price": 1000}'
@@ -524,6 +528,16 @@ docker compose down
 1. インストール後、Cursor を再起動
 
 #### Q：Docker コンテナ内でコマンドが実行できない
+
+**Dev Container を使用している場合**：
+ターミナルはすでにコンテナ内で動作しているため、直接コマンドを実行できます：
+
+```bash
+# Dev Container のターミナルで直接実行
+uv run pytest
+```
+
+**Dev Container を使用していない場合**：
 
 ```bash
 # コンテナに入る

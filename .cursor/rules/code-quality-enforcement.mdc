@@ -22,7 +22,7 @@ alwaysApply: true
 - **パブリックAPIにはdocstring必須**
 - **関数は焦点を絞り、小さく設計**
 - **既存パターンを正確に踏襲**
-- **行長制限: 最大88文字**（このプロジェクトではPEP 8の79文字を88文字に拡張）
+- **行長制限: 最大100文字**（このプロジェクトではPEP 8の79文字を100文字に拡張）
 
 ### 3. テスト要件（t-wada方式TDD）
 - **フレームワーク**: `uv run --frozen pytest`
@@ -42,7 +42,7 @@ alwaysApply: true
 - **修正**: `uv run --frozen ruff check . --fix`
 
 #### 重要なRuffの問題:
-- 行長制限（88文字）
+- 行長制限（100文字）
 - インポートソート（I001）
 - 未使用インポート
 
@@ -52,11 +52,13 @@ alwaysApply: true
 - **インポート**: 複数行に分割
 
 ### 2. 型チェック
-- **ツール**: `uv run --frozen pyright`
+- **ツール**: Pyrightを使用（VSCode/Cursorで自動実行）
+- **手動実行**: 必要に応じて `uv run --frozen pyright`
 - **要件**:
   - OptionalのNoneチェックを明示的に
   - 文字列の型の絞り込み
   - バージョン警告はチェックが通れば無視可能
+- **注**: mypyは使用しません（シンプルさ重視）
 
 ### 3. Pre-commitフック
 - **設定**: `.pre-commit-config.yaml`

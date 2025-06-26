@@ -15,21 +15,17 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         curl \
         git
 
-# Install uv
-RUN --mount=type=cache,target=/root/.cache/uv \
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Add uv to PATH
-ENV PATH="/root/.local/bin:$PATH"
+# Copy uv binary from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 WORKDIR /app
 
 # Copy dependency files
-COPY pyproject.toml ./
+COPY pyproject.toml uv.lock* ./
 
 # Install dependencies
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --no-install-project --no-editable
+    uv sync --frozen --no-install-project
 
 FROM ${RUNNER_IMAGE} AS production
 
@@ -42,21 +38,15 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         curl \
         git \
         sudo \
-        gosu \
-        zsh \
-        nodejs \
-        npm && \
+        gosu && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install markdownlint-cli globally
-RUN npm install -g markdownlint-cli
+# Copy uv binary from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Add uv to PATH
-ENV PATH="/root/.local/bin:/app/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Configure environment
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -67,24 +57,22 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /app
 
-# Copy virtual environment from builder
+# Copy Python installation from builder
+COPY --from=builder /root/.local/share/uv /root/.local/share/uv
 COPY --from=builder /app/.venv /app/.venv
 
 # Copy source code
-COPY . .
+COPY . /app
 
 # Copy entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Install project in development mode (if main.py exists)
+# Install project
 RUN --mount=type=cache,target=/root/.cache/uv \
-    if [ -f "src/product_api/main.py" ]; then \
-        uv sync --extra dev; \
-    else \
-        uv sync --no-install-project --extra dev; \
-    fi
+    cd /app && uv sync --frozen
 
 EXPOSE 8000
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["uvicorn", "src.product_api.main:app", "--host", "0.0.0.0", "--port", "8000"]

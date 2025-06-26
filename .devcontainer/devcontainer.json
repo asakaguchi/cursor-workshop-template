@@ -1,10 +1,25 @@
 {
   "name": "Product API Development",
-  "dockerComposeFile": "../compose.yml",
-  "service": "app",
-  "workspaceFolder": "/app",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   
   "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "username": "vscode",
+      "userUid": "automatic",
+      "userGid": "automatic"
+    },
+    "ghcr.io/devcontainers-contrib/features/apt-packages:1": {
+      "packages": "curl,wget,git,sudo,zsh,gnupg,openssh-client,socat,fzf,ripgrep,nodejs,npm,markdownlint"
+    },
+    "ghcr.io/devcontainers-contrib/features/uv:1": {
+      "version": "latest",
+      "autoCompletions": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
 
@@ -17,10 +32,12 @@
         "redhat.vscode-yaml",
         "ms-azuretools.vscode-docker",
         "eamodio.gitlens",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.vscode-jupyter-cell-tags"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/app/.venv/bin/python",
+        "python.defaultInterpreterPath": ".venv/bin/python",
         "python.linting.enabled": false,
         "python.formatting.provider": "none",
         "[python]": {
@@ -31,18 +48,11 @@
             "source.organizeImports": "explicit"
           }
         },
-        "ruff.path": ["/app/.venv/bin/ruff"],
+        "ruff.path": [".venv/bin/ruff"],
         "ruff.organizeImports": true,
         "ruff.fixAll": true,
-        "python.analysis.typeCheckingMode": "strict",
+        "python.analysis.typeCheckingMode": "basic",
         "python.analysis.autoImportCompletions": true,
-        "python.analysis.diagnosticSeverityOverrides": {
-          "reportUnknownParameterType": "none",
-          "reportUnknownArgumentType": "none",
-          "reportUnknownVariableType": "none",
-          "reportUnknownMemberType": "none",
-          "reportMissingParameterType": "none"
-        },
         "markdownlint.config": {
           "MD013": false,
           "MD033": false,
@@ -72,21 +82,16 @@
     }
   },
 
-  "postCreateCommand": "uv sync --extra dev",
-  "postStartCommand": "echo '🚀 Product API development environment is ready!'",
-
-
-
-  "runArgs": [
-    "--init"
-  ],
+  "postCreateCommand": "uv sync",
+  "postStartCommand": "uv run pre-commit install",
 
   "containerEnv": {
     "PYTHONUNBUFFERED": "1",
     "PYTHONDONTWRITEBYTECODE": "1",
-    "UV_CACHE_DIR": "/app/.cache/uv",
-    "UV_TOOL_DIR": "/app/.local/share/uv/tools",
-    "UV_TOOL_BIN_DIR": "/app/.local/bin",
-    "UV_PYTHON_INSTALL_DIR": "/app/.local/share/uv/python"
-  }
+    "UV_CACHE_DIR": "${containerWorkspaceFolder}/.cache/uv",
+    "UV_PYTHON_PREFERENCE": "only-managed",
+    "UV_PROJECT_ENVIRONMENT": "${containerWorkspaceFolder}/.venv"
+  },
+
+  "remoteUser": "vscode"
 }

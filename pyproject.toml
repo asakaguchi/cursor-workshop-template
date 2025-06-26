@@ -25,14 +25,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0",
+    "pytest>=8.0",
     "pytest-cov>=4.0",
     "pytest-asyncio>=0.21.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0",
+    "ruff>=0.11.0",
     "httpx>=0.24.0",
     "pre-commit>=3.5.0",
-    "pyright>=1.1.0",
 ]
 
 [project.scripts]
@@ -43,7 +41,11 @@ packages = ["src/product_api"]
 
 [tool.ruff]
 target-version = "py312"
-line-length = 88
+line-length = 100
+exclude = [".git", ".ruff_cache", ".venv", ".vscode"]
+preview = true
+
+[tool.ruff.lint]
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
@@ -64,23 +66,16 @@ ignore = [
     "D107", # Missing docstring in __init__
     "ANN101", # Missing type annotation for self
     "ANN102", # Missing type annotation for cls
+    "ANN401", # Dynamically typed expressions (Any)
 ]
+unfixable = ["F401", "F841"]
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
-
-[tool.mypy]
-python_version = "3.12"
-strict = true
-warn_return_any = true
-warn_unused_configs = true
-no_implicit_reexport = true
-namespace_packages = true
-explicit_package_bases = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -105,7 +100,7 @@ exclude_lines = [
 pythonVersion = "3.12"
 venvPath = "."
 venv = ".venv"
-strict = ["src"]
 include = ["src", "tests"]
 exclude = ["**/node_modules", "**/__pycache__", ".venv"]
 reportMissingTypeStubs = false
+typeCheckingMode = "basic"

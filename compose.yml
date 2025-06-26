@@ -3,13 +3,9 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    working_dir: /app
-    volumes:
-      - .:/app
-      # Use anonymous volumes to avoid sharing host's .venv
-      # Renew volumes when you change packages with
-      # `docker compose up --renew-anon-volumes`
-      - /app/.venv
     restart: unless-stopped
     ports:
       - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1

@@ -96,8 +96,9 @@ uv run --frozen ruff check .
 # Lint問題の修正
 uv run --frozen ruff check . --fix
 
-# 型チェック
-uv run --frozen pyright
+# 型チェック（pyrightはdevcontainer環境で自動実行）
+# 手動で実行する場合：
+# uv run --frozen pyright
 
 # Markdownファイルのチェック（必須）
 markdownlint *.md
@@ -107,6 +108,9 @@ uv run --frozen pre-commit install
 
 # pre-commitの手動実行
 uv run --frozen pre-commit run --all-files
+
+# pre-commitの自動更新（定期的に実行推奨）
+uv run --frozen pre-commit autoupdate
 ```
 
 ## アーキテクチャに関する注意
@@ -218,7 +222,7 @@ def create_item():
 - **型ヒント**: すべてのコードで必須
 - **ドキュメント**: パブリックAPIで必須
 - **関数設計**: 小さく、焦点を絞った関数
-- **行長制限**: 最大88文字
+- **行長制限**: 最大100文字
 - **テスト**: 新機能とバグ修正で必須
 - **Markdown**: ファイル編集後は常にmarkdownlintでチェックし、エラーがゼロであることを確認
 
