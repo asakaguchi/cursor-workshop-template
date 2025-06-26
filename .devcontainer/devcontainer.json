@@ -12,16 +12,29 @@
       "userUid": "automatic",
       "userGid": "automatic"
     },
-    "ghcr.io/devcontainers-contrib/features/apt-packages:1": {
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
       "packages": "curl,wget,git,jq,ca-certificates,build-essential,ripgrep"
     },
-    "ghcr.io/devcontainers-contrib/features/uv:1": {
-      "version": "latest",
-      "autoCompletions": true
+    "ghcr.io/va-h/devcontainers-features/uv:1": {
+      "shellAutocompletion": true
     },
     "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
   },
+
+  "runArgs": [
+    "--init",
+    "--rm"
+  ],
+
+  "hostRequirements": {
+    "gpu": "optional"
+  },
+
+  "mounts": [
+    "source=claude-code-config,target=/home/vscode/.claude,type=volume"
+  ],
 
   "customizations": {
     "vscode": {
@@ -37,7 +50,7 @@
         "ms-toolsai.vscode-jupyter-cell-tags"
       ],
       "settings": {
-        "python.defaultInterpreterPath": ".venv/bin/python",
+        "python.defaultInterpreterPath": "/home/vscode/.venv/bin/python",
         "python.linting.enabled": false,
         "python.formatting.provider": "none",
         "[python]": {
@@ -86,11 +99,13 @@
   "postStartCommand": "uv run pre-commit install",
 
   "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
     "PYTHONUNBUFFERED": "1",
     "PYTHONDONTWRITEBYTECODE": "1",
     "UV_CACHE_DIR": "${containerWorkspaceFolder}/.cache/uv",
-    "UV_PYTHON_PREFERENCE": "only-managed",
-    "UV_PROJECT_ENVIRONMENT": "${containerWorkspaceFolder}/.venv"
+    "UV_LINK_MODE": "copy",
+    "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv",
+    "UV_COMPILE_BYTECODE": "1"
   },
 
   "remoteUser": "vscode"
