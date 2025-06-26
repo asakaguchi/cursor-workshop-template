@@ -186,6 +186,39 @@ cursor .
    コーヒーでも飲みながら待ちましょう ☕
 1. 完了すると、完全に設定された開発環境が利用可能に！
 
+### 1.6 GitHub CLI の認証設定
+
+Dev Container 起動後、ターミナルに以下のメッセージが表示される場合があります：
+
+```text
+To get started with GitHub CLI, please run:  gh auth login
+```
+
+これは正常な状況で、GitHub CLI の認証が必要であることを示しています。
+
+**認証手順**：
+
+```bash
+# GitHub CLI で認証
+gh auth login
+```
+
+認証プロンプトが表示されたら：
+
+1. **What account do you want to log into?** → `GitHub.com` を選択
+1. **What is your preferred protocol for Git operations?** → `HTTPS` を選択
+1. **Authenticate Git with your GitHub credentials?** → `Yes` を選択
+1. **How would you like to authenticate GitHub CLI?** → `Login with a web browser` を選択
+1. **Press Enter to open github.com in your browser...** → Enter キーを押す
+1. ブラウザが開くので、表示されたワンタイムコードを入力
+1. GitHub にログインして認証を完了
+
+**💡 ポイント**：
+
+- 認証は **Part 3（Issue 駆動開発）の前まで** に完了すれば OK
+- 基本的な `git` コマンド（add、commit 等）は認証なしでも動作
+- GitHub CLI 機能（Issue 作成、PR 作成等）には認証が必要
+
 **💡 Dev Container の利点**：
 
 - Python、uv、必要なツールがすべてインストール済み
