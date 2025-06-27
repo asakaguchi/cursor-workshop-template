@@ -39,7 +39,6 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-ceintl.vscode-language-pack-ja",
         "ms-python.python",
         "charliermarsh.ruff",
         "DavidAnson.vscode-markdownlint",

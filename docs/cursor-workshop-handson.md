@@ -61,7 +61,6 @@
 
 1. **ログイン方法の選択**
    - **GitHub アカウントで**サインイン
-
 1. **エディター設定**
    - テーマのカスタマイズ
    - キーバインドの設定
@@ -71,10 +70,14 @@
      - Language for AI → Japanese
      - Open from Terminal → `cursor` command → 「Install」ボタンをクリック
      - 「Continue」ボタンをクリック
-
 1. **プライバシー設定**
    - 右上の歯車アイコンをクリック
    - 「General」→「Privacy」→「Privacy Mode with Storage」に変更
+1. **Japanese Language Pack 拡張機能のインストール**
+   - 拡張機能を開く（`Cmd`+`Shift`+`X`）
+   - 入力欄に、`Japanese` と入力
+   - `Japanese Language Pack for Visual Studio Code` 拡張機能の `Install` ボタンをクリック
+   - 画面左下に、`Would you like to change Cursor's display language to Japanese and restart?` とメッセージが表示されたら、そこに表示されている `Change Language and Restart` ボタンをクリック
 
 **💡 ポイント**：
 
@@ -106,38 +109,7 @@ docker --version
 docker compose version
 ```
 
-### 1.3 Git と GitHub CLI のセットアップ
-
-1. **Git のバージョン確認**（macOS には標準でインストール済み）
-
-   ```bash
-   git --version
-   ```
-
-1. **Homebrew のインストール**：
-
-   ```bash
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   ```
-
-   インストール後、表示される指示に従ってパスを設定してください。
-
-1. **GitHub CLI のインストール**：
-
-   ```bash
-   brew update
-   brew install gh
-   ```
-
-1. **GitHub にログイン**：
-
-   ```bash
-   gh auth login
-   ```
-
-   ブラウザで認証を選択し、表示されるワンタイムコードを使用してログインしてください。
-
-### 1.4 プロジェクトの準備
+### 1.3 プロジェクトの準備
 
 テンプレートリポジトリから自分のプロジェクトを作成します。
 
@@ -174,42 +146,35 @@ cd my-cursor-workshop
 cursor .
 ```
 
-### 1.5 Dev Container で開く
+### 1.4 Dev Container で開く
 
 1. Cursor でプロジェクトを開くと、「Dev Containers」拡張機能のインストールを推奨するポップアップが表示されます
    - 「Install」ボタンをクリックしてインストール
 1. コマンドパレットを開く（`Cmd`+`Shift`+`P`）
-1. 「Dev Containers: Reopen in Container」と入力して選択
-   一部入力すると候補が表示されるので、候補の中に「Dev Containers: Reopen in Container」が表示されたらそれをクリック
+1. 「`Dev Containers: Reopen in Container`」と入力して選択
+   一部入力すると候補が表示されるので、候補の中に「`Dev Containers: Reopen in Container`」が表示されたらそれをクリック
 1. 初回は Docker イメージのビルドに数分かかります
    ネットワーク環境やマシンスペックにより 5-15 分程度かかる場合があります。
    コーヒーでも飲みながら待ちましょう ☕
-1. 完了すると、完全に設定された開発環境が利用可能に！
+1. 完了すると、ターミナルが表示されます
 
-### 1.6 GitHub CLI の認証設定
+### 1.5 GitHub CLI の認証設定
 
-Dev Container 起動後、ターミナルに以下のメッセージが表示される場合があります：
+開発の準備として、GitHub CLI の認証を済ませておきます。
 
-```text
-To get started with GitHub CLI, please run:  gh auth login
-```
-
-これは正常な状況で、GitHub CLI の認証が必要であることを示しています。
-
-**認証手順**：
+開いているターミナルで、以下のコマンドを入力します。
 
 ```bash
-# GitHub CLI で認証
 gh auth login
 ```
 
-認証プロンプトが表示されたら：
+認証プロンプトが表示されたら、以下の手順で認証を進めます。
 
-1. **What account do you want to log into?** → `GitHub.com` を選択
-1. **What is your preferred protocol for Git operations?** → `HTTPS` を選択
-1. **Authenticate Git with your GitHub credentials?** → `Yes` を選択
-1. **How would you like to authenticate GitHub CLI?** → `Login with a web browser` を選択
-1. **Press Enter to open github.com in your browser...** → Enter キーを押す
+1. **What account do you want to log into?** → `GitHub.com` を選択し、`ENTER` キーを押す
+1. **What is your preferred protocol for Git operations?** → `HTTPS` を選択し、`ENTER` キーを押す
+1. **Authenticate Git with your GitHub credentials?** → `ENTER` キーを押す
+1. **How would you like to authenticate GitHub CLI?** → `Login with a web browser` を選択し、`ENTER` キーを押す
+1. **Press Enter to open github.com in your browser...** → `Enter` キーを押す
 1. ブラウザが開くので、表示されたワンタイムコードを入力
 1. GitHub にログインして認証を完了
 
