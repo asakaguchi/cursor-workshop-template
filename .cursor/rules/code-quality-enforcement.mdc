@@ -60,10 +60,16 @@ alwaysApply: true
   - バージョン警告はチェックが通れば無視可能
 - **注**: mypyは使用しません（シンプルさ重視）
 
-### 3. Pre-commitフック
+### 3. Pre-commitフック（TDD強化済み）
 - **設定**: `.pre-commit-config.yaml`
 - **実行**: git commit時
-- **ツール**: Prettier（YAML/JSON）、Ruff（Python）
+- **ツール**: uv-lock、Ruff（Python）、pytest（テスト実行）
+- **TDD保証**: 自動修正後に必ずテストが実行される
+- **フロー**: 
+  1. uv-lock（依存関係更新）
+  2. ruff-check --fix（コード修正）
+  3. ruff-format（フォーマット）
+  4. pytest-check（テスト実行）← **グリーンキープ保証**
 - **Ruffアップデート**:
   - PyPIバージョンをチェック
   - config revを更新
@@ -98,12 +104,14 @@ alwaysApply: true
 ### 開発ワークフロー（TDD必須）:
 - **TDDサイクルの徹底**: Red→Green→Refactorを必ず守る
 - **テストファースト**: 実装コードの前に必ずテストを書く
+- **グリーンキープ**: pre-commit後のテスト実行で自動保証
 - **コミット前にgit statusを確認**
 - **型チェック前にフォーマッターを実行**
 - **変更は最小限に保つ**
 - **既存パターンに従う**
 - **パブリックAPIにドキュメント記述**
 - **テストを徹底的に実施**: 1テスト1アサーション原則
+- **ローカル環境**: Docker不要の高速Python開発
 
 ### Gitコミットガイドライン:
 - ユーザーレポートに基づくバグ修正・機能追加の場合:

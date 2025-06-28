@@ -77,7 +77,7 @@ from .context import product_api
 
 ## テストの実行
 
-uvを使用してテストを実行します：
+uvを使用してテストを実行します（ローカルPython環境）：
 
 ```bash
 # 全テストを実行
@@ -93,14 +93,33 @@ uv run pytest tests/ --cov=src/product_api --cov-report=html
 uv run pytest tests/test_basic.py::test_create_product -v
 ```
 
-## テスト環境のセットアップ
+## pre-commitでの自動テスト実行
+
+**重要**: 現在のプロジェクトでは、pre-commitフックでテストが自動実行されます：
+
+```bash
+# コミット時の自動フロー
+git commit -m "..."
+# 1. uv-lock（依存関係更新）
+# 2. ruff-check --fix（コード修正）
+# 3. ruff-format（フォーマット）
+# 4. pytest-check（テスト実行）← **グリーンキープ保証**
+
+# これにより、t-wada方式TDDの「グリーンキープ」原則が自動保証される
+```
+
+## テスト環境のセットアップ（ローカルPython環境）
 
 ```bash
 # 開発用依存関係の同期（pyproject.tomlから）
-uv sync --dev
+uv sync
 
-# または個別に追加
-uv add --dev pytest pytest-cov httpx
+# 仮想環境を有効化
+source .venv/bin/activate  # macOS/Linux
+.venv\Scripts\activate     # Windows
+
+# または個別に追加（必要に応じて）
+uv add --dev pytest pytest-cov httpx anyio
 ```
 
 ## カバレッジ目標

@@ -76,9 +76,12 @@ gh pr create \
 uv はプロジェクトの設定を自動的に認識し、必要な環境を構築します。
 
 ```bash
-# 依存関係の同期（pyproject.toml から自動認識）
-# 必要な Python バージョンも自動でインストールされます
+# 初回セットアップ（Python仮想環境の構築）
 uv sync
+
+# 仮想環境を有効化
+source .venv/bin/activate  # macOS/Linux
+.venv\Scripts\activate     # Windows
 
 # パッケージの追加（pyproject.toml に自動追加）
 uv add fastapi
@@ -99,7 +102,7 @@ uv run --frozen pytest tests/ -v
 uv run uvicorn src.product_api.main:app --reload
 ```
 
-**注意**：プロジェクトに pyproject.toml があれば、Python のインストールも含めてすべて自動化されます。
+**注意**：プロジェクトに pyproject.toml があれば、Python のインストールも含めてすべて自動化されます。ローカルPython環境での高速開発が可能です。
 
 ## TDD実践の具体的フロー
 
@@ -135,6 +138,26 @@ git commit -m "feat: implement minimal product creation endpoint"
 # 5. Refactor: 必要に応じてリファクタリング
 # すべてのテストが通ることを確認しながら進める
 uv run --frozen pytest tests/ -v
+
+### pre-commit後のテスト確認（重要）
+
+**t-wada方式TDDの絶対的ルール**: pre-commitフックが自動修正を行った場合、必ずテストを再実行してグリーンを確認する
+
+```bash
+# 現在のpre-commit設定では以下が自動実行される：
+# 1. uv-lock（依存関係の更新）
+# 2. ruff-check --fix（コード修正）
+# 3. ruff-format（フォーマット）
+# 4. pytest-check（テスト実行）← 自動追加済み
+
+# コミット時の流れ：
+git commit -m "..."
+# → pre-commitが自動修正実行
+# → 修正後に自動的にpytestが実行される
+# → 全テストがPASSEDになることを確認
+# → コミット完了
+
+# この仕組みにより「グリーンキープ」が保証される
 ```
 
 ### 3. コミットメッセージの規則（TDD用）
