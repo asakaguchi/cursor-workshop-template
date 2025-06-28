@@ -101,7 +101,7 @@
   "postCreateCommand": "uv sync",
   "postStartCommand": [
     "bash", "-c", 
-    "uv run pre-commit install && echo '\\n✅ ホストの認証情報を共有しています' && echo '🔐 必要に応じて以下を実行してください:' && echo 'gcloud auth application-default login --impersonate-service-account=cloud-run-mcp@YOUR_PROJECT_ID.iam.gserviceaccount.com'"
+    "uv run pre-commit install && echo '' && echo '✅ ホストの認証情報を共有しています' && echo '🔐 必要に応じて以下を実行してください:' && echo 'gcloud auth application-default login --impersonate-service-account=cloud-run-mcp@YOUR_PROJECT_ID.iam.gserviceaccount.com'"
   ],
 
   "containerEnv": {
