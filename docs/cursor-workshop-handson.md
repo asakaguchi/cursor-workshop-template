@@ -37,11 +37,11 @@
 
 **対象OS**：このワークショップは macOS を対象としています。
 
-**開発環境**：このワークショップでは Docker を使用します。
+**開発環境**：このワークショップではローカルPython環境を使用します。
 
-- 環境差異がなく、確実に動作します
-- 依存関係の問題が起こりません
-- VS Code Dev Container で快適な開発体験を実現できます
+- `uv`を使った高速な仮想環境管理
+- シンプルで迅速な開発サイクル
+- Cloud RunへのデプロイもMCPで自動化
 
 ### 1.1 Cursor のインストール
 
@@ -89,28 +89,35 @@
 - 初期設定は後から変更可能です
 - VS Code の設定や拡張機能も移行可能です
 
-### 1.2 Docker Desktop のインストール
+### 1.2 Pythonとuvのインストール
 
-1. [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/) にアクセス
-2. 「Download Docker Desktop」にマウスカーソルを合わせる
-   - Apple Silicon Mac（M1/M2/M3）：「Download for Mac - Apple Silicon」をクリック
-   - Intel Mac：「Download for Mac - Intel Chip」をクリック
-3. ファイル名やダウンロード先を確認（必要に応じて変更）して「保存」ボタンをクリック
-4. ダウンロードしたファイルを開く
-5. Docker アイコンを Application アイコンにドラッグ＆ドロップ
-6. Launchpad から Docker を起動
-7. Docker Subscription Service Agreement の画面で、「Accept」ボタンをクリック
-8. 「Use recommended settings (requires password)」を選択し、「Finish」ボタンをクリック
-   - macOS アカウントのパスワードを入力
-9. Welcome to Docker の画面で、「Skip」リンクをクリック
-10. Welcome Survey の画面で、「Skip」リンクをクリック
+#### Pythonのインストール
+
+1. [python.org](https://www.python.org/downloads/) にアクセス
+2. 「Download Python 3.12.x」ボタンをクリック
+3. ダウンロードしたインストーラを実行
+4. 「Add Python to PATH」にチェックを入れてインストール
+
+#### uvのインストール
+
+uvは高速なPythonパッケージマネージャーです。
+
+```bash
+# macOS/Linuxの場合
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# またはHomebrewを使用
+brew install uv
+```
 
 動作確認を行います。
 
 ```bash
-# Docker が正しくインストールされたか確認
-docker --version
-docker compose version
+# Pythonが正しくインストールされたか確認
+python3 --version
+
+# uvが正しくインストールされたか確認
+uv --version
 ```
 
 ### 1.3 プロジェクトの準備
@@ -151,17 +158,24 @@ cd my-cursor-workshop
 cursor .
 ```
 
-### 1.4 Dev Container で開く
+### 1.4 Python環境のセットアップ
 
-1. Cursor でプロジェクトを開くと、「Dev Containers」拡張機能のインストールを推奨するポップアップが表示されます
-   - 「Install」ボタンをクリックしてインストール
-2. コマンドパレットを開く（`Cmd`+`Shift`+`P`）
-3. 「`Dev Containers: Reopen in Container`」と入力して選択
-   一部入力すると候補が表示されるので、候補の中に「`Dev Containers: Reopen in Container`」が表示されたらそれをクリック
-4. 初回は Docker イメージのビルドに数分かかります
-   ネットワーク環境やマシンスペックにより 5-15 分程度かかる場合があります。
-   コーヒーでも飲みながら待ちましょう。
-5. 完了すると、ターミナルが表示されます
+1. Cursorでプロジェクトを開く
+2. ターミナルを開く（`Cmd`+`Shift`+`~`）
+3. Python仮想環境をセットアップ：
+
+   ```bash
+   # 依存関係をインストール（初回のみ）
+   uv sync
+   
+   # 仮想環境を有効化
+   source .venv/bin/activate  # macOS/Linux
+   # または
+   .venv\Scripts\activate     # Windows
+   ```
+
+4. 初回は依存関係のダウンロードに1-2分かかります
+5. 完了すると、Python環境が使用できます
 
 ### 1.5 GitHub CLI の認証設定
 
@@ -189,13 +203,14 @@ gh auth login
 - 基本的な `git` コマンド（add、commit 等）は認証なしでも動作します
 - GitHub CLI 機能（Issue 作成、PR 作成等）には認証が必要です
 
-【Dev Container の利点】
+【ローカルPython環境の利点】
 
-- Python、uv、必要なツールがすべてインストール済みです
-- Cursor の拡張機能も自動でインストールされます
-- チーム全員が同じ環境で開発可能です
+- 高速な開発サイクル（ファイル変更が即座に反映）
+- シンプルなセットアップ
+- IDEやエディタとのスムーズな連携
+- Cloud RunへのデプロイもMCP経由で簡単
 
-テンプレートリポジトリを使うことで、必要なファイルがすべて揃った状態から始められます。Dev Container を使用することで、Python とすべての開発ツールが自動的にセットアップされます。
+テンプレートリポジトリを使うことで、必要なファイルがすべて揃った状態から始められます。uvを使用することで、Pythonの依存関係が高速にインストールされます。
 
 【できたこと】
 
@@ -307,7 +322,7 @@ gh repo view --web
 
 **AI ペアプロ効果**：AI が Red-Green-Refactor サイクルを高速実行。人間の10-20倍の実装速度でテスト実行と次の実装を並行処理するため5分短縮。
 
-Dev Container 使用時の注意点です。以降のコマンドは Dev Container 内で実行されるため、`docker compose exec app` を省略して直接コマンドを実行できます。Dev Container のターミナルは、すでにコンテナ内部で動作しています。
+Python環境使用時の注意点です。以降のコマンドは仮想環境を有効化した状態で実行してください。
 
 ### 4.1 最初のタスク開始
 
@@ -335,7 +350,7 @@ AI がこのサイクルを実践しながら開発を進めます。
 
 ### 4.3 テストの実行
 
-Dev Container 内では以下のコマンドを直接実行できます。
+仮想環境で以下のコマンドを実行します。
 
 ```bash
 # テストを実行（カバレッジ付き）
@@ -347,8 +362,6 @@ uv run pytest -v
 # 特定のテストだけ実行
 uv run pytest tests/test_specific.py -v
 ```
-
-Dev Container 環境では、すでにコンテナ内にいるため `docker compose exec app` は不要です。
 
 最初は赤い文字（テスト失敗）が表示され、実装を進めると緑（テスト成功）に変わります。
 
@@ -675,84 +688,68 @@ To upgrade, run: brew upgrade gh
 【解決法】
 更新は任意です。ハンズオン中は無視して構いません。後で `brew upgrade gh` で更新できます。
 
-### Docker 関連のトラブルシューティング
+### Python環境のトラブルシューティング
 
-#### Q：Docker Desktop が起動していない
+#### Q：Pythonが見つからない
 
 ```text
-Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
+command not found: python
 ```
 
 【解決法】
-Docker Desktop アプリケーションを起動してください。メニューバーに Docker アイコンが表示されます。
+`python3`コマンドを使用するか、Pythonをインストールしてください。
 
-#### Q：Docker コンテナのポートが使用中
+```bash
+# Pythonのバージョンを確認
+python3 --version
+```
+
+#### Q：uvが見つからない
+
+【解決法】
+
+```bash
+# uvをインストール
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# パスを通す
+source $HOME/.cargo/env
+```
+
+#### Q：仮想環境が有効化されない
+
+【解決法】
+
+```bash
+# macOS/Linux
+source .venv/bin/activate
+
+# Windows
+.venv\Scripts\activate
+
+# 仮想環境が有効か確認
+which python
+# 出力: /path/to/project/.venv/bin/python
+```
+
+#### Q：ポートが使用中
 
 ```text
-bind: address already in use
+OSError: [Errno 48] Address already in use
 ```
 
 【解決法】
 
 ```bash
-# 使用中のコンテナを停止
-docker compose down
+# 使用中のプロセスを確認
+lsof -i :8000
+
+# プロセスを終了
+kill -9 <PID>
 
 # または別のポートを使用
-# compose.yml を編集して "8000:8000" を "8001:8000" に変更
+uvicorn src.product_api.main:app --reload --port 8001
 ```
-
-#### Q：Cursor で "Reopen in Container" が表示されない
-
-【解決法】
-
-1. Cursor に Dev Containers 拡張機能をインストール
-2. 拡張機能を検索："ms-vscode-remote.remote-containers"
-3. インストール後、Cursor を再起動
-
-#### Q：Cursor Pyright 設定のインポートについて
-
-Dev Container 起動時に「Would you like Cursor Pyright to import your settings from Pylance?」というダイアログが表示される場合があります。
-
-【推奨回答】
-**「No」を選択**
-
-【理由】
-
-- このプロジェクトには既に最適化された Pyright 設定が `pyproject.toml` で定義済みです
-- Pylance からの設定をインポートすると、プロジェクト固有の設定が上書きされる可能性があります
-- プロジェクトの一貫性を保ち、トラブルシューティングを簡素化するため
-
-「Never ask again」もチェックして、今後同様のダイアログを非表示にすることを推奨します。
-
-#### Q：Docker コンテナ内でコマンドが実行できない
-
-【Dev Container を使用している場合】
-
-ターミナルはすでにコンテナ内で動作しているため、直接コマンドを実行できます。
-
-```bash
-# Dev Container のターミナルで直接実行
-uv run pytest
-```
-
-【Dev Container を使用していない場合】
-
-```bash
-# コンテナに入る
-docker compose exec app bash
-
-# または直接コマンドを実行
-docker compose exec app uv run pytest
-```
-
-#### Q：Docker イメージのビルドが遅い
-
-【解決法】
-
-- 初回ビルドは時間がかかります（約 5-10 分）
-- 2 回目以降はキャッシュが利用されるため高速化されます
-- Docker Desktop の設定でメモリを増やすことで改善する場合があります
 
 ### Web UI 開発のトラブルシューティング
 

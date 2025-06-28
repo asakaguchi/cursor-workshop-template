@@ -21,7 +21,7 @@
   - 特に[CLAUDE.md](
     https://github.com/mjun0812/python-project-template/blob/main/CLAUDE.md)の構造を参考にしています
 
-Docker設定、uvの使用、プロジェクト構造など多くの要素が上記のリソースに基づいています。
+uvの使用、プロジェクト構造など多くの要素が上記のリソースに基づいています。
 
 ## プロジェクト概要
 
@@ -45,6 +45,17 @@ APIは以下を実装する必要があります：
 - created_at: 日時（自動設定）
 
 ## 開発コマンド
+
+### 初回セットアップ
+
+```bash
+# Python仮想環境のセットアップ
+uv sync
+
+# 仮想環境を有効化
+source .venv/bin/activate  # macOS/Linux
+.venv\Scripts\activate     # Windows
+```
 
 ### パッケージ管理
 
@@ -96,9 +107,9 @@ uv run --frozen ruff check .
 # Lint問題の修正
 uv run --frozen ruff check . --fix
 
-# 型チェック（pyrightはdevcontainer環境で自動実行）
+# 型チェック
 # 手動で実行する場合：
-# uv run --frozen pyright
+uv run --frozen pyright
 
 # Markdownファイルのチェック（必須）
 markdownlint *.md
@@ -247,10 +258,12 @@ def create_item():
 ## 技術的制約
 
 - Python 3.12以上が必要
+- ローカルPython環境での開発（Docker不要）
 - 外部データベースなし
 - 認証/認可なし
 - 更新/削除操作なし（作成と読み取りのみ）
 - 自動生成ドキュメントを備えたREST API用のFastAPI
+- Cloud RunへのデプロイはMCP経由で自動化
 
 ## Gitコミットガイドライン
 

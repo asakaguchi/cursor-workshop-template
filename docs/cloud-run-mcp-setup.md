@@ -74,45 +74,24 @@ gcloud iam service-accounts add-iam-policy-binding \
     --role="roles/iam.serviceAccountTokenCreator"
 ```
 
-### 3. ホスト認証情報の共有（推奨）
+### 3. ローカル環境での認証設定
 
-devcontainer.jsonでホストの認証情報を自動的に共有する設定になっています。
-
-```json
-{
-  "mounts": [
-    "source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached"
-  ]
-}
-```
-
-この設定により、ホストで設定済みの以下の認証情報が自動的に利用可能になります。
+ローカルPython環境では、ホストの認証情報を直接使用できます。
 
 - **gcloud**: Google Cloud認証情報
 - **gh**: GitHub CLI認証情報
 
+これらはホームディレクトリの`.config`フォルダに保存されています。
+
 ### 4. サービスアカウントインパーソネーションの設定
 
-ホストの認証情報が共有されているため、devcontainer内で以下のコマンドのみ実行：
+ローカル環境で以下のコマンドを実行：
 
 ```bash
 # サービスアカウントをインパーソネートしてデフォルト認証情報を設定
 gcloud auth application-default login \
   --impersonate-service-account=cursor-workshop-app@YOUR_PROJECT_ID.iam.gserviceaccount.com
 ```
-
-### 代替方式: ホストでの事前設定
-
-ホスト側で事前にインパーソネーション設定を行うことも可能：
-
-```bash
-# ホストで実行
-gcloud auth application-default login \
-  --impersonate-service-account=cursor-workshop-app@YOUR_PROJECT_ID.iam.gserviceaccount.com
-```
-
-この場合、devcontainer内では追加設定不要でアプリケーションのデプロイが可能になります。
 
 ## MCP設定ファイルの説明
 
@@ -141,40 +120,26 @@ gcloud auth application-default login \
 
 ## 使用方法
 
-### devcontainer初回セットアップ
+### 初回セットアップ
 
-#### 方法1: ホストで事前設定（推奨）
-
-ホストマシンで事前にインパーソネーション設定を行う：
+ローカル環境でインパーソネーション設定を行います：
 
 ```bash
-# ホストで実行
-gcloud auth application-default login \
-  --impersonate-service-account=cursor-workshop-app@YOUR_PROJECT_ID.iam.gserviceaccount.com
-```
-
-この場合、devcontainerを起動するだけでアプリケーションのデプロイが可能になります。
-
-#### 方法2: devcontainer内で設定
-
-devcontainer起動後に以下を実行：
-
-```bash
-# devcontainer内で実行
+# サービスアカウントをインパーソネートしてデフォルト認証情報を設定
 gcloud auth application-default login \
   --impersonate-service-account=cursor-workshop-app@YOUR_PROJECT_ID.iam.gserviceaccount.com
 ```
 
 ### Claude Codeでの使用
 
-1. devcontainerが起動し、ホストの認証情報が自動的に共有されます
+1. ローカル環境で上記の認証設定を完了
 2. Claude Codeを起動
 3. MCPツールが自動的に読み込まれます
 4. 「Deploy to Cloud Run」などのコマンドでアプリケーションデプロイが可能になります
 
 ### Cursorでの使用
 
-1. devcontainerが起動し、ホストの認証情報が自動的に共有されます
+1. ローカル環境で上記の認証設定を完了
 2. Cursorを再起動
 3. Settings → MCPでサーバーの状態を確認
 4. AIアシスタントを通じてアプリケーションのCloud Runデプロイを実行
@@ -239,14 +204,7 @@ gcloud auth application-default print-access-token
 - **最小権限の原則**: 必要最小限の権限のみを付与
 - **インパーソネーション権限管理**: Service Account Token Creator権限を適切に管理
 - **監査ログ**: インパーソネーションの使用が自動的に記録される
-- **ホスト認証情報共有**: 個人開発環境での使用を前提とした設定
 - **定期的な権限レビュー**: 不要な権限を定期的に削除
-
-### ホスト認証情報共有のリスク
-
-- ホストの認証情報がdevcontainer内からアクセス可能
-- 個人開発環境または信頼できる環境でのみ使用を推奨
-- チーム開発では別途セキュリティポリシーを検討
 
 ## 参考リンク
 
