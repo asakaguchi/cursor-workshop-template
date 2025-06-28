@@ -27,3 +27,7 @@ htmlcov/
 # Project specific
 *.log
 instance/
+
+# Google Cloud credentials
+service-account.json
+*-service-account.json

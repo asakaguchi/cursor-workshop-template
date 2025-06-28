@@ -20,7 +20,8 @@
     },
     "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+    "ghcr.io/devcontainers/features/gcloud:1": {}
   },
 
   "runArgs": [
@@ -33,7 +34,9 @@
   },
 
   "mounts": [
-    "source=claude-code-config,target=/home/vscode/.claude,type=volume"
+    "source=claude-code-config,target=/home/vscode/.claude,type=volume",
+    "source=${localEnv:HOME}/.config/gcloud,target=/home/vscode/.config/gcloud,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached"
   ],
 
   "customizations": {
@@ -96,7 +99,10 @@
   },
 
   "postCreateCommand": "uv sync",
-  "postStartCommand": "uv run pre-commit install",
+  "postStartCommand": [
+    "bash", "-c", 
+    "uv run pre-commit install && echo '\\n✅ ホストの認証情報を共有しています' && echo '🔐 必要に応じて以下を実行してください:' && echo 'gcloud auth application-default login --impersonate-service-account=cloud-run-mcp@YOUR_PROJECT_ID.iam.gserviceaccount.com'"
+  ],
 
   "containerEnv": {
     "DISPLAY": "${localEnv:DISPLAY}",
