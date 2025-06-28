@@ -226,6 +226,19 @@ def create_item():
 - Green: `git commit -m "feat: implement minimal ..."`  
 - Refactor: `git commit -m "refactor: extract ..."`
 
+### 重要原則：pre-commit後のテスト確認
+
+**絶対的ルール**: pre-commitフックが自動修正を行った場合、必ずテストを再実行してグリーンを確認する
+
+```bash
+# pre-commitが自動修正した場合の正しい流れ
+git commit -m "..."  # pre-commitが動作、自動修正が発生
+# → pre-commitに組み込まれたpytestが自動実行される
+# → 全テストがグリーンであることを確認してからコミット完了
+```
+
+これにより、t-wada方式TDDの「グリーンキープ」原則を維持できます。
+
 ## 開発ガイドライン
 
 ### コード品質要件

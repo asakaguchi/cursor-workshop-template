@@ -9,3 +9,12 @@ repos:
       - id: ruff-check
         args: [--fix]
       - id: ruff-format
+  - repo: local
+    hooks:
+      - id: pytest-check
+        name: Run tests after formatting and dependency changes
+        entry: uv run --frozen pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
