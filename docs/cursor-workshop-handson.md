@@ -118,29 +118,34 @@ npm --version
 ##### Step 2：基本設定
 
 1. テーマ選択：お好みで選んでください（後で変更可能）
-2. データ共有の確認：
+2. キーバインディング選択：
+   - VS Code（デフォルト）、Vim、Emacs、Sublime Text から選択
+   - 「Continue」をクリック
+3. データ共有の確認：
    - チェックボックスを ON にして「Continue」をクリック
    - **重要**：後でプライバシー設定を変更します
+4. Review Settings 画面：
+   - **Language for AI**：「**Japanese**」を選択（デフォルトは Auto）
+   - **Open from Terminal**：「**Install**」ボタンをクリック（デフォルトの `cursor` command が選択されている状態で）
+   - 「**Continue**」をクリック
 
-##### Step 3：言語設定
-
-- 「Language for AI」を「**Japanese**」に変更
-- 「Install cursor command」をクリック
-- 「Continue」をクリック
-
-##### Step 4：プライバシー設定（重要）
+##### Step 3：プライバシー設定（重要）
 
 1. 右上の歯車アイコンをクリック
 2. 「General」→「Privacy」
 3. 「**Privacy Mode with Storage**」を選択
    - これで、あなたのコードが学習に使われません
 
-##### Step 5：日本語化
+##### Step 4：日本語化
 
 1. `Cmd` + `Shift` + `X` を押す（拡張機能を開く）
 2. 検索欄に「Japanese」と入力
 3. 「Japanese Language Pack for Visual Studio Code」をインストール
 4. 左下に表示される「Change Language and Restart」をクリック
+
+##### Step 5：設定完了
+
+- Cursor Settings タブの「×」をクリックして閉じる
 
 【豆知識】
 
@@ -215,8 +220,6 @@ gh --version
 
 ##### Step 2：自分のプロジェクトを作る
 
-##### 方法1：GitHub Web サイト（推奨）
-
 1. 緑色の「**Use this template**」ボタンをクリック
 2. 「**Create a new repository**」を選択
 3. **Repository name**に「`my-cursor-workshop`」と入力
@@ -224,46 +227,25 @@ gh --version
 4. 「**Create repository**」をクリック
 5. 数秒待つと、あなた専用のプロジェクトが完成！
 
-##### 方法2：Cursor の GitHub 統合（上級者向け）
-
-1. **Cursor を起動**
-2. **コマンドパレット**（`Cmd` + `Shift` + `P`）を開く
-3. 「**GitHub: Clone Repository**」と入力
-4. **GitHub にサインイン**（初回のみ）
-5. テンプレートリポジトリを検索・選択
-
 ##### Step 3：Cursor でプロジェクトを開く
 
 ##### 方法1：GUI操作（推奨）
 
-1. **Cursor を起動**
-2. **コマンドパレットを開く**：`Cmd` + `Shift` + `P`（Mac）/ `Ctrl` + `Shift` + `P`（Windows）
-3. **「Git: Clone」と入力**してEnter
-4. **リポジトリのURLを入力**：
-   - `https://github.com/YOUR_USERNAME/my-cursor-workshop.git`
-   - YOUR_USERNAME を自分の GitHub ユーザー名に変更
-5. **保存先を選択**：
-   - **「New Folder」をクリック**して「Projects」フォルダを作成（推奨）
-   - ホームディレクトリ（`~`）内に作成するのがベスト
-   - デスクトップは避けましょう
-6. **「Open」をクリック**してプロジェクトを開く
-
-##### 方法2：ターミナル操作
-
-Cursor内のターミナルでも実行可能です：
-
-```bash
-# プロジェクト専用フォルダを作る
-mkdir -p ~/Projects
-cd ~/Projects
-
-# プロジェクトをクローン
-git clone https://github.com/YOUR_USERNAME/my-cursor-workshop.git
-cd my-cursor-workshop
-
-# Cursor で開く
-cursor .
-```
+1. **コマンドパレットを開く**：`Cmd` + `Shift` + `P`（Mac）/ `Ctrl` + `Shift` + `P`（Windows）
+2. **「Git: Clone」と入力**してEnter
+3. **「GitHub から複製」**を選択
+4. **GitHub サインイン**（初回のみ）：
+   - 「**許可**」ボタンをクリック
+   - 「**コピーして GitHub に進む**」ボタンをクリック
+   - コードを貼り付けて「**Continue**」ボタンをクリック
+   - 「**Authorize Visual-Studio-Code**」ボタンをクリック
+5. **リポジトリを選択**：
+   - リポジトリの一覧から先ほど作成したリポジトリ（`my-cursor-workshop`）をクリック
+6. **保存先フォルダを選択**：
+   - ホームディレクトリ内に「**Projects**」フォルダを作成して選択
+   - 「**リポジトリの宛先として選択**」ボタンをクリック
+7. **プロジェクトを開く**：
+   - 「クローンしたリポジトリを開きますか？」で「**開く**」ボタンをクリック
 
 **これ以降はすべて Cursor 内で作業を続けます。**
 
