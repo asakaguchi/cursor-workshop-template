@@ -64,12 +64,18 @@ alwaysApply: true
 - **設定**: `.pre-commit-config.yaml`
 - **実行**: git commit時
 - **ツール**: uv-lock、Ruff（Python）、pytest（テスト実行）
-- **TDD保証**: 自動修正後に必ずテストが実行される
+- **重要**: 以下の場合は必ず手動でテスト実行
+  - pre-commitが自動修正した場合
+  - pre-commitでエラーが発生して手動修正した場合
 - **フロー**: 
   1. uv-lock（依存関係更新）
   2. ruff-check --fix（コード修正）
   3. ruff-format（フォーマット）
-  4. pytest-check（テスト実行）← **グリーンキープ保証**
+  4. pytest-check（テスト実行）
+  5. **修正発生時**: `uv run --frozen pytest` を手動実行してから再コミット
+- **AIの必須動作**: 
+  - 自動修正後は必ず `uv run --frozen pytest` を実行
+  - pre-commitエラー修正後も必ず `uv run --frozen pytest` を実行
 - **Ruffアップデート**:
   - PyPIバージョンをチェック
   - config revを更新
@@ -104,7 +110,13 @@ alwaysApply: true
 ### 開発ワークフロー（TDD必須）:
 - **TDDサイクルの徹底**: Red→Green→Refactorを必ず守る
 - **テストファースト**: 実装コードの前に必ずテストを書く
-- **グリーンキープ**: pre-commit後のテスト実行で自動保証
+- **グリーンキープ**: 以下の場合は手動でpytest実行必須
+  - pre-commit自動修正後
+  - pre-commitエラー修正後
+  - コード編集後
+- **絶対ルール**: 
+  - pre-commitで自動修正が発生したら `uv run --frozen pytest` を実行
+  - pre-commitでエラーが発生して修正したら `uv run --frozen pytest` を実行
 - **コミット前にgit statusを確認**
 - **型チェック前にフォーマッターを実行**
 - **変更は最小限に保つ**

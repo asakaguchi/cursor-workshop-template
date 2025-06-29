@@ -141,24 +141,34 @@ uv run --frozen pytest tests/ -v
 
 ### pre-commit後のテスト確認（重要）
 
-**t-wada方式TDDの絶対的ルール**: pre-commitフックが自動修正を行った場合、必ずテストを再実行してグリーンを確認する
+**t-wada方式TDDの絶対的ルール**: 以下の場合は必ず手動でテストを再実行してグリーンを確認する
+1. pre-commitフックが自動修正を行った場合
+2. pre-commitでエラーが発生して手動修正した場合
 
 ```bash
-# 現在のpre-commit設定では以下が自動実行される：
-# 1. uv-lock（依存関係の更新）
-# 2. ruff-check --fix（コード修正）
-# 3. ruff-format（フォーマット）
-# 4. pytest-check（テスト実行）← 自動追加済み
-
-# コミット時の流れ：
+# ケース1: pre-commitが自動修正した場合
 git commit -m "..."
-# → pre-commitが自動修正実行
-# → 修正後に自動的にpytestが実行される
-# → 全テストがPASSEDになることを確認
-# → コミット完了
+# → pre-commitが自動修正実行（ruff-check --fix, ruff-format等）
 
-# この仕組みにより「グリーンキープ」が保証される
+# ケース2: pre-commitでエラーが発生した場合  
+git commit -m "..."
+# → pre-commitが失敗、エラーメッセージを表示
+# → エラーを手動で修正
+
+# いずれの場合も必ず以下を手動実行：
+uv run --frozen pytest  # 手動でテスト実行
+# → 全テストがPASSEDになることを確認
+
+# テストがグリーンなら修正ファイルを再コミット：
+git add .
+git commit -m "..."  # 修正されたファイルでコミット
+
+# AIは必ず上記の手順を実行すること（自動化不可）
 ```
+
+**重要**: AIは以下の場合に必ず `uv run --frozen pytest` を手動実行してからコミットを完了すること：
+- pre-commitが自動修正した場合
+- pre-commitエラーで手動修正した場合
 
 ### 3. コミットメッセージの規則（TDD用）
 - `test:` テストの追加・修正
