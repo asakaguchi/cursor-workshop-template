@@ -51,6 +51,7 @@ AI が先生役になってくれるので、専門用語がわからなくて�
 2025年の最新トレンドとして、**Volta**（ボルタ）が推奨されています。
 
 **Volta の特徴：**
+
 - **自動切り替え**：プロジェクトに入ると自動的に適切な Node.js バージョンに切り替え
 - **チーム統一**：みんなが同じバージョンを使うので安心
 - **高速動作**：Rust 製で非常に高速
@@ -191,7 +192,7 @@ brew install gh
 
 **ヒント**：Cursor の **Source Control** パネル（サイドバーのGitアイコン）からもGit操作が可能です。
 
-#### 動作確認
+##### ツールの動作確認
 
 両方のツールがインストールされたか確認します。
 
@@ -248,6 +249,22 @@ gh --version
    - 「クローンしたリポジトリを開きますか？」で「**開く**」ボタンをクリック
 
 **これ以降はすべて Cursor 内で作業を続けます。**
+
+##### Step 7：MCP サーバーの有効化
+
+画面左下に以下の通知が表示されます：
+
+- 「New MCP Server detected: cloud-run」
+- 「New MCP Server detected: context7」
+- 「New MCP Server detected: playwright」
+
+それぞれの通知で「**Enable**」ボタンをクリックして有効化してください。
+
+これらの MCP（Model Context Protocol）サーバーは以下の機能を提供します：
+
+- **cloud-run**：Google Cloud Run へのデプロイ機能
+- **context7**：ライブラリのドキュメント検索機能
+- **playwright**：ブラウザ自動化機能
 
 ### 1.5 Python 環境のセットアップ（5 分）
 
