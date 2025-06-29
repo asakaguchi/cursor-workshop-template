@@ -1252,173 +1252,341 @@ Issue #[番号] が完了しました。次の Issue #[次の番号] を開始�
 ### クラウド環境で公開しましょう
 
 AI がクラウドの設定からデプロイまで、プロレベルの作業を自動化してくれます。
+今回は最新のMCP（Model Context Protocol）を使って、よりセキュアな方法でデプロイします。
 
-### 6.1 クラウド環境へのデプロイ（5 分）
+### 6.1 セキュアな認証の準備（5分）
 
-#### インターネット経由でアクセスできるようにしよう
+#### なぜサービスアカウントを使うの？
 
-画面と API が完成したら、いよいよクラウド環境への公開です。
-AI に以下をお願いしてください。
+通常の個人アカウントではなく、専用の「サービスアカウント」を使うことで、以下のメリットがあります。
 
-```text
-Cloud Run にデプロイして、インターネット経由でアクセスできるようにしてください
+- **セキュリティ向上**：必要最小限の権限だけを持つ専用アカウント
+- **キーファイル不要**：インパーソネーション（なりすまし）技術でより安全
+- **監査可能**：誰がいつ使ったかの記録が残る
+
+#### Step 1：プロジェクトIDの設定
+
+**Cursor 内のターミナル**で以下を実行します。
+
+```bash
+# あなたのGoogle CloudプロジェクトIDを設定
+export PROJECT_ID="your-project-id"
+gcloud config set project $PROJECT_ID
 ```
 
-#### AI がやってくれる作業
+##### プロジェクトIDがわからない場合
 
-1. **ソースコードの準備**（必要なファイルを自動選択）
-2. **クラウドビルド**（Google Cloud Platform が自動でコンテナ化）
-3. **Cloud Run でホスティング**（サーバーレス環境で実行）
-4. **URL の発行**（HTTPS でアクセス可能なエンドポイントを生成）
+```bash
+# プロジェクト一覧を表示
+gcloud projects list
+```
 
-### 6.2 Cloud Runデプロイでの対話パターン
+#### Step 2：専用サービスアカウントの作成
 
-#### デプロイ作業特有の確認場面
+このアプリケーション専用の「作業用アカウント」を作ります。
 
-クラウドデプロイでは、技術的な設定に関する確認が多く出てきます：
+```bash
+# サービスアカウントを作成
+gcloud iam service-accounts create cursor-workshop-app \
+    --display-name="Cursor Workshop Application Service Account"
+```
 
-##### デプロイでのボタン/アイコンの使い分け
+**これで何ができたの？**
+「cursor-workshop-app@[プロジェクトID].iam.gserviceaccount.com」という専用アカウントが作成されました。
 
-**「Run」ボタン**：デプロイ設定や新しい設定ファイルの作成時
-**「Accept」ボタン**：Dockerfileや既存設定の修正時
-**「✓」「×」アイコン / 「Accept file」ボタン**：設定ファイル作成・編集提案時（どちらでもOK）
+#### Step 3：必要な権限を付与
 
-##### デプロイ設定の確認
+作業に必要な権限を3つ付与します。
 
-**場面例**：
+```bash
+# Cloud Run管理者権限（アプリをデプロイするため）
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:cursor-workshop-app@\
+${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="roles/run.admin"
 
-- 「プロジェクトIDを確認してください」
-- 「デプロイするリージョンはasia-northeast1でよろしいですか？」
-- 「サービス名は何にしますか？」
+# サービスアカウント使用権限（サービスとして動作するため）
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:cursor-workshop-app@\
+${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="roles/iam.serviceAccountUser"
 
-**対応方法**：
+# ビルド実行権限（コンテナイメージを作成するため）
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:cursor-workshop-app@\
+${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="roles/cloudbuild.builds.builder"
+```
+
+#### Step 4：インパーソネーション権限の設定
+
+あなたが専用アカウントを「使える」ようにします。
+
+```bash
+# あなたのメールアドレスを確認
+gcloud config get-value account
+
+# インパーソネーション権限を付与
+gcloud iam service-accounts add-iam-policy-binding \
+    cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com \
+    --member="user:$(gcloud config get-value account)" \
+    --role="roles/iam.serviceAccountTokenCreator"
+```
+
+**これで何ができたの？**
+あなたが専用アカウントになりすまして、安全に作業できるようになりました。
+
+#### Step 5：認証の実行
+
+いよいよ認証を行います。
+
+```bash
+# サービスアカウントを使って認証
+gcloud auth application-default login \
+  --impersonate-service-account=cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com
+```
+
+##### ブラウザが開いたら
+
+1. Googleアカウントでログイン
+2. 権限を承認
+3. 「認証が完了しました」のメッセージを確認
+
+### 6.2 MCPを使ったデプロイ（5分）
+
+#### Cloud Run MCPが自動でやってくれること
+
+MCP（Model Context Protocol）により、AIが以下の作業を完全自動化します。
+
+- Dockerfileの作成
+- コンテナイメージのビルド
+- Cloud Runへのデプロイ
+- HTTPSエンドポイントの設定
+- 環境変数の設定
+
+#### デプロイの実行
+
+チャットで以下を送信してください。
+
+```text
+Cloud Run MCPを使って、商品管理アプリケーションをデプロイしてください。
+以下の設定でお願いします。
+
+- リージョン: asia-northeast1（東京）
+- サービス名: cursor-workshop-app
+- 認証なしで公開アクセス可能に設定
+- 環境変数: PORT=8080
+```
+
+#### AIがやってくれる作業の流れ
+
+1. **設定確認**：デプロイ設定を提示して確認を求める
+2. **Dockerfile作成**：アプリケーションに最適な設定で作成
+3. **ビルド実行**：Cloud Buildでコンテナイメージを作成
+4. **デプロイ実行**：Cloud Runにアプリケーションを配置
+5. **URL発行**：HTTPSでアクセス可能なURLを生成
+
+### 6.3 デプロイ時の対話パターン
+
+#### MCPを使ったデプロイでの確認場面
+
+##### パターン1：設定確認
+
+###### AIからの質問例
+
+```text
+以下の設定でCloud Runにデプロイします。
+- プロジェクト: your-project-id
+- リージョン: asia-northeast1
+- サービス名: cursor-workshop-app
+
+よろしいですか？
+```
+
+###### あなたの返答
 
 ```text
 ok
 ```
 
-または具体的な指定がある場合：
+##### パターン2：Dockerfile作成の承認
+
+###### 場面
+
+AIがDockerfileを提案
+
+###### 対応方法
+
+- 「**Accept file**」ボタンをクリック
+- または、チャットパネルの「**✓**」アイコンをクリック
+
+##### パターン3：ビルド・デプロイの進行状況
+
+###### AIからの進行状況報告例
 
 ```text
-asia-northeast1でお願いします
+ビルドが開始されました。数分かかる場合があります...
 ```
 
-##### 認証・権限の確認
-
-**場面例**：
-
-- 「Google Cloudに認証が必要です。ブラウザを開きますか？」
-- 「Cloud Run APIを有効化しますか？」
-
-**対応方法**：
+###### ビルド待機時の返答
 
 ```text
-はい、進めてください
+わかりました、待ちます
 ```
 
-##### ビルド・デプロイ進行確認
+##### パターン4：デプロイ完了の確認
 
-**場面例**：
-
-- 「ビルドが完了しました。デプロイを開始しますか？」
-- 「URLが発行されました。動作確認しますか？」
-
-**対応方法**：
+###### AIからのデプロイ完了報告
 
 ```text
-ok
+デプロイが完了しました！
+URL: https://cursor-workshop-app-xxxxx.a.run.app
 ```
 
-#### 重要：設定エラーが発生した場合
-
-**場面例**：
-
-- Google Cloud認証エラー
-- API有効化エラー
-- 権限不足エラー
-
-**対応方法**：
+###### デプロイ完了時の返答
 
 ```text
-エラーの詳細を教えてください。解決方法を提案してください。
+ありがとう！URLを確認します
 ```
 
-##### デプロイ完了時のPR確認とマージ
+#### エラーが発生した場合の対処
 
-**AIからの完了報告後**：
+##### 認証エラーの場合
 
-1. **PRを確認**：`gh pr view --web`
-2. **デプロイ確認**：Cloud RunのURLで動作テスト
-3. **PRマージ**：`gh pr merge --merge`
-4. **次へ進行**：「次のタスクを開始してください」または完了報告
+```text
+認証エラーが発生しました。以下のコマンドで再認証してください：
 
-#### 事前準備が必要
+gcloud auth application-default login \
+  --impersonate-service-account=cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com
+```
 
-以下の設定が済んでいることを確認：
+##### APIが有効化されていない場合
 
-- Google Cloud プロジェクトの認証
-- Cloud Run MCP 設定（`.mcp.json`）
-- クラウド接続の準備
+```text
+Cloud Run APIを有効化してください。エラーメッセージに表示されたコマンドを実行してください。
+```
 
-**重要な注意点：**
+### 6.4 本番環境での動作確認（5分）
 
-- Cloud Run にデプロイされたアプリケーションは、デフォルトでは誰でもアクセス可能になります
-- 本番環境では、認証設定（IAM ポリシー）を適切に構成することが重要です
-- 今回は学習目的のため、一時的な公開として扱ってください
+#### デプロイされたアプリの確認
 
-#### 設定がまだの場合
+AIが教えてくれたURLで、実際に動作を確認しましょう。
 
-公式ドキュメントやコミュニティフォーラムで情報を確認してください。エラーメッセージをそのまま AI に相談することも有効です。
+##### API の動作確認
 
-### 6.3 本番環境での動作確認（5 分）
-
-#### クラウド環境のアプリを確認しましょう
-
-デプロイが完了したら、実際の Cloud Run 環境で動作確認します。
-
-#### API の動作確認
-
-AI が教えてくれた URL で確認してみましょう。
+**Cursor 内のターミナル**で実行：
 
 ```bash
-# アプリが生きているか確認
-curl https://your-app-name-xxxxx.a.run.app/health
+# ヘルスチェック（アプリが生きているか確認）
+curl https://cursor-workshop-app-xxxxx.a.run.app/health
 
-# API 仕様書を開く
-open https://your-app-name-xxxxx.a.run.app/docs
+# 期待される結果
+{"status":"healthy"}
 ```
 
-#### 本番環境でのテスト
+##### Swagger UIでAPIを試す
 
-Swagger UI（API 仕様書）で実際に試してみましょう。
+ブラウザで以下のURLを開きます。
 
-1. **商品を登録**：POST /items で新しい商品作成
-2. **商品を取得**：GET /items/{id} で登録した商品確認
-3. **エラーテスト**：無効なデータを入れて動作確認
-
-#### 画面からクラウド API に接続（時間があれば）
-
-ローカルの画面からクラウドの API に接続：
-
-```bash
-# クラウド API を使うように設定
-export API_BASE_URL=https://your-app-name-xxxxx.a.run.app
-uv run streamlit run src/product_ui/main.py
+```text
+https://cursor-workshop-app-xxxxx.a.run.app/docs
 ```
+
+###### できること
+
+1. **POST /items**：新しい商品を登録
+2. **GET /items/{id}**：登録した商品を確認
+3. **エラーテスト**：わざと間違ったデータを送信
+
+##### Web UIの確認
+
+メインのURLをブラウザで開きます。
+
+```text
+https://cursor-workshop-app-xxxxx.a.run.app
+```
+
+###### Web UIでの動作確認
+
+1. 商品名：「クラウドりんご」
+2. 価格：「300」
+3. 登録ボタンをクリック
+4. 商品が表示されることを確認
+
+### 6.5 セキュリティの確認
+
+#### 現在の設定
+
+- **公開アクセス**：誰でもアクセス可能（学習用）
+- **HTTPS**：通信は暗号化されている
+- **サービスアカウント**：最小権限で動作
+
+#### 本番環境では
+
+実際のビジネスで使う場合は、以下の設定を追加します。
+
+- IAM認証（特定のユーザーのみアクセス可能）
+- APIキー認証
+- OAuth 2.0認証
+
+今回は学習用なので、シンプルな設定にしています。
 
 ### 達成したこと
 
-- 本格的なクラウドアプリが完成
-- インターネット経由でアクセス可能
-- 企業レベルのインフラ構築
-- スケーラブル（負荷に応じて自動的にリソースを調整する）な本番環境
+- **セキュアな認証**：サービスアカウントによる安全な方式
+- **完全自動化**：MCPによる複雑な作業の自動実行
+- **本番環境構築**：企業レベルのインフラ
+- **スケーラブル**：負荷に応じて自動的にスケール
 
 #### 友達に見せよう
 
-URL を友達に送って、あなたが作ったアプリを使ってもらいましょう！
-ただし、学習用のアプリなので、個人情報や重要なデータは入力しないよう注意してください。
+URLを友達に送って、あなたが作ったアプリを使ってもらいましょう！
+「これ、1.5時間で作ったんだよ」と自慢してもOKです。
 
----
+**注意**：学習用のアプリなので、個人情報や重要なデータは入力しないよう注意してください。
+
+### トラブルシューティング
+
+#### よくある問題と解決方法
+
+##### 認証が通らない場合
+
+```bash
+# 現在の認証状態を確認
+gcloud auth list
+
+# プロジェクトが正しいか確認
+gcloud config get-value project
+
+# 再度インパーソネーション認証
+gcloud auth application-default login \
+  --impersonate-service-account=cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com
+```
+
+##### MCPが動作しない場合
+
+1. Cursorを再起動
+2. MCPサーバーの状態を確認（Settings → MCP）
+3. 必要に応じて「Enable」ボタンをクリック
+
+##### デプロイが失敗する場合
+
+```bash
+# Cloud Run APIが有効か確認
+gcloud services list --enabled | grep run
+
+# 有効化されていない場合
+gcloud services enable run.googleapis.com
+```
+
+#### 成功の秘訣
+
+- エラーメッセージをよく読む
+- AIに詳細を聞く
+- 焦らず一つずつ解決
+
+プロの開発者も同じようにトラブルシューティングを行います。
+これも大切な学習の一部です！
 
 ## Part 7：完成とまとめ（5分）
 
