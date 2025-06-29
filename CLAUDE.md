@@ -25,7 +25,9 @@ uvの使用、プロジェクト構造など多くの要素が上記のリソー
 
 ## プロジェクト概要
 
-これはPythonとFastAPIを使用して**商品管理API**を構築するためのCursorワークショップテンプレートです。インメモリストレージを使用したシンプルなREST APIを実装します。
+これはPythonとFastAPIを使用して**商品管理API**を構築するための
+Cursorワークショップテンプレートです。
+インメモリストレージを使用したシンプルなREST APIを実装します。
 
 ## 主要な要件
 
@@ -74,7 +76,7 @@ uv sync
 
 ```bash
 # FastAPIサーバーの起動
-uvicorn src.product_api.main:app --reload
+uv run uvicorn src.product_api.main:app --reload
 
 # Swagger UIへのアクセス: http://localhost:8000/docs
 ```
