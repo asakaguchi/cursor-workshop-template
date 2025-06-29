@@ -116,6 +116,14 @@ AI が先生役になってくれるので、専門用語がわからなくて�
 
 #### uv のインストール
 
+###### GUI操作での確認
+
+1. **コマンドパレット**（`Cmd` + `Shift` + `P`）を開く
+2. 「**Terminal: Create New Terminal**」と入力してEnter
+3. Cursor内のターミナルが開きます
+
+###### インストール実行
+
 **Cursor 内のターミナル**で以下を実行します。
 
 ```bash
@@ -133,6 +141,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # GitHub CLIをインストール
 brew install gh
 ```
+
+**ヒント**：Cursor の **Source Control** パネル（サイドバーのGitアイコン）からもGit操作が可能です。
 
 #### 動作確認
 
@@ -163,6 +173,8 @@ gh --version
 
 ##### Step 2：自分のプロジェクトを作る
 
+###### 方法1：GitHub Web サイト（推奨）
+
 1. 緑色の「**Use this template**」ボタンをクリック
 2. 「**Create a new repository**」を選択
 3. **Repository name**に「`my-cursor-workshop`」と入力
@@ -170,29 +182,48 @@ gh --version
 4. 「**Create repository**」をクリック
 5. 数秒待つと、あなた専用のプロジェクトが完成！
 
-##### Step 3：パソコンにダウンロード
+###### 方法2：Cursor の GitHub 統合（上級者向け）
 
-###### 整理整頓のコツ
+1. **Cursor を起動**
+2. **コマンドパレット**（`Cmd` + `Shift` + `P`）を開く
+3. 「**GitHub: Clone Repository**」と入力
+4. **GitHub にサインイン**（初回のみ）
+5. テンプレートリポジトリを検索・選択
 
-プロジェクトは専用フォルダで管理しましょう。デスクトップに置くと散らかってしまいます。
+##### Step 3：Cursor でプロジェクトを開く
 
-**Cursor 内のターミナル**で以下をコピー&ペースト：
+###### 方法1：GUI操作（推奨）
+
+1. **Cursor を起動**
+2. **コマンドパレットを開く**：`Cmd` + `Shift` + `P`（Mac）/ `Ctrl` + `Shift` + `P`（Windows）
+3. **「Git: Clone」と入力**してEnter
+4. **リポジトリのURLを入力**：
+   - `https://github.com/YOUR_USERNAME/my-cursor-workshop.git`
+   - YOUR_USERNAME を自分の GitHub ユーザー名に変更
+5. **保存先を選択**：
+   - **「New Folder」をクリック**して「Projects」フォルダを作成（推奨）
+   - ホームディレクトリ（`~`）内に作成するのがベスト
+   - デスクトップは避けましょう
+6. **「Open」をクリック**してプロジェクトを開く
+
+###### 方法2：ターミナル操作
+
+Cursor内のターミナルでも実行可能です：
 
 ```bash
 # プロジェクト専用フォルダを作る
 mkdir -p ~/Projects
 cd ~/Projects
 
-# あなたのプロジェクトをダウンロード
-# YOUR_USERNAME を自分の GitHub ユーザー名に変更してください
+# プロジェクトをクローン
 git clone https://github.com/YOUR_USERNAME/my-cursor-workshop.git
 cd my-cursor-workshop
 
-# Cursor で開く（ここからは Cursor 内で作業します）
+# Cursor で開く
 cursor .
 ```
 
-**重要**：この後はずっと **Cursor 内のターミナル** で作業を続けます。
+**これ以降はすべて Cursor 内で作業を続けます。**
 
 ### 1.4 Python 環境のセットアップ（5 分）
 
