@@ -39,11 +39,11 @@ source .venv/bin/activate  # macOS/Linux
 | タスク | コマンド |
 |------|------|
 | 依存関係インストール | `uv sync` |
-| テスト実行 | `uv run pytest` |
-| フォーマット | `uv run ruff format .` |
-| Lint | `uv run ruff check .` |
-| FastAPI起動 | `uvicorn src.product_api.main:app --reload` |
-| Streamlit UI起動 | `uv run streamlit run src/product_ui/main.py` |
+| テスト実行 | `uv run --frozen pytest` |
+| フォーマット | `uv run --frozen ruff format .` |
+| Lint | `uv run --frozen ruff check .` |
+| FastAPI起動 | `cd api && uv run uvicorn main:app --reload` |
+| Streamlit UI起動 | `cd ui && uv run streamlit run main.py` |
 
 ## 🛠️ 主な機能
 
@@ -59,13 +59,13 @@ source .venv/bin/activate  # macOS/Linux
 
 ```text
 .
-├── src/
-│   ├── product_api/      # FastAPI商品管理API
-│   └── product_ui/       # Streamlit Web UI
+├── api/                 # FastAPI商品管理API
+├── ui/                  # Streamlit Web UI
 ├── tests/               # テストコード
 ├── docs/                # ドキュメント
 ├── .cursor/             # Cursor AI設定
-└── pyproject.toml       # プロジェクト設定
+├── pyproject.toml       # プロジェクト設定（開発・テスト用）
+└── DEPLOYMENT.md        # Cloud Runデプロイガイド
 ```
 
 ## 🚀 開発の始め方
