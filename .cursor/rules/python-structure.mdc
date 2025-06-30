@@ -6,60 +6,64 @@ alwaysApply: true
 
 # Pythonプロジェクト構造ガイドライン
 
-## 推奨構造：srcレイアウト
+## 推奨構造：分離デプロイレイアウト
 
-モダンなPython開発では、Python Packaging Authority (PyPA) が推奨するsrcレイアウトを採用します。
-（参考: https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/）
+このプロジェクトでは、Cloud Runでの分離デプロイを前提とした構造を採用します。
+APIとUIを独立したサービスとして開発・デプロイするためのマイクロサービス指向の設計です。
 
 ### 基本構造
 ```
 cursor-workshop-template/
-├── src/                    # ソースコードを配置するsrcディレクトリ
-│   └── product_api/        # インポート可能なパッケージ
-│       ├── __init__.py
-│       ├── main.py         # エントリーポイント
-│       ├── models.py       # データモデル
-│       └── storage.py      # ビジネスロジック
+├── api/                    # FastAPI アプリケーション
+│   ├── pyproject.toml      # API専用の最小依存関係
+│   ├── main.py             # FastAPIエントリーポイント
+│   ├── models.py           # データモデル
+│   └── storage.py          # ビジネスロジック
+├── ui/                     # Streamlit アプリケーション
+│   ├── pyproject.toml      # UI専用の最小依存関係
+│   └── main.py             # Streamlitエントリーポイント
 ├── tests/                  # テストコード
 │   ├── __init__.py
-│   └── test_*.py
+│   ├── api/                # API用テスト
+│   └── ui/                 # UI用テスト
 ├── docs/                   # ドキュメント
-├── scripts/                # ユーティリティスクリプト
 ├── .github/                # CI/CDワークフロー
 │   └── workflows/
 ├── .gitignore
-├── pyproject.toml          # 信頼できる唯一の情報源 (Single Source of Truth)
+├── pyproject.toml          # 開発・テスト用統合環境
 ├── LICENSE                 # ライセンスファイル
 └── README.md
 ```
 
-## なぜsrcレイアウト？
+## なぜ分離デプロイレイアウト？
 
 ### 技術的な利点
 
-1. **意図しないインポートの防止**
-   - Pythonは常にカレントディレクトリを`sys.path`の先頭に追加します
-   - フラットレイアウトでは、開発中のローカルコードが意図せずインポートされる可能性があります
-   - srcレイアウトでは、パッケージが`src/`内に隔離されるため、この問題を回避できます
+1. **独立したデプロイ単位**
+   - APIとUIを個別にデプロイ・スケーリング可能
+   - 異なるリソース要件に対応（APIは計算重視、UIは軽量）
+   - 片方のサービスに問題があっても他方に影響しない
 
-2. **インストールベースのテストの強制**
-   - テスト実行時、パッケージがインストールされた状態であることを強制します
-   - エンドユーザーと同じ環境でテストできるため、パッケージング問題を早期発見できます
+2. **依存関係の最小化**
+   - 各サービスに必要な最小限の依存関係のみを含める
+   - Docker イメージサイズの削減
+   - セキュリティリスクの軽減
 
-3. **クリーンな名前空間**
-   - `README.md`、`pyproject.toml`などの管理ファイルとPythonコードを明確に分離
-   - プロジェクトルートが整理され、誤って管理ファイルをインポートすることを防げます
+3. **開発効率の向上**
+   - チーム間での並行開発が容易
+   - 技術スタックを個別に選択可能
+   - テストとデプロイを独立して実行
 
-### 歴史的背景
+### Cloud Run向けの設計
 
-- The Hitchhiker's Guide to Python（HHGTTG）はかつてフラットレイアウトを推奨していました
-- しかし、現代のPythonエコシステムでは、srcレイアウトが明確なベストプラクティスです
-- HHGTTGの思想（クリーンコード、モジュール性）は今も価値がありますが、技術的実装は更新が必要です
+- Cloud Run は各サービスを独立したコンテナとして実行
+- 各ディレクトリが独立したデプロイ単位となる
+- 最小限の依存関係により高速な起動時間を実現
 
 ## 命名規則
 
 - **モジュール名**: 短く、lowercase、特殊記号（. や ? ）を避ける
-- **パッケージ名**: プロジェクト名と一致させる（cursor-workshop → product_api）
+- **サービス名**: 目的に応じた明確な命名（api, ui）
 - **ファイル名**: `my.spam.py` のような形式は避ける
 - **クラス名**: CapWords（例: ProductModel）
 - **関数名**: lowercase_with_underscores（例: get_product_by_id）
@@ -76,44 +80,70 @@ from datetime import datetime
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-# 3. ローカルアプリケーション
-from product_api.models import Product
-from product_api.storage import InMemoryStorage
+# 3. ローカルアプリケーション（相対インポート）
+from .models import Product
+from .storage import InMemoryStorage
 ```
 
 ## モダンなパッケージ管理
 
-### pyproject.tomlを中心とした設定
+### 分離デプロイ用pyproject.toml構成
 
+#### ルート pyproject.toml（開発・テスト用）
 ```toml
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
-name = "product_api"
+name = "cursor-workshop-template"
 version = "0.1.0"
-description = "商品管理 API - Cursor ハンズオン"
+description = "Cursor ワークショップ - 商品管理API"
 requires-python = ">=3.12"
-dependencies = [
-    "fastapi>=0.100.0",
-    "uvicorn[standard]>=0.23.0",
-]
+dependencies = []
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
+    "httpx>=0.24.0",
+    "asgi-lifespan>=2.0.0",
+    "trio>=0.22.0",
     "ruff>=0.1.0",
-    "mypy>=1.0",
+    "pyright>=1.1.0",
+    "pre-commit>=3.0.0",
 ]
 
 [tool.ruff]
 target-version = "py312"
-line-length = 88
+line-length = 100
 
-[tool.mypy]
-python_version = "3.12"
-strict = true
+[tool.pyright]
+pythonVersion = "3.12"
+strict = ["**"]
+```
+
+#### api/pyproject.toml（API専用）
+```toml
+[project]
+name = "product-api"
+version = "0.1.0"
+description = "商品管理 API"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.23.0",
+    "pydantic>=2.0.0",
+]
+```
+
+#### ui/pyproject.toml（UI専用）
+```toml
+[project]
+name = "product-ui"
+version = "0.1.0"
+description = "商品管理 UI"
+requires-python = ">=3.12"
+dependencies = [
+    "streamlit>=1.28.0",
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0",
+]
 ```
 
 ### 推奨ツール
@@ -125,53 +155,54 @@ strict = true
 
 ## 開発環境のセットアップ
 
-### uvを使用する場合
+### 分離デプロイ構造での環境管理
 ```bash
-# プロジェクトの初期化
-uv init
-
-# 依存関係の同期
+# ルートで開発・テスト環境をセットアップ
 uv sync
 
-# 開発用依存関係も含めて同期
-uv sync --dev
+# 各サービス用の個別環境セットアップ
+cd api && uv sync && cd ..
+cd ui && uv sync && cd ..
 
-# 新しいパッケージを追加
-uv add fastapi
+# API開発時
+cd api && uv run uvicorn main:app --reload
 
-# 開発用パッケージを追加
-uv add --dev pytest
+# UI開発時  
+cd ui && uv run streamlit run main.py
+
+# テスト実行（常にルートから）
+uv run --frozen pytest tests/ -v
 ```
 
-### テストの実行
+### Cloud Run デプロイ
 ```bash
-# 全テストの実行
-uv run pytest
+# API デプロイ（api/ディレクトリを独立デプロイ）
+mcp__cloud-run__deploy_local_folder --folderPath="./api" --service="product-api"
 
-# 特定のテストファイルの実行
-uv run pytest tests/test_models.py
-
-# カバレッジ付きテスト
-uv run pytest --cov=src/product_api
+# UI デプロイ（ui/ディレクトリを独立デプロイ）
+mcp__cloud-run__deploy_local_folder --folderPath="./ui" --service="product-ui"
 ```
 
-## srcレイアウトでのテスト
+## テスト戦略
 
-srcレイアウトでは、パッケージをインストールしてからテストする必要があります：
+分離デプロイ構造では、統合テストをルートから実行し、各サービスのテストを分離します：
 
 ```bash
-# 編集可能モードでインストール
-uv pip install -e .
+# API テスト
+uv run --frozen pytest tests/api/ -v
 
-# または、uvを使用してテスト実行
-uv run pytest
+# UI テスト  
+uv run --frozen pytest tests/ui/ -v
+
+# 統合テスト
+uv run --frozen pytest tests/ -v
 ```
 
 ## 実践例
 
-良い例：
+### API サービス例
 ```python
-# src/product_api/models.py
+# api/models.py
 from datetime import datetime
 from pydantic import BaseModel, Field
 
@@ -183,17 +214,31 @@ class ProductModel(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
 ```
 
-避けるべき例：
 ```python
-# models.py（srcディレクトリの外）
+# api/main.py
+from fastapi import FastAPI
+from .models import ProductModel
+from .storage import InMemoryStorage
+
+app = FastAPI(title="商品管理API")
+storage = InMemoryStorage()
+
+@app.post("/items", response_model=ProductModel, status_code=201)
+async def create_item(item: ProductModel) -> ProductModel:
+    return storage.create_product(item)
+```
+
+### 避けるべき例
+```python
+# models.py（サービスディレクトリの外）
 class product_model:  # クラス名が小文字
     ProductName: str  # 変数名が大文字始まり
 ```
 
 ## まとめ
 
-- **srcレイアウト**を採用してパッケージング問題を防ぐ
-- **pyproject.toml**を中心に設定を一元管理
-- **モダンなツール**（uv、Ruff、mypy）を活用
-- **型ヒント**と**ドキュメント**を重視
-- **テスト駆動開発**（TDD）を実践
+- **分離デプロイ構造**でマイクロサービス指向の開発
+- **最小依存関係**で各サービスを軽量化
+- **独立デプロイ**でCloud Runに最適化
+- **統合テスト環境**でプロジェクト全体の品質保証
+- **モダンなツール**（uv、Ruff、pyright）を活用

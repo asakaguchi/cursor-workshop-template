@@ -99,7 +99,7 @@ uv remove パッケージ名
 uv run --frozen pytest tests/ -v
 
 # アプリケーションの起動
-uv run uvicorn src.product_api.main:app --reload
+cd api && uv run uvicorn main:app --reload
 ```
 
 **注意**：プロジェクトに pyproject.toml があれば、Python のインストールも含めてすべて自動化されます。ローカルPython環境での高速開発が可能です。

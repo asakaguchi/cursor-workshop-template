@@ -71,8 +71,16 @@ def test_create_product_with_valid_data_returns_201():
 ## インポート方法
 
 ```python
-# context.pyを使用したインポート
-from .context import product_api
+# 分離デプロイ構造でのテストインポート
+import sys
+from pathlib import Path
+
+# APIモジュールをパスに追加
+sys.path.insert(0, str(Path(__file__).parent.parent / "api"))
+
+# APIモジュールをインポート
+from main import app
+from models import ProductModel
 ```
 
 ## テストの実行
@@ -87,7 +95,7 @@ uv run pytest tests/ -v
 uv run pytest tests/test_basic.py -v
 
 # カバレッジ付きで実行
-uv run pytest tests/ --cov=src/product_api --cov-report=html
+uv run pytest tests/ --cov=api --cov-report=html
 
 # 特定のテスト関数のみ実行
 uv run pytest tests/test_basic.py::test_create_product -v

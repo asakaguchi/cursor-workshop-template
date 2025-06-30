@@ -502,7 +502,7 @@ gh auth login</code></pre>
                     <i data-lucide="list-checks" class="w-6 h-6 text-blue-500 mr-2"></i>
                     <h1 class="text-2xl font-bold">Part 3: API開発タスクの計画（10分）</h1>
                 </div>
-                <p class="text-gray-600 mb-6">API開発の作業を整理して、AI に手伝ってもらいましょう！作業を適切な粒度に分けることで、確実に進められます。</p>
+                <p class="text-gray-600 mb-6">AI にお任せして、作業を整理してもらいましょう！Cursor のルールに従って、自動的に適切なタスクに分解されます。</p>
                 
                 <div class="space-y-6">
                     <!-- 3.1 作業の分解 -->
@@ -514,20 +514,8 @@ gh auth login</code></pre>
                         
                         <p class="text-gray-600 mb-4">チャットで以下を送信してください：</p>
                         <div class="command-block">
-                            <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>@requirements.md @CLAUDE.md
-
-要件を確認して、API開発のみに焦点を当ててタスクを分解してください。
-各タスクは以下の粒度で分解してください：
-- 1つのエンドポイント実装
-- 1つのTDDサイクル（Red→Green→Refactor）
-- 1つのテストケース群
-- 1つの機能単位
-
-初心者でもわかりやすい言葉で説明してください。
-
-重要：今回はAPI開発のみ実装します。UI（Streamlit）は後の工程で実装予定です。
-api/ディレクトリにFastAPIアプリケーションを構築してください。</code></pre>
-                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="@requirements.md @CLAUDE.md&#10;&#10;要件を確認して、API開発のみに焦点を当ててタスクを分解してください。&#10;各タスクは以下の粒度で分解してください：&#10;- 1つのエンドポイント実装&#10;- 1つのTDDサイクル（Red→Green→Refactor）&#10;- 1つのテストケース群&#10;- 1つの機能単位&#10;&#10;初心者でもわかりやすい言葉で説明してください。&#10;&#10;重要：今回はAPI開発のみ実装します。UI（Streamlit）は後の工程で実装予定です。&#10;api/ディレクトリにFastAPIアプリケーションを構築してください。">
+                            <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>@requirements.md を確認して、API開発のタスクを分解してください。</code></pre>
+                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="@requirements.md を確認して、API開発のタスクを分解してください。">
                                 <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -548,12 +536,12 @@ api/ディレクトリにFastAPIアプリケーションを構築してくださ
                             </button>
                         </div>
                         
-                        <div class="bg-yellow-50 p-4 rounded mt-4">
+                        <div class="bg-blue-50 p-4 rounded mt-4">
                             <h4 class="font-semibold mb-2 flex items-center">
-                                <i data-lucide="alert-triangle" class="w-4 h-4 mr-1"></i>
-                                重要
+                                <i data-lucide="info" class="w-4 h-4 mr-1"></i>
+                                Cursor の自動化機能
                             </h4>
-                            <p class="text-sm">AI が各 Issue を作成する前に、内容を表示して確認を求めます。画面に「Run」ボタンが表示されたら、内容を確認してクリックしてください。</p>
+                            <p class="text-sm">「ok」と承認すると、Cursor のルールに従って AI が自動的に GitHub Issues を作成します。各 Issue 作成前に「Run」ボタンが表示されるので、内容を確認してクリックしてください。</p>
                         </div>
                     </div>
 

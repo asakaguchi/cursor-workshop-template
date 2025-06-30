@@ -43,12 +43,11 @@ alwaysApply: false
 ## プロジェクト構造
 
 ```
-src/
-└── product_api/   # アプリケーションコード（srcレイアウト）
-    ├── __init__.py
-    ├── main.py    # FastAPI アプリケーション
-    ├── models.py  # Pydantic モデル
-    └── storage.py # データストレージ
+api/               # FastAPI アプリケーション（分離デプロイ）
+├── pyproject.toml # API専用の依存関係
+├── main.py        # FastAPI エントリーポイント
+├── models.py      # Pydantic モデル
+└── storage.py     # データストレージ
 ```
 
 ## パッケージ管理
