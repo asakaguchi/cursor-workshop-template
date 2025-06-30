@@ -1,6 +1,6 @@
 ---
 description: 
-globs: tests/**/*.py,src/**/*.py
+globs: **/*.py
 alwaysApply: false
 ---
 # Python コーディングガイドライン
