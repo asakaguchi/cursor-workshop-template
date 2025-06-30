@@ -29,6 +29,28 @@ t-wada氏が推奨するTDDの実践では、この原則を絶対に破って�
 - 重複を除去し、設計を改善
 - 小さなステップで進める
 
+## テストピラミッド戦略
+
+このプロジェクトでは3層のテスト戦略を採用：
+
+### Unit Tests（単体テスト）
+- **対象**: 個別の関数・メソッド
+- **ツール**: pytest
+- **実行速度**: 高速（秒単位）
+- **カバレッジ**: 詳細なエッジケース
+
+### Integration Tests（統合テスト）
+- **対象**: API エンドポイント、コンポーネント間連携
+- **ツール**: pytest + httpx（FastAPI Test Client）
+- **実行速度**: 中速（秒〜分単位）
+- **カバレッジ**: モジュール間の相互作用
+
+### E2E Tests（エンドツーエンドテスト）
+- **対象**: ユーザージャーニー全体（API + UI + ブラウザ）
+- **ツール**: Playwright MCP
+- **実行速度**: 低速（分単位）
+- **カバレッジ**: 実際のユーザー体験
+
 ## TDD実践の重要原則
 
 ### TODOリストの活用
@@ -85,6 +107,7 @@ from models import ProductModel
 
 ## テストの実行
 
+### Unit/Integration Tests
 uvを使用してテストを実行します（ローカルPython環境）：
 
 ```bash
@@ -99,6 +122,21 @@ uv run pytest tests/ --cov=api --cov-report=html
 
 # 特定のテスト関数のみ実行
 uv run pytest tests/test_basic.py::test_create_product -v
+```
+
+### E2E Tests (Playwright MCP)
+AI対話によるE2Eテストの実行：
+
+```bash
+# 前提条件: API + UIサーバーを並行起動
+# ターミナル1
+cd api && uv run uvicorn main:app --reload --port 8080
+
+# ターミナル2  
+cd ui && uv run streamlit run main.py --server.port 8501
+
+# ターミナル3: Cursorチャットで以下を実行
+# "Playwright MCPを使って、商品管理UIのE2Eテストを実行してください"
 ```
 
 ## pre-commitでの自動テスト実行
@@ -136,7 +174,9 @@ uv add --dev pytest pytest-cov httpx anyio
 
 ## TDD実践例：商品作成APIの開発
 
-### ステップ1: 最初のテスト（Red）
+### Unit/Integration Tests（従来のTDD）
+
+#### ステップ1: 最初のテスト（Red）
 ```python
 def test_create_product_returns_201():
     """商品作成が成功すると201を返す"""
@@ -145,14 +185,14 @@ def test_create_product_returns_201():
     assert response.status_code == 201  # 失敗する
 ```
 
-### ステップ2: 仮実装（Green）
+#### ステップ2: 仮実装（Green）
 ```python
 @app.post("/items", status_code=201)
 def create_item():
     return {}  # 最小限の実装
 ```
 
-### ステップ3: 次のテスト（Red）
+#### ステップ3: 次のテスト（Red）
 ```python
 def test_create_product_returns_created_product():
     """作成した商品の情報を返す"""
@@ -162,14 +202,14 @@ def test_create_product_returns_created_product():
     assert data["price"] == 100     # 失敗する
 ```
 
-### ステップ4: 三角測量（Green）
+#### ステップ4: 三角測量（Green）
 ```python
 @app.post("/items", status_code=201)
 def create_item(item: dict):
     return {"name": item["name"], "price": item["price"]}
 ```
 
-### ステップ5: リファクタリング
+#### ステップ5: リファクタリング
 ```python
 from pydantic import BaseModel
 
@@ -180,6 +220,35 @@ class Product(BaseModel):
 @app.post("/items", status_code=201)
 def create_item(item: Product) -> Product:
     return item
+```
+
+### E2E Tests（Playwright MCP統合TDD）
+
+#### E2Eシナリオの定義（Red）
+```text
+# AI対話でのE2Eテストシナリオ策定
+ユーザージャーニー:
+1. ブラウザでStreamlitアプリを開く（http://localhost:8501）
+2. 商品名「テスト商品」、価格「999」を入力
+3. 「商品を登録」ボタンをクリック
+4. 登録成功メッセージの確認
+5. 商品一覧に新しい商品が表示されることを確認
+```
+
+#### UI実装でE2E通す（Green）
+```text
+# AI対話でのStreamlit実装指示
+上記のE2Eテストシナリオを通すStreamlitアプリを実装してください。
+APIエンドポイント（http://localhost:8080）との連携を含めて。
+```
+
+#### UX改善（Refactor）
+```text
+# AI対話でのUI改善指示
+E2Eテストは通っているので、以下のUX改善を行ってください：
+- エラーハンドリングの追加
+- ローディング表示の実装
+- レスポンシブデザインの調整
 ```
 
 ## 禁止事項

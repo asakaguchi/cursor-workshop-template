@@ -892,24 +892,131 @@ gh auth login</code></pre>
                         </div>
                     </div>
 
-                    <!-- 5.4 最終確認用手動テスト -->
-                    <div class="border-l-4 border-orange-500 pl-4">
+                    <!-- 5.4 Playwright E2Eテスト戦略の策定 -->
+                    <div class="border-l-4 border-indigo-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
-                            <i data-lucide="mouse-pointer-click" class="w-5 h-5 mr-2"></i>
-                            5.4 最終確認用手動テスト
+                            <i data-lucide="globe" class="w-5 h-5 mr-2"></i>
+                            5.4 Playwright E2Eテスト戦略の策定（時間に余裕がある場合）
                         </h3>
                         
-                        <p class="text-gray-600 mb-4">全てのIssueが完了したら、最終確認として画面アプリを起動：</p>
+                        <div class="bg-blue-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="info" class="w-4 h-4 mr-1"></i>
+                                時間効率化のポイント
+                            </h4>
+                            <p class="text-sm">ワークショップの残り時間に応じて、Playwright MCPを使ったE2Eテストを追加実装します。従来のStreamlit手動テストに加えて、ブラウザ自動化による回帰テストを体験できます。</p>
+                        </div>
+                        
+                        <p class="text-gray-600 mb-4">E2Eテストシナリオの策定をAIに依頼：</p>
                         <div class="command-block">
-                            <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># 画面アプリを起動（最終確認用）
-cd ui && uv run streamlit run main.py</code></pre>
-                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="cd ui && uv run streamlit run main.py">
+                            <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>Playwright MCPを使って、商品管理UIのE2Eテストシナリオを作成してください。
+
+以下のユーザージャーニーをテストしたいです：
+1. ブラウザでStreamlitアプリを開く
+2. 商品名「テスト商品」、価格「999」を入力
+3. 「商品を登録」ボタンをクリック
+4. 登録成功メッセージの確認
+5. 商品一覧に新しい商品が表示されることを確認
+
+API: http://localhost:8080（事前起動）
+UI: http://localhost:8501（事前起動）
+
+テストコードの形式は問いません。AIとの対話でPlaywright機能を体験したいです。</code></pre>
+                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="Playwright MCPを使って、商品管理UIのE2Eテストシナリオを作成してください。&#10;&#10;以下のユーザージャーニーをテストしたいです：&#10;1. ブラウザでStreamlitアプリを開く&#10;2. 商品名「テスト商品」、価格「999」を入力&#10;3. 「商品を登録」ボタンをクリック&#10;4. 登録成功メッセージの確認&#10;5. 商品一覧に新しい商品が表示されることを確認&#10;&#10;API: http://localhost:8080（事前起動）&#10;UI: http://localhost:8501（事前起動）&#10;&#10;テストコードの形式は問いません。AIとの対話でPlaywright機能を体験したいです。">
                                 <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
                             </button>
                         </div>
                         
-                        <div class="bg-blue-50 p-4 rounded mt-4">
-                            <p class="text-sm">ブラウザで <a href="http://localhost:8501" class="text-blue-600 underline" target="_blank">http://localhost:8501</a> にアクセスして目視確認してください。</p>
+                        <div class="bg-purple-50 p-4 rounded mt-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="zap" class="w-4 h-4 mr-1"></i>
+                                Playwright MCPの体験ポイント
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li>• <strong>ブラウザ自動化</strong>：手動テストの自動化を体験</li>
+                                <li>• <strong>スクリーンショット</strong>：テスト実行時の画面キャプチャ</li>
+                                <li>• <strong>アクセシビリティツリー</strong>：構造化された画面情報の取得</li>
+                                <li>• <strong>決定論的操作</strong>：AIによる正確なUI操作の指示</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 5.5 統合TDDサイクルの実践 -->
+                    <div class="border-l-4 border-cyan-500 pl-4">
+                        <h3 class="text-lg font-semibold mb-3 flex items-center">
+                            <i data-lucide="repeat" class="w-5 h-5 mr-2"></i>
+                            5.5 統合TDDサイクルの実践（時間に余裕がある場合）
+                        </h3>
+                        
+                        <div class="bg-green-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">Step 1: API + UI同時起動</h4>
+                            <p class="text-sm mb-2">2つのターミナルで並行実行：</p>
+                            <div class="space-y-2">
+                                <div class="command-block">
+                                    <pre class="language-bash bg-gray-900 text-white p-3 rounded overflow-x-auto text-sm"><code># ターミナル1: API起動
+cd api && uv run uvicorn main:app --reload --port 8080</code></pre>
+                                    <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="cd api && uv run uvicorn main:app --reload --port 8080">
+                                        <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <div class="command-block">
+                                    <pre class="language-bash bg-gray-900 text-white p-3 rounded overflow-x-auto text-sm"><code># ターミナル2: UI起動
+cd ui && uv run streamlit run main.py --server.port 8501</code></pre>
+                                    <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="cd ui && uv run streamlit run main.py --server.port 8501">
+                                        <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">Step 2: Playwrightテスト実行</h4>
+                            <p class="text-sm mb-2">チャットでAIに以下を指示：</p>
+                            <div class="command-block">
+                                <pre class="language-text bg-gray-900 text-white p-3 rounded overflow-x-auto text-sm"><code>先ほど策定したE2Eテストシナリオを実行してください。
+ブラウザで実際に操作して、商品登録→一覧表示のフローをテストしてください。</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="先ほど策定したE2Eテストシナリオを実行してください。&#10;ブラウザで実際に操作して、商品登録→一覧表示のフローをテストしてください。">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-purple-50 p-4 rounded">
+                            <h4 class="font-semibold mb-2">Step 3: 回帰テストの自動化</h4>
+                            <p class="text-sm mb-2">継続的なテスト実行の設定：</p>
+                            <div class="command-block">
+                                <pre class="language-text bg-gray-900 text-white p-3 rounded overflow-x-auto text-sm"><code>このE2Eテストを、コード変更時に自動実行される回帰テストにしてください。
+GitHub Actionsでの実行設定について教えてください。</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="このE2Eテストを、コード変更時に自動実行される回帰テストにしてください。&#10;GitHub Actionsでの実行設定について教えてください。">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5.6 最終確認（従来の5.4から変更） -->
+                    <div class="border-l-4 border-orange-500 pl-4">
+                        <h3 class="text-lg font-semibold mb-3 flex items-center">
+                            <i data-lucide="mouse-pointer-click" class="w-5 h-5 mr-2"></i>
+                            5.6 最終確認
+                        </h3>
+                        
+                        <div class="bg-yellow-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">手動テスト（必須）</h4>
+                            <p class="text-sm mb-2">全てのIssueが完了したら、画面アプリを起動：</p>
+                            <div class="command-block">
+                                <pre class="language-bash bg-gray-900 text-white p-3 rounded overflow-x-auto text-sm"><code># 画面アプリを起動（最終確認用）
+cd ui && uv run streamlit run main.py</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="cd ui && uv run streamlit run main.py">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                            <p class="text-sm mt-2">ブラウザで <a href="http://localhost:8501" class="text-blue-600 underline" target="_blank">http://localhost:8501</a> にアクセスして目視確認してください。</p>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded">
+                            <h4 class="font-semibold mb-2">E2Eテスト（時間に余裕がある場合）</h4>
+                            <p class="text-sm">Playwright MCPによる自動テストで、手動テストでは発見しにくい問題も検出できます。</p>
                         </div>
                     </div>
 
@@ -924,6 +1031,7 @@ cd ui && uv run streamlit run main.py</code></pre>
                             <li class="flex items-center"><input type="checkbox" class="mr-2"> UI仕様書（docs/ui-design.md）が作成された</li>
                             <li class="flex items-center"><input type="checkbox" class="mr-2"> UIタスクがIssueに登録された</li>
                             <li class="flex items-center"><input type="checkbox" class="mr-2"> Streamlitアプリが動作する</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> （オプション）Playwright E2Eテストを体験した</li>
                         </ul>
                     </div>
                 </div>

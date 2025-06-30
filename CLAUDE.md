@@ -210,6 +210,11 @@ gh pr create \
 3. **段階的な実装**
    - 仮実装 → 三角測量 → 一般化の順で進める
 
+4. **テストピラミッドの実践**
+   - **Unit Tests（単体テスト）**: 個別機能の詳細検証
+   - **Integration Tests（統合テスト）**: コンポーネント間連携
+   - **E2E Tests（エンドツーエンドテスト）**: ユーザージャーニー全体
+
 ### 実践例
 
 ```python
@@ -231,6 +236,33 @@ def create_item():
 - Red: `git commit -m "test: add test for ..."`
 - Green: `git commit -m "feat: implement minimal ..."`  
 - Refactor: `git commit -m "refactor: extract ..."`
+
+### Playwright統合TDDの実践
+
+**UI開発におけるTDD拡張**: ワークショップではStreamlit UIの開発でPlaywright MCPを活用
+
+#### E2Eテストサイクル
+
+1. **Red（失敗するE2Eテスト）**
+   - ユーザージャーニーシナリオの定義
+   - ブラウザ自動化での操作フロー記述
+   - 期待する結果の明文化
+
+2. **Green（E2Eテストを通す）**
+   - StreamlitアプリとAPIの実装
+   - フォーム、表示機能の最小実装
+   - ブラウザテストの成功確認
+
+3. **Refactor（UI/UX改善）**
+   - デザインの洗練
+   - ユーザビリティの向上
+   - パフォーマンス最適化
+
+#### 統合テスト戦略
+
+- **API Layer**: FastAPIの単体・統合テスト
+- **UI Layer**: Streamlitコンポーネントテスト
+- **E2E Layer**: Playwright MCPによるブラウザ自動化
 
 ### 重要原則：pre-commit後のテスト確認
 
