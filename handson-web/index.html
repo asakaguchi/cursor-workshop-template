@@ -622,31 +622,48 @@ gh auth login</code></pre>
                         </div>
                     </div>
 
-                    <!-- 4.2 テストを動かしてみよう -->
+                    <!-- 4.2 AI の提案を承認しよう -->
                     <div class="border-l-4 border-green-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
-                            <i data-lucide="flask-conical" class="w-5 h-5 mr-2"></i>
-                            4.2 テストを動かしてみよう
+                            <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
+                            4.2 AI の提案を承認しよう
                         </h3>
                         
-                        <p class="text-gray-600 mb-4">品質チェックを実行してみてください：</p>
-                        <div class="command-block">
-                            <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># 全体的な品質チェック
-uv run pytest
-
-# 詳細な結果を表示
-uv run pytest -v</code></pre>
-                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="uv run pytest">
-                                <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
-                            </button>
+                        <p class="text-gray-600 mb-4">AI がコード修正を提案してきたら、適切に承認していきましょう：</p>
+                        
+                        <div class="bg-blue-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="file-edit" class="w-4 h-4 mr-1"></i>
+                                チャットパネルでの承認
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li>• AI がファイル作成・編集を提案</li>
+                                <li>• チャットパネル内の「<strong>✓</strong>」アイコンをクリック → 承認</li>
+                                <li>• 問題があれば「<strong>×</strong>」アイコンをクリック → 拒否</li>
+                            </ul>
                         </div>
                         
-                        <div class="bg-blue-50 p-4 rounded mt-4">
-                            <h4 class="font-semibold mb-2">結果の見方</h4>
+                        <div class="bg-green-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="monitor" class="w-4 h-4 mr-1"></i>
+                                エディタ画面での承認
+                            </h4>
                             <ul class="text-sm space-y-1">
-                                <li><strong>赤い文字</strong>: まだ作成中（正常です！）</li>
-                                <li><strong>緑の文字</strong>: 完成して正常動作</li>
-                                <li><strong>PASSED</strong>: 完璧に動作</li>
+                                <li>• エディタ画面で変更内容をプレビュー表示</li>
+                                <li>• 画面下部の「<strong>Accept file</strong>」ボタンをクリック → 承認</li>
+                                <li>• 問題があれば「<strong>Reject file</strong>」ボタンをクリック → 拒否</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-yellow-50 p-4 rounded">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="lightbulb" class="w-4 h-4 mr-1"></i>
+                                承認のコツ
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li>• <strong>どちらの方法でも同じ結果</strong>：チャットパネルとエディタ、どちらを使ってもOK</li>
+                                <li>• <strong>複数ファイルの場合</strong>：「Review next file」で順番に確認</li>
+                                <li>• <strong>迷った時</strong>：内容を確認してわからなければAIに質問しよう</li>
                             </ul>
                         </div>
                     </div>
