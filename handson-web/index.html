@@ -153,6 +153,109 @@ npm --version</code></pre>
                                 <li>Launchpad から「Cursor」を起動</li>
                             </ol>
                         </div>
+                        
+                        <!-- 詳細設定の折りたたみセクション -->
+                        <div class="mt-4">
+                            <button class="flex items-center justify-between w-full px-4 py-2 text-left bg-gray-100 hover:bg-gray-200 rounded transition-colors cursor-settings-toggle">
+                                <span class="font-semibold text-gray-700">詳細な初期設定手順を見る</span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-gray-600 transition-transform cursor-settings-icon"></i>
+                            </button>
+                            
+                            <div class="cursor-settings-content hidden mt-4 space-y-4">
+                                <div class="bg-yellow-50 p-4 rounded">
+                                    <h4 class="font-semibold mb-2">Step 3: 起動</h4>
+                                    <ol class="list-decimal list-inside space-y-1 text-sm">
+                                        <li>Launchpad を開く</li>
+                                        <li>「<strong>Cursor</strong>」を見つけてクリック</li>
+                                    </ol>
+                                </div>
+                                
+                                <div class="border-l-4 border-orange-500 pl-4">
+                                    <h4 class="text-lg font-semibold mb-3">初期設定（10分）</h4>
+                                    <p class="text-sm text-gray-600 mb-4">初回起動時に設定を行います。ゆっくりひとつずつ進めていきましょう。</p>
+                                    
+                                    <div class="space-y-4">
+                                        <div class="bg-blue-50 p-4 rounded">
+                                            <h5 class="font-semibold mb-2">Step 1：ログイン</h5>
+                                            <ul class="list-disc list-inside space-y-1 text-sm">
+                                                <li>「<strong>Sign in with GitHub</strong>」をクリック</li>
+                                                <li>GitHub アカウントでログイン（ない場合はその場で作成できます）</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="bg-green-50 p-4 rounded">
+                                            <h5 class="font-semibold mb-2">Step 2：基本設定</h5>
+                                            <ol class="list-decimal list-inside space-y-2 text-sm">
+                                                <li><strong>テーマ選択</strong>：
+                                                    <ul class="list-disc list-inside ml-4 mt-1">
+                                                        <li>Cursor Dark、Cursor Dark Midnight、Cursor Dark High Contrast から選択</li>
+                                                        <li>「<strong>Continue</strong>」をクリック</li>
+                                                    </ul>
+                                                </li>
+                                                <li><strong>キーバインディング選択</strong>：
+                                                    <ul class="list-disc list-inside ml-4 mt-1">
+                                                        <li>VS Code（デフォルト）、Vim、Emacs、Sublime Text から選択</li>
+                                                        <li>「<strong>Continue</strong>」をクリック</li>
+                                                    </ul>
+                                                </li>
+                                                <li><strong>データ共有の確認</strong>：
+                                                    <ul class="list-disc list-inside ml-4 mt-1">
+                                                        <li>チェックボックスを ON にして「<strong>Continue</strong>」をクリック</li>
+                                                        <li><strong>重要</strong>：後でプライバシー設定を変更します</li>
+                                                    </ul>
+                                                </li>
+                                                <li><strong>Review Settings 画面</strong>：
+                                                    <ul class="list-disc list-inside ml-4 mt-1">
+                                                        <li><strong>Language for AI</strong>：「<strong>Japanese</strong>」を選択（デフォルトは Auto）</li>
+                                                        <li><strong>Open from Terminal</strong>：「<strong>Install</strong>」ボタンをクリック（デフォルトの「<strong>cursor command</strong>」が選択されている状態で）</li>
+                                                        <li>「<strong>Continue</strong>」をクリック</li>
+                                                    </ul>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                        
+                                        <div class="bg-red-50 p-4 rounded">
+                                            <h5 class="font-semibold mb-2">Step 3：プライバシー設定（重要）</h5>
+                                            <ol class="list-decimal list-inside space-y-1 text-sm">
+                                                <li>右上の歯車アイコンをクリック</li>
+                                                <li>「<strong>General</strong>」→「<strong>Privacy</strong>」</li>
+                                                <li>「<strong>Privacy Mode</strong>」を選択
+                                                    <ul class="list-disc list-inside ml-4 mt-1">
+                                                        <li>これで、あなたのコードが学習に使われません</li>
+                                                    </ul>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                        
+                                        <div class="bg-purple-50 p-4 rounded">
+                                            <h5 class="font-semibold mb-2">Step 4：日本語化</h5>
+                                            <ol class="list-decimal list-inside space-y-1 text-sm">
+                                                <li><code>Cmd</code> + <code>Shift</code> + <code>X</code> を押す（拡張機能を開く）</li>
+                                                <li>検索欄に「<code>Japanese</code>」と入力</li>
+                                                <li>「<strong>Japanese Language Pack for Visual Studio Code</strong>」の「<strong>Install</strong>」ボタンをクリック</li>
+                                                <li>左下に表示される「<strong>Change Language and Restart</strong>」をクリック</li>
+                                            </ol>
+                                        </div>
+                                        
+                                        <div class="bg-gray-50 p-4 rounded">
+                                            <h5 class="font-semibold mb-2">Step 5：設定完了</h5>
+                                            <ul class="list-disc list-inside space-y-1 text-sm">
+                                                <li>Cursor Settings タブの「×」をクリックして閉じる</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="bg-indigo-50 p-4 rounded">
+                                            <h5 class="font-semibold mb-2">【豆知識】</h5>
+                                            <ul class="list-disc list-inside space-y-1 text-sm">
+                                                <li>Cursor Pro の<strong>14 日間無料トライアル</strong>が使えます</li>
+                                                <li>設定は後からいつでも変更できるので安心してください</li>
+                                                <li>VS Code を使ったことがある方は、設定を引き継げます</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- 1.3 開発ツールのインストール -->
@@ -884,6 +987,23 @@ curl https://product-api-xxxxx.a.run.app/health</code></pre>
             } else if (e.key === 'ArrowRight' && currentStep < totalSteps) {
                 currentStep++;
                 updateStep(currentStep);
+            }
+        });
+        
+        // 折りたたみ機能
+        document.addEventListener('click', (e) => {
+            const toggleBtn = e.target.closest('.cursor-settings-toggle');
+            if (toggleBtn) {
+                const content = toggleBtn.nextElementSibling;
+                const icon = toggleBtn.querySelector('.cursor-settings-icon');
+                
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    content.classList.add('hidden');
+                    icon.style.transform = 'rotate(0deg)';
+                }
             }
         });
         
