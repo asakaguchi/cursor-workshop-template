@@ -9,12 +9,5 @@ repos:
       - id: ruff-check
         args: [--fix]
       - id: ruff-format
-  - repo: local
-    hooks:
-      - id: pytest-check
-        name: Run tests after formatting and dependency changes
-        entry: uv run --frozen pytest
-        language: system
-        pass_filenames: false
-        always_run: true
-        stages: [pre-commit]
+# Removed automatic test execution to prevent workshop workflow interruptions
+# Tests should be run manually with: uv run --group dev pytest

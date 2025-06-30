@@ -51,8 +51,13 @@ APIは以下を実装する必要があります：
 ### 初回セットアップ
 
 ```bash
-# Python仮想環境のセットアップ
-uv sync
+# ワークショップ用の完全環境セットアップ（推奨）
+uv sync --extra all
+
+# または必要な部分のみセットアップ
+uv sync --extra dev          # 開発ツールのみ
+uv sync --extra api          # API開発のみ  
+uv sync --extra ui           # UI開発のみ
 
 # 仮想環境を有効化
 source .venv/bin/activate  # macOS/Linux
@@ -64,69 +69,73 @@ source .venv/bin/activate  # macOS/Linux
 **重要**: 常にuvを使用し、pipは決して使用しないでください
 
 ```bash
-# プロジェクトの同期（推奨 - pyproject.tomlから自動認識）
-uv sync
+# ワークショップ環境の同期（推奨）
+uv sync --extra all
+
+# 特定のグループのみ同期
+uv sync --extra dev --extra api
 
 # 必要に応じて新しい依存関係を追加する場合のみ
-# uv add package_name
-# uv add --dev dev_package_name
+# uv add --optional-group api package_name      # API用
+# uv add --optional-group ui package_name       # UI用  
+# uv add --optional-group dev package_name      # 開発用
 ```
 
 ### アプリケーションの実行
 
 ```bash
 # FastAPIサーバーの起動（ルートディレクトリから）
-uv run uvicorn api.main:app --reload
+uv run --extra api uvicorn api.main:app --reload
 
-# または api/ ディレクトリから
-cd api && uv run uvicorn main:app --reload
+# Streamlit UIの起動
+uv run --extra ui streamlit run ui/main.py
 
-# Swagger UIへのアクセス: http://localhost:8080/docs
+# Swagger UIへのアクセス: http://localhost:8000/docs
+# Streamlit UIへのアクセス: http://localhost:8501
 ```
 
 ### テスト
 
 ```bash
 # すべてのテストを実行
-uv run --frozen pytest
+uv run --extra dev pytest
 
 # 特定のテストファイルを実行
-uv run --frozen pytest tests/test_filename.py
+uv run --extra dev pytest tests/test_filename.py
 
 # 詳細出力でテストを実行
-uv run --frozen pytest -v
+uv run --extra dev pytest -v
 
 # anyioプラグインの問題がある場合
-PYTEST_DISABLE_PLUGIN_AUTOLOAD="" uv run --frozen pytest
+PYTEST_DISABLE_PLUGIN_AUTOLOAD="" uv run --extra dev pytest
 ```
 
 ### コード品質チェック
 
 ```bash
 # コードフォーマット
-uv run --frozen ruff format .
+uv run --extra dev ruff format .
 
 # Lintチェック
-uv run --frozen ruff check .
+uv run --extra dev ruff check .
 
 # Lint問題の修正
-uv run --frozen ruff check . --fix
+uv run --extra dev ruff check . --fix
 
 # 型チェック
-# 手動で実行する場合：
-uv run --frozen pyright
+uv run --extra dev pyright
 
 # Markdownファイルのチェック（必須）
 markdownlint *.md
 
 # pre-commitフックのインストール（初回のみ）
-uv run --frozen pre-commit install
+uv run --extra dev pre-commit install
 
 # pre-commitの手動実行
-uv run --frozen pre-commit run --all-files
+uv run --extra dev pre-commit run --all-files
 
 # pre-commitの自動更新（定期的に実行推奨）
-uv run --frozen pre-commit autoupdate
+uv run --extra dev pre-commit autoupdate
 ```
 
 ## アーキテクチャに関する注意
@@ -153,7 +162,23 @@ uv run --frozen pre-commit autoupdate
 #### ブランチ命名規則
 
 - `feature/task-{issue-number}-{brief-description}`
-- 例: `feature/task-1-project-setup`
+- 例: `feature/task-1-basic-directories`, `feature/task-2-health-endpoint`
+
+#### 効果的なタスク分解の原則
+
+**推奨タスクサイズ**: 15-30分で完了可能な単位
+
+**良いタスク分解の例:**
+- Task 1A: 基本ディレクトリ構造作成 (api/, ui/, tests/)
+- Task 1B: 空ファイル作成 (main.py, models.py等)  
+- Task 1C: 開発環境セットアップ確認
+- Task 2: ヘルスチェックエンドポイント実装
+- Task 3: 商品データモデル定義
+
+**避けるべき大きすぎるタスク:**
+- ❌ "プロジェクト基盤の構築" (複数の異なる作業を含む)
+- ❌ "API全体の実装" (複数エンドポイントを含む)
+- ❌ "テストとデプロイの設定" (異なる関心事を含む)
 
 #### GitHub CLI使用例
 
@@ -173,7 +198,23 @@ gh pr create \
 
 **実装コードを書く前に、必ず失敗するテストを書く。**
 
-この原則は絶対に破ってはいけません。
+この原則は機能実装において絶対に破ってはいけません。
+
+### TDD適用の判断基準
+
+**TDDを厳格に適用するタスク（機能実装）:**
+- APIエンドポイントの実装
+- ビジネスロジックの実装
+- データ処理・変換ロジック
+- バリデーション機能
+
+**TDDを緩やかに適用するタスク（インフラ・設定）:**
+- プロジェクト初期設定（pyproject.toml等）
+- ディレクトリ構造の作成
+- 設定ファイルの編集
+- 依存関係の管理
+
+**重要:** インフラタスクでもTDD適用が可能な場合は実施し、適用が困難な場合は理由を明確に説明すること。
 
 ### TDDサイクル
 
@@ -264,35 +305,30 @@ def create_item():
 - **UI Layer**: Streamlitコンポーネントテスト
 - **E2E Layer**: Playwright MCPによるブラウザ自動化
 
-### 重要原則：pre-commit後のテスト確認
+### 重要原則：手動テスト実行によるTDD品質保証
 
-**絶対的ルール**: 以下の場合は必ず手動でテストを再実行してグリーンを確認する
+**TDD品質保証ルール**: 以下の場合は必ず手動でテストを実行してグリーンを確認する
 
-1. pre-commitフックが自動修正を行った場合
-2. pre-commitでエラーが発生して手動修正した場合
+1. 機能実装コードを変更した場合
+2. pre-commitフックが自動修正を行った場合  
+3. pre-commitでエラーが発生して手動修正した場合
 
 ```bash
-# ケース1: pre-commitが自動修正した場合
-git commit -m "..."  # pre-commitが動作、自動修正が発生
+# 機能実装後やpre-commit修正後の確認手順
+uv run --extra dev pytest  # 手動でテスト実行
+# → 全テストがグリーンであることを確認してからコミット
 
-# ケース2: pre-commitでエラーが発生した場合
-git commit -m "..."  # pre-commitが失敗、エラーメッセージを表示
-# → エラーを手動で修正
-
-# いずれの場合も、以下を必ず実行：
-uv run --frozen pytest  # 手動でテスト実行
-# → 全テストがグリーンであることを確認してから再度コミット
 git add .
-git commit -m "..."  # 修正されたファイルでコミット
+git commit -m "..."  # テスト通過を確認してからコミット
 ```
 
-**重要**: AIは以下の場合に必ずpytestを手動実行してからコミットを完了すること：
+**重要な変更**: pre-commitは自動的にテストを実行しなくなりました。これにより：
 
-- pre-commitが自動修正した場合
-- pre-commitエラーで手動修正した場合
-- コードを直接編集した場合
+- ワークショップ中の予期しない中断を防止
+- 開発者が意図したタイミングでのテスト実行
+- TDD学習により集中できる環境
 
-これにより、t-wada方式TDDの「グリーンキープ」原則を維持できます。
+**AIは必ず**機能実装やコード修正後に手動でpytestを実行し、グリーン状態を確認してからコミットすること。
 
 ## 開発ガイドライン
 
@@ -405,31 +441,31 @@ ui/pyproject.toml - 本番デプロイ用
 
 **重要**: Cloud Run デプロイ時は、APIとUIを分離した独立構造で実装してください：
 
-#### 必要な構造
+#### ワークショップ用のシンプル構造
 
 ```text
 project/
+├── pyproject.toml      # 統合された依存関係管理
 ├── api/
-│   ├── pyproject.toml  # FastAPI専用（最小依存関係）
 │   ├── main.py         # FastAPIアプリケーション
 │   └── README.md
 ├── ui/
-│   ├── pyproject.toml  # Streamlit専用（最小依存関係）
 │   ├── main.py         # Streamlitアプリケーション
 │   └── README.md
 └── tests/              # テストファイル
 ```
 
-#### 各pyproject.tomlの要件
+#### 依存関係管理
 
-**API用**: 依存関係は `fastapi>=0.100.0`, `uvicorn[standard]>=0.23.0`,
-`pydantic>=2.0.0` のみ  
-**UI用**: 依存関係は `streamlit>=1.28.0`, `httpx>=0.24.0`,
-`pydantic>=2.0.0` のみ
+**統合pyproject.toml**: オプショナルグループで管理
+- `[project.optional-dependencies.api]`: FastAPI用
+- `[project.optional-dependencies.ui]`: Streamlit用  
+- `[project.optional-dependencies.dev]`: 開発・テスト用
+- `[project.optional-dependencies.all]`: 全て含む（ワークショップ推奨）
 
 #### デプロイ方法
 
-各ディレクトリを `mcp__cloud-run__deploy_local_folder` で独立してデプロイ
+個別デプロイ時は各ディレクトリを `mcp__cloud-run__deploy_local_folder` で実行
 
 ## Gitコミットガイドライン
 
@@ -477,6 +513,39 @@ project/
 - 変更を最小限に保つ
 - 既存のパターンに従う
 - パブリックAPIは常にドキュメント化
+
+## AI開発時のコミュニケーションガイドライン
+
+### CLI環境での応答スタイル
+
+**基本原則**: Claude Codeは**コマンドライン環境**で使用されるため、応答は簡潔かつ要点を絞ること
+
+**適切な応答例:**
+```
+✅ "pyproject.toml統合完了。pre-commit最適化に進みます。"
+✅ "ファイル編集完了。テスト実行中..."
+✅ "エラー修正。再度コミットします。"
+```
+
+**避けるべき冗長な応答例:**
+```
+❌ "はい、承知いたしました。それでは...という手順で進めてまいります。
+   まず最初に...について詳しく説明いたします。普段私たちが..."
+❌ "詳細な手順をご説明します。ステップ1として...ステップ2として..."
+```
+
+### レスポンス長の目安
+
+- **通常応答**: 1-3行以内
+- **エラー説明**: 最大5行以内  
+- **計画説明**: 箇条書きで最大10行以内
+- **技術解説**: 初心者向けでも最大15行以内
+
+### ワークショップ進行での配慮
+
+- **進捗報告**: 現在のタスクと次のステップを明示
+- **エラー対応**: 原因と解決策を簡潔に説明
+- **学習サポート**: 必要最小限の技術解説のみ
 
 ## 重要な指示のリマインダー
 
