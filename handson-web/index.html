@@ -632,12 +632,20 @@ gh auth login</code></pre>
                             4.1 最初の作業開始
                         </h3>
                         
-                        <p class="text-gray-600 mb-4">チャットで AI に伝えてください：</p>
+                        <p class="text-gray-600 mb-4">作成されたタスクから順番に取り組んでいきます。チャットで AI に伝えてください：</p>
                         <div class="command-block">
-                            <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>Issue #1 を開始してください</code></pre>
-                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="Issue #1 を開始してください">
+                            <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>最初のタスク（Issue #1）を開始してください</code></pre>
+                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="最初のタスク（Issue #1）を開始してください">
                                 <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
                             </button>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded mt-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="info" class="w-4 h-4 mr-1"></i>
+                                TDD ワークフローについて
+                            </h4>
+                            <p class="text-sm">AI は「テスト→実装→改善」のサイクルを自動で回します。複数のタスクがありますが、1つずつ順番に完了させていきます。各タスクで同じパターンを繰り返すことで、TDD の流れを体験できます。</p>
                         </div>
                         
                         <div class="bg-yellow-50 p-4 rounded mt-4">
@@ -696,19 +704,61 @@ gh auth login</code></pre>
                         </div>
                     </div>
 
-                    <!-- 4.3 作業完了の報告 -->
+                    <!-- 4.3 タスク完了とワークフロー継続 -->
                     <div class="border-l-4 border-purple-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
                             <i data-lucide="check-square" class="w-5 h-5 mr-2"></i>
-                            4.3 作業完了の報告
+                            4.3 タスク完了とワークフロー継続
                         </h3>
                         
-                        <p class="text-gray-600 mb-4">タスクが完了したら、チャットで伝えてください：</p>
-                        <div class="command-block">
-                            <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>Issue #1 が完了しました。PR を作成してください。</code></pre>
-                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="Issue #1 が完了しました。PR を作成してください。">
-                                <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
-                            </button>
+                        <div class="bg-green-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="check-circle" class="w-4 h-4 mr-1"></i>
+                                Step 1: タスク完了の報告
+                            </h4>
+                            <p class="text-sm mb-2">各タスクが完了したら、チャットで伝えてください：</p>
+                            <div class="command-block">
+                                <pre class="language-text bg-gray-900 text-white p-3 rounded overflow-x-auto text-sm"><code>このタスクが完了しました。PR を作成してください。</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="このタスクが完了しました。PR を作成してください。">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="git-pull-request" class="w-4 h-4 mr-1"></i>
+                                Step 2: PR 管理の対応
+                            </h4>
+                            <p class="text-sm mb-2">AI の PR 作成後の対応は、状況に応じて臨機応変に：</p>
+                            <ul class="text-sm space-y-1 ml-4">
+                                <li>• <strong>PR 作成のみ</strong>：「レビュー待ち」として次のタスクへ進む</li>
+                                <li>• <strong>自動マージ</strong>：AI が適切と判断した場合、自動でマージ</li>
+                                <li>• <strong>レビュー要求</strong>：AI がレビューが必要と判断した場合は指示に従う</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-purple-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="arrow-right" class="w-4 h-4 mr-1"></i>
+                                Step 3: 次のタスクへ継続
+                            </h4>
+                            <p class="text-sm mb-2">PR 対応完了後、次のタスクに進みます：</p>
+                            <div class="command-block">
+                                <pre class="language-text bg-gray-900 text-white p-3 rounded overflow-x-auto text-sm"><code>次のタスク（Issue #X）を開始してください</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="次のタスク（Issue #X）を開始してください">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-2">※ #X は実際のIssue番号に置き換えてください</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="target" class="w-4 h-4 mr-1"></i>
+                                進捗確認
+                            </h4>
+                            <p class="text-sm">すべてのAPI開発タスクを完了するまで、Step 1-3 を繰り返します。GitHub の Issues ページで進捗を随時確認できます。</p>
                         </div>
                     </div>
 
@@ -719,9 +769,11 @@ gh auth login</code></pre>
                             <h4 class="font-semibold text-green-800">チェックポイント</h4>
                         </div>
                         <ul class="space-y-1 text-sm text-green-700">
-                            <li class="flex items-center"><input type="checkbox" class="mr-2"> Issue #1 を開始できた</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> TDD ワークフローを理解した</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 最初のタスクを開始できた</li>
                             <li class="flex items-center"><input type="checkbox" class="mr-2"> テストが実行できた</li>
                             <li class="flex items-center"><input type="checkbox" class="mr-2"> PR が作成された</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 複数タスクの継続方法を理解した</li>
                         </ul>
                     </div>
                 </div>
@@ -760,19 +812,66 @@ gh auth login</code></pre>
                         </div>
                     </div>
 
-                    <!-- 5.2 UI開発もIssue駆動で進める -->
+                    <!-- 5.2 実装仕様書の作成 -->
                     <div class="border-l-4 border-green-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
-                            <i data-lucide="list-todo" class="w-5 h-5 mr-2"></i>
-                            5.2 UI開発もIssue駆動で進める
+                            <i data-lucide="file-text" class="w-5 h-5 mr-2"></i>
+                            5.2 実装仕様書の作成
                         </h3>
                         
-                        <p class="text-gray-600 mb-4">UI開発のタスク分解を依頼：</p>
+                        <div class="bg-yellow-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="clock" class="w-4 h-4 mr-1"></i>
+                                時間効率化のポイント
+                            </h4>
+                            <p class="text-sm">ワークショップの時間内で完成させるため、<strong>実装済みのAPI機能のみ</strong>を使った UI を設計します。新しい API 機能は追加せず、既存の機能で実現できる範囲に絞ります。</p>
+                        </div>
+                        
+                        <p class="text-gray-600 mb-4">実装済みの API を確認してから UI を設計してもらいましょう：</p>
+                        <div class="command-block">
+                            <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>@api/ ディレクトリの実装済みAPIを確認して、これらの機能だけを使った商品管理UIの仕様書を作成してください。
+
+以下の条件でお願いします：
+- 実装済みのAPIエンドポイントのみ使用
+- 新しいAPI機能は追加しない
+- docs/ui-design.md として仕様書を保存
+- Streamlitでの実装を前提とした設計
+- ワークショップ時間内（20分）で実装可能な範囲に限定
+
+ユーザーは商品在庫管理の担当者で、初心者でも使いやすい画面が必要です。</code></pre>
+                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="@api/ ディレクトリの実装済みAPIを確認して、これらの機能だけを使った商品管理UIの仕様書を作成してください。&#10;&#10;以下の条件でお願いします：&#10;- 実装済みのAPIエンドポイントのみ使用&#10;- 新しいAPI機能は追加しない&#10;- docs/ui-design.md として仕様書を保存&#10;- Streamlitでの実装を前提とした設計&#10;- ワークショップ時間内（20分）で実装可能な範囲に限定&#10;&#10;ユーザーは商品在庫管理の担当者で、初心者でも使いやすい画面が必要です。">
+                                <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded mt-4">
+                            <h4 class="font-semibold mb-2 flex items-center">
+                                <i data-lucide="info" class="w-4 h-4 mr-1"></i>
+                                設計のポイント
+                            </h4>
+                            <ul class="text-sm space-y-1">
+                                <li>• <strong>API制約の確認</strong>：利用可能なエンドポイントを正確に把握</li>
+                                <li>• <strong>MVP思考</strong>：最小限の機能で最大の価値を提供</li>
+                                <li>• <strong>実装時間の考慮</strong>：20分で実現可能な機能に絞り込み</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 5.3 UI開発もIssue駆動で進める -->
+                    <div class="border-l-4 border-purple-500 pl-4">
+                        <h3 class="text-lg font-semibold mb-3 flex items-center">
+                            <i data-lucide="list-todo" class="w-5 h-5 mr-2"></i>
+                            5.3 UI開発もIssue駆動で進める
+                        </h3>
+                        
+                        <p class="text-gray-600 mb-4">作成された仕様書を基に、UI開発のタスク分解を依頼：</p>
                         <div class="command-block">
                             <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>@docs/ui-design.md
 
 この設計書を基に、UI開発のタスクを分解してください。
 各タスクは15-30分で完了できる小さな作業にしてください。
+
+重要：実装済みAPI機能のみを使用し、ワークショップ時間内で完成させることを最優先にしてください。
 
 例：
 - Task 1: Streamlitアプリの基本構造作成
@@ -793,11 +892,11 @@ gh auth login</code></pre>
                         </div>
                     </div>
 
-                    <!-- 5.3 最終確認用手動テスト -->
-                    <div class="border-l-4 border-purple-500 pl-4">
+                    <!-- 5.4 最終確認用手動テスト -->
+                    <div class="border-l-4 border-orange-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
                             <i data-lucide="mouse-pointer-click" class="w-5 h-5 mr-2"></i>
-                            5.3 最終確認用手動テスト
+                            5.4 最終確認用手動テスト
                         </h3>
                         
                         <p class="text-gray-600 mb-4">全てのIssueが完了したら、最終確認として画面アプリを起動：</p>
@@ -821,7 +920,8 @@ cd ui && uv run streamlit run main.py</code></pre>
                             <h4 class="font-semibold text-green-800">チェックポイント</h4>
                         </div>
                         <ul class="space-y-1 text-sm text-green-700">
-                            <li class="flex items-center"><input type="checkbox" class="mr-2"> UI設計が完了した</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> UI設計のアイデア検討が完了した</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> UI仕様書（docs/ui-design.md）が作成された</li>
                             <li class="flex items-center"><input type="checkbox" class="mr-2"> UIタスクがIssueに登録された</li>
                             <li class="flex items-center"><input type="checkbox" class="mr-2"> Streamlitアプリが動作する</li>
                         </ul>
