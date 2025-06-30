@@ -129,8 +129,9 @@ uv run --frozen pre-commit autoupdate
 ## アーキテクチャに関する注意
 
 - **インメモリストレージ**: データベースなし - データはアプリケーション実行時のみ保持
-- **テストコンテキスト**: インストールなしで`product_api`をインポートするために`tests/context.py`を使用
-- **プロジェクト構造**: メインAPIコードは`src/product_api/`、テストは`tests/`（srcレイアウト採用）
+- **分離デプロイ構造**: APIは`api/`、UIは`ui/`に独立配置（Cloud Run対応）
+- **テストコンテキスト**: 分離構造に対応した`tests/context.py`を使用
+- **プロジェクト構造**: APIコードは`api/`、UIコードは`ui/`、テストは`tests/`
 - **エラーハンドリング**: 適切なバリデーションとHTTPステータスコードの実装
 - **認証なし**: このワークショップの範囲外
 
@@ -294,6 +295,32 @@ git commit -m "..."  # 修正されたファイルでコミット
 - 更新/削除操作なし（作成と読み取りのみ）
 - 自動生成ドキュメントを備えたREST API用のFastAPI
 - Cloud RunへのデプロイはMCP経由で自動化
+
+### Cloud Run 分離デプロイ要件
+
+**重要**: Cloud Run デプロイ時は、APIとUIを分離した独立構造で実装してください：
+
+#### 必要な構造
+```
+project/
+├── api/ (または product_api/)
+│   ├── pyproject.toml  # FastAPI専用（最小依存関係）
+│   ├── main.py         # FastAPIアプリケーション
+│   └── README.md
+├── ui/ (または product_ui/)
+│   ├── pyproject.toml  # Streamlit専用（最小依存関係）
+│   ├── main.py         # Streamlitアプリケーション
+│   └── README.md
+└── src/                # 開発用（レガシー）
+```
+
+#### 各pyproject.tomlの要件
+
+**API用**: 依存関係は `fastapi>=0.100.0`, `uvicorn[standard]>=0.23.0`, `pydantic>=2.0.0` のみ  
+**UI用**: 依存関係は `streamlit>=1.28.0`, `httpx>=0.24.0`, `pydantic>=2.0.0` のみ
+
+#### デプロイ方法
+各ディレクトリを `mcp__cloud-run__deploy_local_folder` で独立してデプロイ
 
 ## Gitコミットガイドライン
 

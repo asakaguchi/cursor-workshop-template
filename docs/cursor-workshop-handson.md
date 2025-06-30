@@ -471,11 +471,14 @@ AI は自動的にこのルールに従ってくれるので、初心者でも�
 チャットで以下を送信してください。
 
 ```text
-@requirements.md @.cursor/prompts/task-breakdown.md @CLAUDE.md
+@requirements.md @CLAUDE.md
 
 要件を確認して、2 時間で完成できるようにタスクを分解してください。
 各タスクは 15-30 分で完了できる小さな作業にしてください。
 初心者でもわかりやすい言葉で説明してください。
+
+重要：このプロジェクトはCloud Run分離デプロイ対応で、api/とui/ディレクトリに
+独立したアプリケーションを開発します。
 ```
 
 **@マークって何？**
@@ -743,7 +746,7 @@ pyproject.toml の既存設定をそのまま使用し、必要最小限の追�
 
 #### ファイルの置き場所
 
-コードは `src/product_api/` フォルダに整理されます。
+コードは `api/` フォルダに整理されます。
 
 #### 見守ってください
 
@@ -1155,7 +1158,7 @@ Issue #[番号] が完了しました。次の Issue #[次の番号] を開始�
 
 ```bash
 # 画面アプリを起動（最終確認用）
-uv run streamlit run src/product_ui/main.py
+uv run streamlit run ui/main.py
 ```
 
 ブラウザで <http://localhost:8501> にアクセスして目視確認してください。
@@ -1167,9 +1170,12 @@ uv run streamlit run src/product_ui/main.py
 ### クラウド環境で公開しましょう
 
 AI がクラウドの設定からデプロイまで、プロレベルの作業を自動化してくれます。
-今回は最新のMCP（Model Context Protocol）を使って、よりセキュアな方法でデプロイします。
+今回は最新のMCP（Model Context Protocol）を使って、APIとUIを分離してデプロイします。
 
-### 6.1 セキュアな認証の準備（5分）
+**重要**: このプロジェクトは最初からCloud Run分離デプロイ対応で設計されています。
+`api/` と `ui/` のディレクトリがそれぞれ独立したサービスとしてデプロイされます。
+
+### 6.1 セキュアな認証の準備（3分）
 
 #### なぜサービスアカウントを使うの？
 
@@ -1267,39 +1273,59 @@ gcloud auth application-default login \
 2. 権限を承認
 3. 「認証が完了しました」のメッセージを確認
 
-### 6.2 MCPを使ったデプロイ（5分）
+### 6.2 MCPを使った分離デプロイ（4分）
 
-#### Cloud Run MCPが自動でやってくれること
+#### API と UI の分離デプロイ
 
-MCP（Model Context Protocol）により、AIが以下の作業を完全自動化します。
+このプロジェクトでは、APIとUIを別々のCloud Runサービスとしてデプロイします。
 
-- Dockerfileの作成
-- コンテナイメージのビルド
-- Cloud Runへのデプロイ
-- HTTPSエンドポイントの設定
-- 環境変数の設定
-
-#### デプロイの実行
+#### API のデプロイ
 
 チャットで以下を送信してください。
 
 ```text
-Cloud Run MCPを使って、商品管理アプリケーションをデプロイしてください。
+Cloud Run MCPを使って、api/ ディレクトリの商品管理APIをデプロイしてください。
 以下の設定でお願いします。
 
 - リージョン: asia-northeast1（東京）
-- サービス名: cursor-workshop-app
+- サービス名: product-api
 - 認証なしで公開アクセス可能に設定
-- 環境変数: PORT=8080
+- ポート: 8080
 ```
 
-#### AIがやってくれる作業の流れ
+#### UI のデプロイ
 
-1. **設定確認**：デプロイ設定を提示して確認を求める
-2. **Dockerfile作成**：アプリケーションに最適な設定で作成
-3. **ビルド実行**：Cloud Buildでコンテナイメージを作成
-4. **デプロイ実行**：Cloud Runにアプリケーションを配置
-5. **URL発行**：HTTPSでアクセス可能なURLを生成
+APIのデプロイが完了したら、UIをデプロイします。
+
+```text
+Cloud Run MCPを使って、ui/ ディレクトリの商品管理UIをデプロイしてください。
+以下の設定でお願いします。
+
+- リージョン: asia-northeast1（東京）
+- サービス名: product-ui
+- 認証なしで公開アクセス可能に設定
+- ポート: 8501
+- 環境変数: API_URL=https://product-api-xxxxx.a.run.app（APIのURL）
+```
+
+#### Cloud Run MCPが自動でやってくれること
+
+各デプロイで、MCP（Model Context Protocol）により、AIが以下の作業を完全自動化します：
+
+**API デプロイ**:
+
+1. **設定確認**：FastAPI用デプロイ設定を確認
+2. **ビルド実行**：Cloud Build でAPIアプリケーションをビルド
+3. **デプロイ実行**：product-api サービスとしてデプロイ
+4. **URL発行**：API用HTTPSエンドポイントを生成
+
+**UI デプロイ**:
+
+1. **設定確認**：Streamlit用デプロイ設定を確認
+2. **環境変数設定**：API_URLを正しいAPIエンドポイントに設定
+3. **ビルド実行**：Cloud Build でUIアプリケーションをビルド
+4. **デプロイ実行**：product-ui サービスとしてデプロイ
+5. **URL発行**：UI用HTTPSエンドポイントを生成
 
 ### 6.3 デプロイ時の対話パターン
 
@@ -1381,19 +1407,19 @@ gcloud auth application-default login \
 Cloud Run APIを有効化してください。エラーメッセージに表示されたコマンドを実行してください。
 ```
 
-### 6.4 本番環境での動作確認（5分）
+### 6.4 本番環境での動作確認（3分）
 
-#### デプロイされたアプリの確認
+#### デプロイされた分離アプリの確認
 
-AIが教えてくれたURLで、実際に動作を確認しましょう。
+AIが教えてくれた各URLで、実際に動作を確認しましょう。
 
 ##### API の動作確認
 
 **Cursor 内のターミナル**で実行：
 
 ```bash
-# ヘルスチェック（アプリが生きているか確認）
-curl https://cursor-workshop-app-xxxxx.a.run.app/health
+# ヘルスチェック（APIが生きているか確認）
+curl https://product-api-xxxxx.a.run.app/health
 
 # 期待される結果
 {"status":"healthy"}
@@ -1401,13 +1427,13 @@ curl https://cursor-workshop-app-xxxxx.a.run.app/health
 
 ##### Swagger UIでAPIを試す
 
-ブラウザで以下のURLを開きます。
+ブラウザで以下のAPIのURLを開きます。
 
 ```text
-https://cursor-workshop-app-xxxxx.a.run.app/docs
+https://product-api-xxxxx.a.run.app/docs
 ```
 
-###### できること
+###### APIでできること
 
 1. **POST /items**：新しい商品を登録
 2. **GET /items/{id}**：登録した商品を確認
@@ -1415,18 +1441,29 @@ https://cursor-workshop-app-xxxxx.a.run.app/docs
 
 ##### Web UIの確認
 
-メインのURLをブラウザで開きます。
+UIのURLをブラウザで開きます。
 
 ```text
-https://cursor-workshop-app-xxxxx.a.run.app
+https://product-ui-xxxxx.a.run.app
 ```
 
 ###### Web UIでの動作確認
 
-1. 商品名：「クラウドりんご」
-2. 価格：「300」
-3. 登録ボタンをクリック
-4. 商品が表示されることを確認
+1. 「API接続OK」が表示されることを確認
+2. 商品登録タブで：
+   - 商品名：「クラウドりんご」
+   - 価格：「300」
+   - 登録ボタンをクリック
+3. 商品検索タブで：
+   - 登録した商品のIDで検索
+   - 商品情報が表示されることを確認
+
+##### 分離アーキテクチャの確認
+
+- **API**: <https://product-api-xxxxx.a.run.app> （データ処理）
+- **UI**: <https://product-ui-xxxxx.a.run.app> （画面表示）
+
+2つのサービスが独立して動作し、UIがAPIを呼び出している構成を確認できます。
 
 ### 6.5 セキュリティの確認
 

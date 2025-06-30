@@ -1,14 +1,15 @@
-"""
-テストモジュールが product_api パッケージをインポートできるようにするヘルパー。
+"""テストモジュールがapiとuiモジュールをインポートできるようにするヘルパー。
 
-srcレイアウトに対応したパス設定を行います。
+分離デプロイ対応のパス設定を行います。
 """
+
 import os
 import sys
 
-# srcディレクトリをPythonパスに追加
-src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src'))
-sys.path.insert(0, src_path)
+# api と ui ディレクトリをPythonパスに追加
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+api_path = os.path.join(project_root, "api")
+ui_path = os.path.join(project_root, "ui")
 
-# アプリケーションモジュールをインポート
-import product_api
+sys.path.insert(0, api_path)
+sys.path.insert(0, ui_path)

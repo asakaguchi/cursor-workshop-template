@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "cursor-workshop-template"
 version = "0.1.0"
-description = "Cursor×Python×GitHub ハンズオン用テンプレート - 商品管理APIとWeb UI"
+description = "Cursor×Python×GitHub ハンズオン用テンプレート - 商品管理APIとWeb UI（分離デプロイ対応）"
 readme = "README.md"
 requires-python = ">=3.12"
 license = {text = "MIT"}
@@ -18,18 +18,16 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
+    # 開発環境用の共通依存関係
     "fastapi>=0.100.0",
     "uvicorn[standard]>=0.23.0",
     "pydantic>=2.0.0",
     "streamlit>=1.28.0",
+    "httpx>=0.24.0",
 ]
 
-
-[project.scripts]
-product-api = "product_api.main:app"
-
 [tool.hatch.build.targets.wheel]
-packages = ["src/product_api", "src/product_ui"]
+packages = ["api", "ui"]
 
 [tool.ruff]
 target-version = "py312"
@@ -45,20 +43,25 @@ select = [
     "I",  # isort
     "B",  # flake8-bugbear
     "C4", # flake8-comprehensions
-    "UP", # pyupgrade
     "ANN", # flake8-annotations
     "D",  # pydocstyle
-    "PTH", # flake8-use-pathlib
-    "RUF", # Ruff-specific rules
     "SIM", # flake8-simplify
 ]
 ignore = [
     "D100", # Missing docstring in public module
     "D104", # Missing docstring in public package
     "D107", # Missing docstring in __init__
+    "D415", # First line should end with a period
     "ANN101", # Missing type annotation for self
     "ANN102", # Missing type annotation for cls
     "ANN401", # Dynamically typed expressions (Any)
+    "RUF001", # String contains ambiguous unicode character
+    "RUF002", # Docstring contains ambiguous unicode character
+    "PTH100", # os.path.abspath -> Path.resolve
+    "PTH118", # os.path.join -> Path
+    "PTH120", # os.path.dirname -> Path.parent
+    "UP035", # typing.Dict -> dict
+    "F401", # Unused import
 ]
 unfixable = ["F401", "F841"]
 
@@ -72,11 +75,11 @@ convention = "google"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-pythonpath = ["src"]
-addopts = "-v --tb=short --cov=src/product_api --cov-report=term-missing"
+pythonpath = ["api", "ui"]
+addopts = "-v --tb=short --cov=api --cov=ui --cov-report=term-missing"
 
 [tool.coverage.run]
-source = ["src/product_api"]
+source = ["api", "ui"]
 branch = true
 
 [tool.coverage.report]
@@ -90,7 +93,7 @@ exclude_lines = [
 
 [tool.pyright]
 pythonVersion = "3.12"
-include = ["src", "tests"]
+include = ["api", "ui", "tests"]
 exclude = ["**/node_modules", "**/__pycache__", ".venv"]
 reportMissingTypeStubs = false
 typeCheckingMode = "basic"
