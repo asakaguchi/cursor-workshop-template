@@ -240,57 +240,42 @@ gcloud --version
 「プロジェクトのひな形」をダウンロードして、自分専用にします。
 必要なファイルがすべて揃った「スターターキット」を受け取るイメージです。
 
-##### Step 1：テンプレートを開く
+#### Step 1：テンプレートを開く
 
-ブラウザで以下のリンクを開いてください。
-<https://github.com/asakaguchi/cursor-workshop-template>
+ブラウザで以下のリンクを開いてください：
 
-##### Step 2：自分のプロジェクトを作る
+```text
+https://github.com/asakaguchi/cursor-workshop-template
+```
 
-1. 緑色の「**Use this template**」ボタンをクリック
+#### Step 2：自分のプロジェクトを作る
+
+1. 青色の「**Use this template**」ボタンをクリック
 2. 「**Create a new repository**」を選択
 3. **Repository name**に「`my-cursor-workshop`」と入力
-   - または、お好きな名前でも OK（例：`my-first-app`）
 4. 「**Create repository**」をクリック
-5. 数秒待つと、あなた専用のプロジェクトが完成！
 
-##### Step 3：Cursor でプロジェクトを開く
+#### Step 3：Cursor でプロジェクトを開く
 
-1. **コマンドパレットを開く**：`Cmd` + `Shift` + `P`
-2. **「Git: Clone」と入力**して `Enter` を押す
+1. `Cmd + Shift + P` でコマンドパレットを開く
+2. 「**Git: Clone**」と入力して `Enter`
 3. 「**GitHub から複製**」を選択
-4. **GitHub サインイン**（初回のみ）：
-   - 「**許可**」ボタンをクリック
-   - 「**コピーして GitHub に進む**」ボタンをクリック
-   - コードを貼り付けて「**Continue**」ボタンをクリック
-   - 「**Authorize Visual-Studio-Code**」ボタンをクリック
-5. **リポジトリを選択**：
-   - リポジトリの一覧から先ほど作成したリポジトリ（`my-cursor-workshop`）をクリック
-6. **保存先フォルダを選択**：
-   - ホームディレクトリ内に「**Projects**」フォルダを作成して選択
-   - 「**リポジトリの宛先として選択**」ボタンをクリック
-7. **プロジェクトを開く**：
-   - 「**クローンしたリポジトリを開きますか？**」で「**開く**」ボタンをクリック
+4. 「**拡張機能 'GitHub' が GitHub を使用してサインインしようとしています。**」のダイアログで、「**許可**」をクリック
+5. 「**コピーして GitHub に進む**」をクリック
+6. 自身の GitHub アカウントで認証（ブラウザで認証コードをペースト）
+7. 「**Authorize Visual Studio Code**」で「**Authorize Visual-Studio-Code**」をクリック
+8. Cursor に戻り、作成したリポジトリ（`my-cursor-workshop`）を選択
+9. 保存先フォルダを選択して「**リポジトリの宛先として選択**」をクリック（「**Projects**」フォルダーの作成を推奨）
 
-**これ以降はすべて Cursor 内で作業を続けます。**
+### 1.5 MCP サーバーの有効化
 
-##### Step 4：MCP サーバーの有効化
-
-画面左下に以下の通知が表示されます：
+画面左下に以下の通知が表示されたら、それぞれ「**Enable**」ボタンをクリック：
 
 - 「**New MCP Server detected: cloud-run**」
 - 「**New MCP Server detected: context7**」
 - 「**New MCP Server detected: playwright**」
 
-それぞれの通知で「**Enable**」ボタンをクリックして有効化してください。
-
-これらの MCP（Model Context Protocol）サーバーは以下の機能を提供します。
-
-- **cloud-run**：Google Cloud Run へのデプロイ機能
-- **context7**：ライブラリのドキュメント検索機能
-- **playwright**：ブラウザ自動化機能
-
-### 1.5 Python 環境のセットアップ（5 分）
+### 1.6 Python 環境のセットアップ（5 分）
 
 #### Python 環境の準備
 
@@ -302,13 +287,12 @@ gcloud --version
 ##### 環境をセットアップ
 
 ```bash
-# プロジェクトに必要な道具を全部そろえる（Python も自動インストール）
+# プロジェクトに必要な道具を全部そろえる
 uv sync
 
-# 各サブディレクトリでも個別にセットアップ（分離デプロイ対応）
-cd api && uv sync
-cd ../ui && uv sync
-cd ..
+# 各サブディレクトリでも個別にセットアップ
+cd api && uv sync && cd ..
+cd ui && uv sync && cd ..
 ```
 
 初回は 1-2 分かかります。uv が自動的に以下を実行します。
@@ -324,7 +308,7 @@ cd ..
 uv run pre-commit install
 ```
 
-### 1.6 GitHub CLI の認証設定（5 分）
+### 1.7 GitHub CLI の認証設定（5 分）
 
 #### GitHub 認証の概要
 
