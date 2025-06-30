@@ -191,6 +191,7 @@ uv run --extra dev pre-commit autoupdate
 **推奨タスクサイズ**: 15-30分で完了可能な単位
 
 **良いタスク分解の例:**
+
 - Task 1A: 基本ディレクトリ構造作成 (api/, ui/, tests/)
 - Task 1B: 空ファイル作成 (main.py, models.py等)  
 - Task 1C: 開発環境セットアップ確認
@@ -198,6 +199,7 @@ uv run --extra dev pre-commit autoupdate
 - Task 3: 商品データモデル定義
 
 **避けるべき大きすぎるタスク:**
+
 - ❌ "プロジェクト基盤の構築" (複数の異なる作業を含む)
 - ❌ "API全体の実装" (複数エンドポイントを含む)
 - ❌ "テストとデプロイの設定" (異なる関心事を含む)
@@ -225,12 +227,14 @@ gh pr create \
 ### TDD適用の判断基準
 
 **TDDを厳格に適用するタスク（機能実装）:**
+
 - APIエンドポイントの実装
 - ビジネスロジックの実装
 - データ処理・変換ロジック
 - バリデーション機能
 
 **TDDを緩やかに適用するタスク（インフラ・設定）:**
+
 - プロジェクト初期設定（pyproject.toml等）
 - ディレクトリ構造の作成
 - 設定ファイルの編集
@@ -282,16 +286,45 @@ gh pr create \
 
 ```python
 # ステップ1: Red（失敗するテスト）
-def test_create_product_returns_201():
-    response = client.post("/items", json={"name": "商品", "price": 100})
+import pytest
+from httpx import ASGITransport, AsyncClient
+from api.main import app
+
+@pytest.mark.anyio
+async def test_create_product_returns_201():
+    async with AsyncClient(
+        transport=ASGITransport(app=app), 
+        base_url="http://test"
+    ) as client:
+        response = await client.post("/items", json={"name": "商品", "price": 100})
     assert response.status_code == 201  # 失敗
 
 # ステップ2: Green（最小限の実装）
 @app.post("/items", status_code=201)
-def create_item():
+async def create_item():
     return {}  # 仮実装
 
 # ステップ3: 次のテストを追加してリファクタリング
+```
+
+### FastAPI + httpx テストパターン（標準）
+
+```python
+# tests/api/test_main.py の標準テンプレート
+import pytest
+from httpx import ASGITransport, AsyncClient
+from api.main import app
+
+@pytest.mark.anyio
+async def test_endpoint_name():
+    """エンドポイントのテスト説明"""
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url="http://test"
+    ) as client:
+        # テスト実装
+        response = await client.get("/path")
+        assert response.status_code == 200
 ```
 
 ### コミット戦略
@@ -479,6 +512,7 @@ project/
 #### 依存関係管理
 
 **統合pyproject.toml**: オプショナルグループで管理
+
 - `[project.optional-dependencies.api]`: FastAPI用
 - `[project.optional-dependencies.ui]`: Streamlit用  
 - `[project.optional-dependencies.dev]`: 開発・テスト用
@@ -542,6 +576,7 @@ project/
 **基本原則**: Claude Codeは**コマンドライン環境**で使用されるため、応答は簡潔かつ要点を絞ること
 
 **適切な応答例:**
+
 ```
 ✅ "pyproject.toml統合完了。pre-commit最適化に進みます。"
 ✅ "ファイル編集完了。テスト実行中..."
@@ -549,6 +584,7 @@ project/
 ```
 
 **避けるべき冗長な応答例:**
+
 ```
 ❌ "はい、承知いたしました。それでは...という手順で進めてまいります。
    まず最初に...について詳しく説明いたします。普段私たちが..."

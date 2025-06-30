@@ -12,6 +12,7 @@ alwaysApply: true
 - fix/task-{issue番号}-{説明}: バグ修正
 
 例：
+
 - feature/task-1-project-setup
 - fix/task-5-validation-error
 
@@ -74,22 +75,26 @@ gh pr create \
 ### PR 作成の流れ
 
 1. テストが全て通ることを確認
+
 ```bash
 uv run pytest tests/ -v
 ```
 
 2. 変更をコミット
+
 ```bash
 git add .
 git commit -m "feat: 商品作成APIを実装"
 ```
 
 3. ブランチをプッシュ
+
 ```bash
 git push -u origin feature/task-2-create-api
 ```
 
 4. PRを作成（$'...'構文使用）
+
 ```bash
 gh pr create \
   --title "feat: Task 2 - 商品作成API実装" \

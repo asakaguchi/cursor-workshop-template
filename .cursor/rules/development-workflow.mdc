@@ -109,12 +109,14 @@ cd api && uv run uvicorn main:app --reload
 **テストライブラリ不足エラーが発生した場合の対処法：**
 
 #### 手順1: 現在位置と環境の確認（必須）
+
 ```bash
 pwd  # プロジェクトルートにいることを確認
 cat pyproject.toml | head -20  # 設定確認
 ```
 
 #### 手順2: 依存関係の統一管理
+
 ```bash
 # 絶対にサブディレクトリ（api/, ui/）ではなく、ルートで実行
 uv add --dev pytest httpx asgi-lifespan trio fastapi
@@ -122,22 +124,26 @@ uv sync
 ```
 
 #### 手順3: テスト環境の検証
+
 ```bash
 uv run --frozen pytest tests/ --collect-only  # テスト収集確認
 uv run --frozen pytest tests/ -v  # 実際のテスト実行
 ```
 
 #### 絶対禁止パターン
+
 - ❌ `cd api && uv add` → `cd .. && pytest` （環境混在）
 - ❌ エラー時の場当たり的パッケージ追加
 - ❌ 複数環境での重複パッケージ管理
 
 #### 環境の原則
+
 - **テスト実行**: 常にプロジェクトルートから
 - **依存関係**: テストツールはルートのpyproject.tomlに集約
 - **本番デプロイ**: api/, ui/は最小限の依存関係のみ
 
 #### 分離デプロイ構造での環境管理
+
 ```
 project/
 ├── pyproject.toml          # 開発・テスト環境（統合）
@@ -155,7 +161,9 @@ project/
 ## TDD実践の具体的フロー
 
 ### 1. テストリストの作成
+
 Issueを開始する前に、実装すべきテストケースをリストアップ：
+
 ```bash
 # TODOコメントとしてテストファイルに記載
 # TODO: test_create_product_returns_201
@@ -165,6 +173,7 @@ Issueを開始する前に、実装すべきテストケースをリストアッ
 ```
 
 ### 2. TDDサイクルの実行
+
 各テストケースに対して以下を繰り返す：
 
 ```bash
@@ -215,15 +224,18 @@ git commit -m "..."  # 修正されたファイルでコミット
 ```
 
 **重要**: AIは以下の場合に必ず `uv run --frozen pytest` を手動実行してからコミットを完了すること：
+
 - pre-commitが自動修正した場合
 - pre-commitエラーで手動修正した場合
 
 ### 3. コミットメッセージの規則（TDD用）
+
 - `test:` テストの追加・修正
 - `feat:` 機能の実装（テストを通すため）
 - `refactor:` リファクタリング（テストは変更しない）
 
 例：
+
 ```bash
 git commit -m "test: add test for product creation with empty name"
 git commit -m "feat: add name validation to product creation"

@@ -12,6 +12,7 @@ alwaysApply: true
 APIとUIを独立したサービスとして開発・デプロイするためのマイクロサービス指向の設計です。
 
 ### 基本構造
+
 ```
 cursor-workshop-template/
 ├── api/                    # FastAPI アプリケーション
@@ -70,6 +71,7 @@ cursor-workshop-template/
 - **定数**: UPPERCASE_WITH_UNDERSCORES（例: MAX_ITEMS）
 
 ## インポートの順序
+
 ```python
 # 1. 標準ライブラリ
 import os
@@ -90,6 +92,7 @@ from .storage import InMemoryStorage
 ### 分離デプロイ用pyproject.toml構成
 
 #### ルート pyproject.toml（開発・テスト用）
+
 ```toml
 [project]
 name = "cursor-workshop-template"
@@ -119,6 +122,7 @@ strict = ["**"]
 ```
 
 #### api/pyproject.toml（API専用）
+
 ```toml
 [project]
 name = "product-api"
@@ -133,6 +137,7 @@ dependencies = [
 ```
 
 #### ui/pyproject.toml（UI専用）
+
 ```toml
 [project]
 name = "product-ui"
@@ -156,6 +161,7 @@ dependencies = [
 ## 開発環境のセットアップ
 
 ### 分離デプロイ構造での環境管理
+
 ```bash
 # ルートで開発・テスト環境をセットアップ
 uv sync
@@ -175,6 +181,7 @@ uv run --frozen pytest tests/ -v
 ```
 
 ### Cloud Run デプロイ
+
 ```bash
 # API デプロイ（api/ディレクトリを独立デプロイ）
 mcp__cloud-run__deploy_local_folder --folderPath="./api" --service="product-api"
@@ -201,6 +208,7 @@ uv run --frozen pytest tests/ -v
 ## 実践例
 
 ### API サービス例
+
 ```python
 # api/models.py
 from datetime import datetime
@@ -229,6 +237,7 @@ async def create_item(item: ProductModel) -> ProductModel:
 ```
 
 ### 避けるべき例
+
 ```python
 # models.py（サービスディレクトリの外）
 class product_model:  # クラス名が小文字
