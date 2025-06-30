@@ -284,6 +284,10 @@ https://github.com/asakaguchi/cursor-workshop-template
 
 **重要**: uv が Python のバージョン管理も含めて全て自動で処理するため、事前の Python インストールは不要です。
 
+#### Cursorでターミナルを開く
+
+**重要**: まず Cursor で `Ctrl + Shift + ~` を押してターミナルを開いてください。これ以降のコマンドは全て Cursor 内のターミナルで実行します。
+
 ##### 環境をセットアップ
 
 ```bash
