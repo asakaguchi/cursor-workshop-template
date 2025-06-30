@@ -104,6 +104,40 @@
                             </button>
                         </div>
                         
+                        <!-- 環境変数設定の重要な注意事項 -->
+                        <div class="mt-4">
+                            <button class="flex items-center justify-between w-full px-4 py-2 text-left bg-orange-100 hover:bg-orange-200 rounded transition-colors volta-env-toggle">
+                                <span class="font-semibold text-orange-800 flex items-center">
+                                    <i data-lucide="alert-triangle" class="w-4 h-4 mr-2"></i>
+                                    重要：インストール後の環境設定
+                                </span>
+                                <i data-lucide="chevron-down" class="w-5 h-5 text-orange-600 transition-transform volta-env-icon"></i>
+                            </button>
+                            
+                            <div class="volta-env-content hidden mt-4 space-y-4">
+                                <div class="bg-orange-50 p-4 rounded">
+                                    <p class="text-sm mb-3">Voltaインストール後は環境変数の設定が必要です。以下のいずれかの方法で対応してください：</p>
+                                    
+                                    <div class="space-y-3">
+                                        <div>
+                                            <h5 class="font-semibold text-sm mb-1">方法1（推奨）：新しいターミナルタブを開く</h5>
+                                            <p class="text-xs text-gray-600">現在のターミナルタブを閉じて、新しいタブを開いてください</p>
+                                        </div>
+                                        
+                                        <div>
+                                            <h5 class="font-semibold text-sm mb-1">方法2：環境変数を手動で読み込む</h5>
+                                            <div class="command-block">
+                                                <pre class="language-bash bg-gray-900 text-white p-3 rounded overflow-x-auto text-sm"><code>source ~/.zshrc</code></pre>
+                                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="source ~/.zshrc">
+                                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="mt-4">
                             <h4 class="font-semibold mb-2">動作確認：</h4>
                             <div class="command-block">
@@ -1124,6 +1158,21 @@ curl https://product-api-xxxxx.a.run.app/health</code></pre>
             if (toggleBtn) {
                 const content = toggleBtn.nextElementSibling;
                 const icon = toggleBtn.querySelector('.cursor-settings-icon');
+                
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    icon.style.transform = 'rotate(180deg)';
+                } else {
+                    content.classList.add('hidden');
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            }
+            
+            // Volta環境変数設定の折りたたみ機能
+            const voltaToggleBtn = e.target.closest('.volta-env-toggle');
+            if (voltaToggleBtn) {
+                const content = voltaToggleBtn.nextElementSibling;
+                const icon = voltaToggleBtn.querySelector('.volta-env-icon');
                 
                 if (content.classList.contains('hidden')) {
                     content.classList.remove('hidden');
