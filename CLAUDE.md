@@ -110,6 +110,28 @@ uv run --extra dev pytest -v
 PYTEST_DISABLE_PLUGIN_AUTOLOAD="" uv run --extra dev pytest
 ```
 
+#### FastAPIテストパターン（重要）
+
+httpx 0.27.0以降では、ASGITransportを使用する必要があります：
+
+```python
+import httpx
+from httpx import ASGITransport
+from main import app
+
+# 正しいパターン
+@pytest.fixture
+def client():
+    transport = ASGITransport(app=app)
+    with httpx.Client(transport=transport, base_url="http://test") as client:
+        yield client
+
+# テストでの使用
+def test_endpoint(client):
+    response = client.get("/health")
+    assert response.status_code == 200
+```
+
 ### コード品質チェック
 
 ```bash
@@ -410,7 +432,6 @@ api/pyproject.toml - 本番デプロイ用
 ui/pyproject.toml - 本番デプロイ用
 ├── dependencies: Streamlit実行に必要な最小限のみ
 │   ├── streamlit>=1.28.0
-│   ├── httpx>=0.24.0
 │   └── pydantic>=2.0.0
 ```
 

@@ -141,13 +141,16 @@ uv run --frozen pytest tests/ -v  # 実際のテスト実行
 ```
 project/
 ├── pyproject.toml          # 開発・テスト環境（統合）
-│   ├── dev-dependencies: pytest, httpx, ruff, pyright
-│   └── dependencies: 共通ライブラリ
+│   ├── optional-dependencies.dev: pytest, httpx, ruff, pyright
+│   ├── optional-dependencies.api: fastapi, uvicorn, pydantic
+│   └── optional-dependencies.ui: streamlit, pydantic
 ├── api/pyproject.toml      # 本番デプロイ専用（最小限）
 │   └── dependencies: fastapi, uvicorn, pydantic のみ
 └── ui/pyproject.toml       # 本番デプロイ専用（最小限）
-    └── dependencies: streamlit, httpx, pydantic のみ
+    └── dependencies: streamlit, pydantic のみ
 ```
+
+**重要**: httpxはFastAPIテスト用のため、devグループに配置（UIの本番環境では不要）
 
 ## TDD実践の具体的フロー
 

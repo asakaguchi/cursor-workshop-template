@@ -29,7 +29,6 @@ api = [
 # Streamlit UI開発用
 ui = [
     "streamlit>=1.28.0",
-    "httpx>=0.24.0",
     "pydantic>=2.0.0",
 ]
 # 開発・テスト用ツール
@@ -40,6 +39,7 @@ dev = [
     "pytest-asyncio>=0.21.0",
     "anyio>=3.0.0",
     "trio>=0.25.0",
+    "httpx>=0.24.0",
     "ruff>=0.11.0",
     "pyright>=1.1.0",
     "asgi-lifespan>=2.1.0",

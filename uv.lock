@@ -241,6 +241,7 @@ api = [
 dev = [
     { name = "anyio" },
     { name = "asgi-lifespan" },
+    { name = "httpx" },
     { name = "pre-commit" },
     { name = "pyright" },
     { name = "pytest" },
@@ -250,7 +251,6 @@ dev = [
     { name = "trio" },
 ]
 ui = [
-    { name = "httpx" },
     { name = "pydantic" },
     { name = "streamlit" },
 ]
@@ -261,7 +261,7 @@ requires-dist = [
     { name = "asgi-lifespan", marker = "extra == 'dev'", specifier = ">=2.1.0" },
     { name = "cursor-workshop-template", extras = ["api", "ui", "dev"], marker = "extra == 'all'" },
     { name = "fastapi", marker = "extra == 'api'", specifier = ">=0.100.0" },
-    { name = "httpx", marker = "extra == 'ui'", specifier = ">=0.24.0" },
+    { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.24.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.5.0" },
     { name = "pydantic", marker = "extra == 'api'", specifier = ">=2.0.0" },
     { name = "pydantic", marker = "extra == 'ui'", specifier = ">=2.0.0" },
