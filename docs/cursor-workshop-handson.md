@@ -119,7 +119,9 @@ npm --version
 
 ##### Step 2：基本設定
 
-1. テーマ選択：お好みで選んでください（後で変更可能）
+1. テーマ選択：
+   - Cursor Dark、Cursor Dark Midnight、Cursor Dark High Contrast から選択
+   - 「**Contineue**」をクリック
 2. キーバインディング選択：
    - VS Code（デフォルト）、Vim、Emacs、Sublime Text から選択
    - 「**Continue**」をクリック
@@ -135,7 +137,7 @@ npm --version
 
 1. 右上の歯車アイコンをクリック
 2. 「**General**」→「**Privacy**」
-3. 「**Privacy Mode with Storage**」を選択
+3. 「**Privacy Mode**」を選択
    - これで、あなたのコードが学習に使われません
 
 ##### Step 4：日本語化
@@ -159,7 +161,7 @@ npm --version
 
 #### Cursor内のターミナルを開く
 
-- Cursor で `Cmd` + `Shift` + `~` を押す
+- Cursor で `Ctrl` + `Shift` + `~` を押す
 - 画面下にターミナルが表示されます
 - **これ以降、すべてのコマンドは Cursor 内のターミナルで実行します**
 
