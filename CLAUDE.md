@@ -235,6 +235,7 @@ def create_item():
 ### 重要原則：pre-commit後のテスト確認
 
 **絶対的ルール**: 以下の場合は必ず手動でテストを再実行してグリーンを確認する
+
 1. pre-commitフックが自動修正を行った場合
 2. pre-commitでエラーが発生して手動修正した場合
 
@@ -254,6 +255,7 @@ git commit -m "..."  # 修正されたファイルでコミット
 ```
 
 **重要**: AIは以下の場合に必ずpytestを手動実行してからコミットを完了すること：
+
 - pre-commitが自動修正した場合
 - pre-commitエラーで手動修正した場合
 - コードを直接編集した場合
@@ -282,6 +284,74 @@ git commit -m "..."  # 修正されたファイルでコミット
 **重要**: pyproject.tomlで依存関係がすでに定義されている場合は、
 `uv add`で重複追加せず、`uv sync`のみを使用してください
 
+#### パッケージ管理緊急対応プロトコル（必須遵守）
+
+**テストライブラリ不足エラーの場合：**
+
+##### 手順1: 環境確認（必須）
+
+```bash
+pwd  # プロジェクトルートにいることを確認
+cat pyproject.toml | grep -A 10 "dev"  # 既存依存関係を確認
+```
+
+##### 手順2: ルート環境への統一追加
+
+```bash
+# 絶対にapi/やui/ではなく、プロジェクトルートで実行
+uv add --dev pytest httpx asgi-lifespan trio fastapi
+uv sync
+```
+
+##### 手順3: 検証（必須）
+
+```bash
+uv run --frozen pytest tests/ --collect-only  # テスト収集確認
+uv run --frozen pytest tests/api/ -v  # 実際のテスト実行
+```
+
+**絶対禁止事項:**
+
+- ❌ 異なるディレクトリでの`uv add`後、別ディレクトリでのテスト実行
+- ❌ `cd api && uv add` → `cd .. && pytest`のような環境混在
+- ❌ エラー時の応急処置的なパッケージ追加
+
+**AI開発者への強制指示:**
+
+1. パッケージ追加前に必ず`pwd && ls pyproject.toml`で位置確認
+2. 「なぜこのパッケージが必要か」を明確に説明
+3. 「どこに追加すべきか」の判断根拠を提示
+4. 環境不整合時は`uv sync`による再構築を最優先
+
+#### 依存関係配置の明確なルール
+
+```text
+pyproject.toml (ルート) - テスト実行環境
+├── dependencies: 共通ライブラリ
+├── dev-dependencies: テスト・開発ツール全般
+│   ├── pytest, httpx, asgi-lifespan, trio
+│   ├── ruff, pyright, pre-commit
+│   └── markdownlint-cli
+│
+api/pyproject.toml - 本番デプロイ用
+├── dependencies: FastAPI実行に必要な最小限のみ
+│   ├── fastapi>=0.100.0
+│   ├── uvicorn[standard]>=0.23.0
+│   └── pydantic>=2.0.0
+│
+ui/pyproject.toml - 本番デプロイ用
+├── dependencies: Streamlit実行に必要な最小限のみ
+│   ├── streamlit>=1.28.0
+│   ├── httpx>=0.24.0
+│   └── pydantic>=2.0.0
+```
+
+**実行コマンド統一（厳格に遵守）:**
+
+- テスト: `uv run --frozen pytest` （常にプロジェクトルートから）
+- API開発: `cd api && uv run uvicorn main:app --reload`
+- UI開発: `cd ui && uv run streamlit run main.py`
+
 ### テスト要件
 
 - **フレームワーク**: `uv run --frozen pytest`
@@ -304,7 +374,8 @@ git commit -m "..."  # 修正されたファイルでコミット
 **重要**: Cloud Run デプロイ時は、APIとUIを分離した独立構造で実装してください：
 
 #### 必要な構造
-```
+
+```text
 project/
 ├── api/
 │   ├── pyproject.toml  # FastAPI専用（最小依存関係）
@@ -319,10 +390,13 @@ project/
 
 #### 各pyproject.tomlの要件
 
-**API用**: 依存関係は `fastapi>=0.100.0`, `uvicorn[standard]>=0.23.0`, `pydantic>=2.0.0` のみ  
-**UI用**: 依存関係は `streamlit>=1.28.0`, `httpx>=0.24.0`, `pydantic>=2.0.0` のみ
+**API用**: 依存関係は `fastapi>=0.100.0`, `uvicorn[standard]>=0.23.0`,
+`pydantic>=2.0.0` のみ  
+**UI用**: 依存関係は `streamlit>=1.28.0`, `httpx>=0.24.0`,
+`pydantic>=2.0.0` のみ
 
 #### デプロイ方法
+
 各ディレクトリを `mcp__cloud-run__deploy_local_folder` で独立してデプロイ
 
 ## Gitコミットガイドライン

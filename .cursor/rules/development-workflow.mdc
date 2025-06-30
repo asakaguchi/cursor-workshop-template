@@ -104,6 +104,51 @@ uv run uvicorn src.product_api.main:app --reload
 
 **注意**：プロジェクトに pyproject.toml があれば、Python のインストールも含めてすべて自動化されます。ローカルPython環境での高速開発が可能です。
 
+### 環境管理緊急プロトコル（必須遵守）
+
+**テストライブラリ不足エラーが発生した場合の対処法：**
+
+#### 手順1: 現在位置と環境の確認（必須）
+```bash
+pwd  # プロジェクトルートにいることを確認
+cat pyproject.toml | head -20  # 設定確認
+```
+
+#### 手順2: 依存関係の統一管理
+```bash
+# 絶対にサブディレクトリ（api/, ui/）ではなく、ルートで実行
+uv add --dev pytest httpx asgi-lifespan trio fastapi
+uv sync
+```
+
+#### 手順3: テスト環境の検証
+```bash
+uv run --frozen pytest tests/ --collect-only  # テスト収集確認
+uv run --frozen pytest tests/ -v  # 実際のテスト実行
+```
+
+#### 絶対禁止パターン
+- ❌ `cd api && uv add` → `cd .. && pytest` （環境混在）
+- ❌ エラー時の場当たり的パッケージ追加
+- ❌ 複数環境での重複パッケージ管理
+
+#### 環境の原則
+- **テスト実行**: 常にプロジェクトルートから
+- **依存関係**: テストツールはルートのpyproject.tomlに集約
+- **本番デプロイ**: api/, ui/は最小限の依存関係のみ
+
+#### 分離デプロイ構造での環境管理
+```
+project/
+├── pyproject.toml          # 開発・テスト環境（統合）
+│   ├── dev-dependencies: pytest, httpx, ruff, pyright
+│   └── dependencies: 共通ライブラリ
+├── api/pyproject.toml      # 本番デプロイ専用（最小限）
+│   └── dependencies: fastapi, uvicorn, pydantic のみ
+└── ui/pyproject.toml       # 本番デプロイ専用（最小限）
+    └── dependencies: streamlit, httpx, pydantic のみ
+```
+
 ## TDD実践の具体的フロー
 
 ### 1. テストリストの作成
