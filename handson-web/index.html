@@ -500,9 +500,9 @@ gh auth login</code></pre>
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <div class="flex items-center mb-4">
                     <i data-lucide="list-checks" class="w-6 h-6 text-blue-500 mr-2"></i>
-                    <h1 class="text-2xl font-bold">Part 3: Issue 駆動開発の実践（10分）</h1>
+                    <h1 class="text-2xl font-bold">Part 3: API開発タスクの計画（10分）</h1>
                 </div>
-                <p class="text-gray-600 mb-6">作業を整理して、AI に手伝ってもらいましょう！大きな仕事を小さな作業に分けることで、確実に進められます。</p>
+                <p class="text-gray-600 mb-6">API開発の作業を整理して、AI に手伝ってもらいましょう！作業を適切な粒度に分けることで、確実に進められます。</p>
                 
                 <div class="space-y-6">
                     <!-- 3.1 作業の分解 -->
@@ -516,13 +516,18 @@ gh auth login</code></pre>
                         <div class="command-block">
                             <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>@requirements.md @CLAUDE.md
 
-要件を確認して、2 時間で完成できるようにタスクを分解してください。
-各タスクは 15-30 分で完了できる小さな作業にしてください。
+要件を確認して、API開発のみに焦点を当ててタスクを分解してください。
+各タスクは以下の粒度で分解してください：
+- 1つのエンドポイント実装
+- 1つのTDDサイクル（Red→Green→Refactor）
+- 1つのテストケース群
+- 1つの機能単位
+
 初心者でもわかりやすい言葉で説明してください。
 
-重要：このプロジェクトはCloud Run分離デプロイ対応で、api/とui/ディレクトリに
-独立したアプリケーションを開発します。</code></pre>
-                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="@requirements.md @CLAUDE.md&#10;&#10;要件を確認して、2 時間で完成できるようにタスクを分解してください。&#10;各タスクは 15-30 分で完了できる小さな作業にしてください。&#10;初心者でもわかりやすい言葉で説明してください。&#10;&#10;重要：このプロジェクトはCloud Run分離デプロイ対応で、api/とui/ディレクトリに&#10;独立したアプリケーションを開発します。">
+重要：今回はAPI開発のみ実装します。UI（Streamlit）は後の工程で実装予定です。
+api/ディレクトリにFastAPIアプリケーションを構築してください。</code></pre>
+                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="@requirements.md @CLAUDE.md&#10;&#10;要件を確認して、API開発のみに焦点を当ててタスクを分解してください。&#10;各タスクは以下の粒度で分解してください：&#10;- 1つのエンドポイント実装&#10;- 1つのTDDサイクル（Red→Green→Refactor）&#10;- 1つのテストケース群&#10;- 1つの機能単位&#10;&#10;初心者でもわかりやすい言葉で説明してください。&#10;&#10;重要：今回はAPI開発のみ実装します。UI（Streamlit）は後の工程で実装予定です。&#10;api/ディレクトリにFastAPIアプリケーションを構築してください。">
                                 <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
                             </button>
                         </div>
