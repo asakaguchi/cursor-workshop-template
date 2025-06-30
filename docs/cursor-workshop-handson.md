@@ -309,7 +309,7 @@ cd ui && uv sync && cd ..
 
 ```bash
 # コードの品質をチェックする仕組みを準備
-uv run pre-commit install
+uv run --extra dev pre-commit install
 ```
 
 ### 1.7 GitHub CLI の認証設定（5 分）
