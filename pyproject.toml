@@ -75,8 +75,8 @@ convention = "google"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-pythonpath = ["api", "ui"]
-addopts = "-v --tb=short --cov=api --cov=ui --cov-report=term-missing"
+pythonpath = ["."]
+addopts = "-v --tb=short"
 
 [tool.coverage.run]
 source = ["api", "ui"]

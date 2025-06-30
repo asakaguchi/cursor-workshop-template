@@ -75,10 +75,13 @@ uv sync
 ### アプリケーションの実行
 
 ```bash
-# FastAPIサーバーの起動
-uv run uvicorn src.product_api.main:app --reload
+# FastAPIサーバーの起動（ルートディレクトリから）
+uv run uvicorn api.main:app --reload
 
-# Swagger UIへのアクセス: http://localhost:8000/docs
+# または api/ ディレクトリから
+cd api && uv run uvicorn main:app --reload
+
+# Swagger UIへのアクセス: http://localhost:8080/docs
 ```
 
 ### テスト
@@ -303,15 +306,15 @@ git commit -m "..."  # 修正されたファイルでコミット
 #### 必要な構造
 ```
 project/
-├── api/ (または product_api/)
+├── api/
 │   ├── pyproject.toml  # FastAPI専用（最小依存関係）
 │   ├── main.py         # FastAPIアプリケーション
 │   └── README.md
-├── ui/ (または product_ui/)
+├── ui/
 │   ├── pyproject.toml  # Streamlit専用（最小依存関係）
 │   ├── main.py         # Streamlitアプリケーション
 │   └── README.md
-└── src/                # 開発用（レガシー）
+└── tests/              # テストファイル
 ```
 
 #### 各pyproject.tomlの要件

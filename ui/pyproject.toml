@@ -16,7 +16,6 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
-    "Framework :: Streamlit",
 ]
 dependencies = [
     "streamlit>=1.28.0",
@@ -61,6 +60,9 @@ indent-style = "space"
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
 
 [dependency-groups]
 dev = [
