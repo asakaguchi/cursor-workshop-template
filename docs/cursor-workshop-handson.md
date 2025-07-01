@@ -1156,21 +1156,13 @@ cd ui && uv run streamlit run main.py
 
 ### クラウド環境で公開しましょう
 
-AI がクラウドの設定からデプロイまで、プロレベルの作業を自動化してくれます。
-今回は最新のMCP（Model Context Protocol）を使って、APIとUIを分離してデプロイします。
+AIと一緒にプロレベルのクラウドデプロイを体験します。
+手動デプロイとMCP（Model Context Protocol）の両方の方法を学習しますが、確実に成功させるため手動デプロイを推奨します。
 
 **重要**: このプロジェクトは最初からCloud Run分離デプロイ対応で設計されています。
 `api/` と `ui/` のディレクトリがそれぞれ独立したサービスとしてデプロイされます。
 
-### 6.1 セキュアな認証の準備（3分）
-
-#### なぜサービスアカウントを使うの？
-
-通常の個人アカウントではなく、専用の「サービスアカウント」を使うことで、以下のメリットがあります。
-
-- **セキュリティ向上**：必要最小限の権限だけを持つ専用アカウント
-- **キーファイル不要**：インパーソネーション（なりすまし）技術でより安全
-- **監査可能**：誰がいつ使ったかの記録が残る
+### 6.1 セキュアな認証の準備（2分）
 
 #### Step 1：プロジェクトIDの設定
 
@@ -1189,86 +1181,79 @@ gcloud config set project $PROJECT_ID
 gcloud projects list
 ```
 
-#### Step 2：専用サービスアカウントの作成
-
-このアプリケーション専用の「作業用アカウント」を作ります。
+#### Step 2：認証の実行
 
 ```bash
-# サービスアカウントを作成
-gcloud iam service-accounts create cursor-workshop-app \
-    --display-name="Cursor Workshop Application Service Account"
+# Google Cloudにログイン
+gcloud auth application-default login
 ```
 
-**これで何ができたの？**
-「cursor-workshop-app@[プロジェクトID].iam.gserviceaccount.com」という専用アカウントが作成されました。
+### 6.2 APIデプロイの準備（3分）
 
-#### Step 3：必要な権限を付与
+#### 重要な注意事項
 
-作業に必要な権限を3つ付与します。
+**Cloud Run環境では相対インポートが機能しません。**
+開発環境では動作していても、本番環境で失敗する典型的なパターンです。
+
+#### 必須ファイルを準備
+
+**1. 空の__init__.pyを作成**
 
 ```bash
-# Cloud Run管理者権限（アプリをデプロイするため）
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:cursor-workshop-app@\
-${PROJECT_ID}.iam.gserviceaccount.com" \
-    --role="roles/run.admin"
-
-# サービスアカウント使用権限（サービスとして動作するため）
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:cursor-workshop-app@\
-${PROJECT_ID}.iam.gserviceaccount.com" \
-    --role="roles/iam.serviceAccountUser"
-
-# ビルド実行権限（コンテナイメージを作成するため）
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-    --member="serviceAccount:cursor-workshop-app@\
-${PROJECT_ID}.iam.gserviceaccount.com" \
-    --role="roles/cloudbuild.builds.builder"
+touch api/__init__.py
 ```
 
-#### Step 4：インパーソネーション権限の設定
-
-あなたが専用アカウントを「使える」ようにします。
+**2. requirements.txtを生成**
 
 ```bash
-# あなたのメールアドレスを確認
-gcloud config get-value account
-
-# インパーソネーション権限を付与
-gcloud iam service-accounts add-iam-policy-binding \
-    cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com \
-    --member="user:$(gcloud config get-value account)" \
-    --role="roles/iam.serviceAccountTokenCreator"
+# プロジェクトルートで実行
+uv pip compile pyproject.toml --extra api -o api/requirements.txt
 ```
 
-**これで何ができたの？**
-あなたが専用アカウントになりすまして、安全に作業できるようになりました。
-
-#### Step 5：認証の実行
-
-いよいよ認証を行います。
+**3. Procfileを作成**
 
 ```bash
-# サービスアカウントを使って認証
-gcloud auth application-default login \
-  --impersonate-service-account=cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com
+echo 'web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app' > api/Procfile
 ```
 
-##### ブラウザが開いたら
+#### 4. インポートパスを修正（最重要）
 
-1. Googleアカウントでログイン
-2. 権限を承認
-3. 「認証が完了しました」のメッセージを確認
+**すべての相対インポートを絶対インポートに変更してください：**
 
-### 6.2 MCPを使った分離デプロイ（4分）
+- ❌ `from .models import ProductModel`（相対インポート）
+- ✅ `from models import ProductModel`（絶対インポート）
 
-#### API と UI の分離デプロイ
+**api/main.py** を修正：
 
-このプロジェクトでは、APIとUIを別々のCloud Runサービスとしてデプロイします。
+```python
+# 変更前（これは失敗する）
+from .models import ProductModel, ProductResponse
+from .storage import ProductStorage
 
-#### API のデプロイ
+# 変更後（これが正解）
+from models import ProductModel, ProductResponse
+from storage import ProductStorage
+```
 
-チャットで以下を送信してください。
+### 6.3 デプロイ実行（4分）
+
+#### 方法1：手動デプロイ（推奨）
+
+確実に成功させるため、手動デプロイを推奨します：
+
+```bash
+# プロジェクトルートから実行
+gcloud run deploy product-api \
+  --source ./api \
+  --region asia-northeast1 \
+  --allow-unauthenticated
+```
+
+**デプロイが完了すると、URL（例：https://product-api-xxxxx.a.run.app）が表示されます。**
+
+#### 方法2：MCPデプロイ（代替）
+
+上記の準備を完了後、チャットで以下を送信：
 
 ```text
 Cloud Run MCPを使って、api/ ディレクトリの商品管理APIをデプロイしてください。
@@ -1277,128 +1262,88 @@ Cloud Run MCPを使って、api/ ディレクトリの商品管理APIをデプ�
 - リージョン: asia-northeast1（東京）
 - サービス名: product-api
 - 認証なしで公開アクセス可能に設定
-- ポート: 8080
 ```
 
-#### UI のデプロイ
+#### UIのデプロイ（参考）
 
-APIのデプロイが完了したら、UIをデプロイします。
+**注意**: ワークショップの時間制限により、UIデプロイは任意です。
 
-```text
-Cloud Run MCPを使って、ui/ ディレクトリの商品管理UIをデプロイしてください。
-以下の設定でお願いします。
-
-- リージョン: asia-northeast1（東京）
-- サービス名: product-ui
-- 認証なしで公開アクセス可能に設定
-- ポート: 8501
-- 環境変数: API_URL=https://product-api-xxxxx.a.run.app（APIのURL）
+```bash
+# UIもデプロイする場合
+gcloud run deploy product-ui \
+  --source ./ui \
+  --region asia-northeast1 \
+  --allow-unauthenticated
 ```
 
-#### Cloud Run MCPが自動でやってくれること
+### 6.4 トラブルシューティング
 
-各デプロイで、MCP（Model Context Protocol）により、AIが以下の作業を完全自動化します：
+#### よくあるエラーと解決方法
 
-**API デプロイ**:
+##### ImportError: attempted relative import with no known parent package
 
-1. **設定確認**：FastAPI用デプロイ設定を確認
-2. **ビルド実行**：Cloud Build でAPIアプリケーションをビルド
-3. **デプロイ実行**：product-api サービスとしてデプロイ
-4. **URL発行**：API用HTTPSエンドポイントを生成
+**原因**: 相対インポートがCloud Run環境で失敗
 
-**UI デプロイ**:
+**解決方法**: すべてのインポートを絶対インポートに変更
 
-1. **設定確認**：Streamlit用デプロイ設定を確認
-2. **環境変数設定**：API_URLを正しいAPIエンドポイントに設定
-3. **ビルド実行**：Cloud Build でUIアプリケーションをビルド
-4. **デプロイ実行**：product-ui サービスとしてデプロイ
-5. **URL発行**：UI用HTTPSエンドポイントを生成
+```python
+# ❌ 失敗する例
+from .models import ProductModel
 
-### 6.3 デプロイ時の対話パターン
-
-#### MCPを使ったデプロイでの確認場面
-
-##### パターン1：設定確認
-
-###### AIからの質問例
-
-```text
-以下の設定でCloud Runにデプロイします。
-- プロジェクト: your-project-id
-- リージョン: asia-northeast1
-- サービス名: cursor-workshop-app
-
-よろしいですか？
+# ✅ 正しい例  
+from models import ProductModel
 ```
 
-###### あなたの返答
+##### Container failed to start on PORT
 
-```text
-ok
+**原因**: Procfileの`$PORT`環境変数が正しく設定されていない
+
+**解決方法**: Procfileの内容を確認
+
+```bash
+# 正しいProcfile
+web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app
 ```
 
-##### パターン2：Dockerfile作成の承認
+##### gunicorn: error: unrecognized arguments
 
-###### 場面
+**原因**: Procfileの引数順序が間違っている
 
-AIがDockerfileを提案
+**解決方法**: オプションをmain:appの前に配置
 
-###### 対応方法
+```bash
+# ❌ 間違った順序
+web: gunicorn main:app --bind 0.0.0.0:$PORT
 
-- 「**Accept file**」ボタンをクリック
-- または、チャットパネルの「**✓**」アイコンをクリック
-
-##### パターン3：ビルド・デプロイの進行状況
-
-###### AIからの進行状況報告例
-
-```text
-ビルドが開始されました。数分かかる場合があります...
+# ✅ 正しい順序
+web: gunicorn --bind 0.0.0.0:$PORT main:app
 ```
 
-###### ビルド待機時の返答
+#### デバッグ手順
 
-```text
-わかりました、待ちます
-```
+1. **ローカルで動作確認**
+   ```bash
+   cd api
+   uvicorn main:app --reload
+   ```
 
-##### パターン4：デプロイ完了の確認
+2. **インポートエラーをチェック**
+   ```bash
+   cd api
+   python -c "from models import ProductModel; print('Import OK')"
+   ```
 
-###### AIからのデプロイ完了報告
+3. **ファイル構成を確認**
+   ```bash
+   ls -la api/
+   # __init__.py, main.py, models.py, storage.py, requirements.txt, Procfile
+   ```
 
-```text
-デプロイが完了しました！
-URL: https://cursor-workshop-app-xxxxx.a.run.app
-```
+### 6.5 本番環境での動作確認（1分）
 
-###### デプロイ完了時の返答
+#### デプロイされたAPIの確認
 
-```text
-ありがとう！URLを確認します
-```
-
-#### エラーが発生した場合の対処
-
-##### 認証エラーの場合
-
-```text
-認証エラーが発生しました。以下のコマンドで再認証してください：
-
-gcloud auth application-default login \
-  --impersonate-service-account=cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com
-```
-
-##### APIが有効化されていない場合
-
-```text
-Cloud Run APIを有効化してください。エラーメッセージに表示されたコマンドを実行してください。
-```
-
-### 6.4 本番環境での動作確認（3分）
-
-#### デプロイされた分離アプリの確認
-
-AIが教えてくれた各URLで、実際に動作を確認しましょう。
+デプロイが成功すると、URLが表示されます。実際に動作を確認しましょう。
 
 ##### API の動作確認
 
@@ -1414,7 +1359,7 @@ curl https://product-api-xxxxx.a.run.app/health
 
 ##### Swagger UIでAPIを試す
 
-ブラウザで以下のAPIのURLを開きます。
+ブラウザで以下のAPIのURLを開きます：
 
 ```text
 https://product-api-xxxxx.a.run.app/docs
@@ -1424,105 +1369,28 @@ https://product-api-xxxxx.a.run.app/docs
 
 1. **POST /items**：新しい商品を登録
 2. **GET /items/{id}**：登録した商品を確認
-3. **エラーテスト**：わざと間違ったデータを送信
-
-##### Web UIの確認
-
-UIのURLをブラウザで開きます。
-
-```text
-https://product-ui-xxxxx.a.run.app
-```
-
-###### Web UIでの動作確認
-
-1. 「API接続OK」が表示されることを確認
-2. 商品登録タブで：
-   - 商品名：「クラウドりんご」
-   - 価格：「300」
-   - 登録ボタンをクリック
-3. 商品検索タブで：
-   - 登録した商品のIDで検索
-   - 商品情報が表示されることを確認
-
-##### 分離アーキテクチャの確認
-
-- **API**: <https://product-api-xxxxx.a.run.app> （データ処理）
-- **UI**: <https://product-ui-xxxxx.a.run.app> （画面表示）
-
-2つのサービスが独立して動作し、UIがAPIを呼び出している構成を確認できます。
-
-### 6.5 セキュリティの確認
-
-#### 現在の設定
-
-- **公開アクセス**：誰でもアクセス可能（学習用）
-- **HTTPS**：通信は暗号化されている
-- **サービスアカウント**：最小権限で動作
-
-#### 本番環境では
-
-実際のビジネスで使う場合は、以下の設定を追加します。
-
-- IAM認証（特定のユーザーのみアクセス可能）
-- APIキー認証
-- OAuth 2.0認証
-
-今回は学習用なので、シンプルな設定にしています。
+3. **GET /health**：ヘルスチェック
 
 ### 達成したこと
 
-- **セキュアな認証**：サービスアカウントによる安全な方式
-- **完全自動化**：MCPによる複雑な作業の自動実行
-- **本番環境構築**：企業レベルのインフラ
-- **スケーラブル**：負荷に応じて自動的にスケール
+- **Cloud Run デプロイ成功**：本格的なクラウド環境でAPIが動作
+- **プロダクション対応**：企業レベルのインフラ構築を体験
+- **トラブルシューティング**：実際の開発で発生する問題と解決法を学習
+- **絶対インポート**：本番環境での重要な技術的知識を習得
 
 #### 友達に見せよう
 
-URLを友達に送って、あなたが作ったアプリを使ってもらいましょう！
+URLを友達に送って、あなたが作ったAPIを使ってもらいましょう！
 「これ、1.5時間で作ったんだよ」と自慢してもOKです。
 
 **注意**：学習用のアプリなので、個人情報や重要なデータは入力しないよう注意してください。
 
-### トラブルシューティング
-
-#### よくある問題と解決方法
-
-##### 認証が通らない場合
-
-```bash
-# 現在の認証状態を確認
-gcloud auth list
-
-# プロジェクトが正しいか確認
-gcloud config get-value project
-
-# 再度インパーソネーション認証
-gcloud auth application-default login \
-  --impersonate-service-account=cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com
-```
-
-##### MCPが動作しない場合
-
-1. Cursorを再起動
-2. MCPサーバーの状態を確認（Settings → MCP）
-3. 必要に応じて「Enable」ボタンをクリック
-
-##### デプロイが失敗する場合
-
-```bash
-# Cloud Run APIが有効か確認
-gcloud services list --enabled | grep run
-
-# 有効化されていない場合
-gcloud services enable run.googleapis.com
-```
-
 #### 成功の秘訣
 
-- エラーメッセージをよく読む
-- AIに詳細を聞く
-- 焦らず一つずつ解決
+- **ファイル準備の徹底**：__init__.py、requirements.txt、Procfileの確実な作成
+- **絶対インポートの統一**：相対インポートは必ず絶対インポートに変更
+- **エラーメッセージを読む**：具体的な解決法が含まれている
+- **AIとの協力**：困ったときは遠慮なく質問する
 
 プロの開発者も同じようにトラブルシューティングを行います。
 これも大切な学習の一部です！

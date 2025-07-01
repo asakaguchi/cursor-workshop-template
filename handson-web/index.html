@@ -1134,43 +1134,79 @@ gcloud auth application-default login \
                         </div>
                     </div>
 
-                    <!-- 6.2 MCPを使った分離デプロイ -->
+                    <!-- 6.2 APIデプロイ準備 -->
+                    <div class="border-l-4 border-yellow-500 pl-4">
+                        <h3 class="text-lg font-semibold mb-3 flex items-center">
+                            <i data-lucide="file-text" class="w-5 h-5 mr-2"></i>
+                            6.2 APIデプロイの準備（3分）
+                        </h3>
+                        
+                        <div class="bg-yellow-50 p-4 rounded mb-4">
+                            <p class="font-semibold text-yellow-800 mb-2">🚨 重要な事前準備が必要です！</p>
+                            <p class="text-sm text-gray-700">Cloud Runデプロイには以下のファイルが必要です：</p>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">Step 1: 必要なファイルを作成</h4>
+                            <div class="command-block">
+                                <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># 空の__init__.pyを作成（Pythonパッケージとして認識させるため）
+touch api/__init__.py
+
+# requirements.txtを生成（プロジェクトルートで実行）
+uv pip compile pyproject.toml --extra api -o api/requirements.txt
+
+# Procfileを作成（起動コマンド定義）
+echo 'web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app' > api/Procfile</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="touch api/__init__.py&#10;&#10;uv pip compile pyproject.toml --extra api -o api/requirements.txt&#10;&#10;echo 'web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app' > api/Procfile">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-orange-50 p-4 rounded">
+                            <h4 class="font-semibold mb-2">Step 2: インポートパスを修正（重要）</h4>
+                            <p class="text-sm mb-2">すべての相対インポートを絶対インポートに変更してください：</p>
+                            <ul class="text-sm space-y-1">
+                                <li>• ❌ <code>from .models import ProductModel</code>（相対インポート）</li>
+                                <li>• ✅ <code>from models import ProductModel</code>（絶対インポート）</li>
+                            </ul>
+                            <p class="text-sm mt-2 text-red-600">理由：Cloud Run環境では相対インポートが失敗します</p>
+                        </div>
+                    </div>
+
+                    <!-- 6.3 デプロイ実行 -->
                     <div class="border-l-4 border-green-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
                             <i data-lucide="upload-cloud" class="w-5 h-5 mr-2"></i>
-                            6.2 MCPを使った分離デプロイ（4分）
+                            6.3 デプロイ実行（4分）
                         </h3>
                         
-                        <div class="bg-blue-50 p-4 rounded mb-4">
-                            <h4 class="font-semibold mb-2">API のデプロイ</h4>
-                            <p class="text-sm mb-2">チャットで以下を送信してください：</p>
+                        <div class="bg-purple-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">方法1: gcloudコマンドで直接デプロイ（推奨）</h4>
+                            <p class="text-sm mb-2">ターミナルで以下のコマンドを実行：</p>
+                            <div class="command-block">
+                                <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># APIをデプロイ（プロジェクトルートから実行）
+gcloud run deploy product-api \
+  --source ./api \
+  --region asia-northeast1 \
+  --allow-unauthenticated</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="gcloud run deploy product-api \&#10;  --source ./api \&#10;  --region asia-northeast1 \&#10;  --allow-unauthenticated">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded">
+                            <h4 class="font-semibold mb-2">方法2: MCPを使った自動デプロイ（代替）</h4>
+                            <p class="text-sm mb-2">上記の準備が完了したら、チャットで以下を送信：</p>
                             <div class="command-block">
                                 <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>Cloud Run MCPを使って、api/ ディレクトリの商品管理APIをデプロイしてください。
 以下の設定でお願いします。
 
 - リージョン: asia-northeast1（東京）
 - サービス名: product-api
-- 認証なしで公開アクセス可能に設定
-- ポート: 8080</code></pre>
-                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="Cloud Run MCPを使って、api/ ディレクトリの商品管理APIをデプロイしてください。&#10;以下の設定でお願いします。&#10;&#10;- リージョン: asia-northeast1（東京）&#10;- サービス名: product-api&#10;- 認証なしで公開アクセス可能に設定&#10;- ポート: 8080">
-                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-green-50 p-4 rounded">
-                            <h4 class="font-semibold mb-2">UI のデプロイ</h4>
-                            <p class="text-sm mb-2">APIのデプロイが完了したら、UIをデプロイします：</p>
-                            <div class="command-block">
-                                <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>Cloud Run MCPを使って、ui/ ディレクトリの商品管理UIをデプロイしてください。
-以下の設定でお願いします。
-
-- リージョン: asia-northeast1（東京）
-- サービス名: product-ui
-- 認証なしで公開アクセス可能に設定
-- ポート: 8501
-- 環境変数: API_URL=https://product-api-xxxxx.a.run.app（APIのURL）</code></pre>
-                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="Cloud Run MCPを使って、ui/ ディレクトリの商品管理UIをデプロイしてください。&#10;以下の設定でお願いします。&#10;&#10;- リージョン: asia-northeast1（東京）&#10;- サービス名: product-ui&#10;- 認証なしで公開アクセス可能に設定&#10;- ポート: 8501&#10;- 環境変数: API_URL=https://product-api-xxxxx.a.run.app（APIのURL）">
+- 認証なしで公開アクセス可能に設定</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="Cloud Run MCPを使って、api/ ディレクトリの商品管理APIをデプロイしてください。&#10;以下の設定でお願いします。&#10;&#10;- リージョン: asia-northeast1（東京）&#10;- サービス名: product-api&#10;- 認証なしで公開アクセス可能に設定">
                                     <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
                                 </button>
                             </div>

@@ -491,21 +491,51 @@ ui/pyproject.toml - 本番デプロイ用
 - 自動生成ドキュメントを備えたREST API用のFastAPI
 - Cloud RunへのデプロイはMCP経由で自動化
 
-## Cloud Run MCPでのデプロイ
+## Cloud Run デプロイ
 
-### 必須の事前準備
+### 手動デプロイ方法（gcloudコマンド）
 
-1. **api/requirements.txt を作成**
+Cloud Runへのデプロイは、MCPを使用せずに直接gcloudコマンドで行うことも可能です。
+
+#### 必須の事前準備
+
+1. **api/__init__.py を作成**
+   ```bash
+   # 空のファイルを作成（Pythonパッケージとして認識させるため）
+   touch api/__init__.py
+   ```
+
+2. **api/requirements.txt を作成**
    ```bash
    # プロジェクトルートで実行
    uv pip compile pyproject.toml --extra api -o api/requirements.txt
    ```
 
-2. **インポートパスを相対インポートに統一**
-   - ❌ `from models import ProductModel`
-   - ✅ `from .models import ProductModel`
+3. **api/Procfile を作成**
+   ```bash
+   # api/Procfile の内容:
+   echo 'web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app' > api/Procfile
+   ```
 
-### MCPデプロイコマンド
+4. **インポートパスを絶対インポートに変更（重要）**
+   - ❌ `from .models import ProductModel`（相対インポート）
+   - ✅ `from models import ProductModel`（絶対インポート）
+   
+   **理由**: Cloud Run環境では相対インポートが失敗するため
+
+#### gcloudコマンドでのデプロイ
+
+```bash
+# プロジェクトルートから実行
+gcloud run deploy product-api \
+  --source ./api \
+  --region asia-northeast1 \
+  --allow-unauthenticated
+```
+
+### MCPでのデプロイ（代替方法）
+
+MCPを使用する場合も、上記の事前準備を完了してから実行してください。
 
 ```
 mcp__cloud-run__deploy_local_folder
@@ -513,6 +543,20 @@ mcp__cloud-run__deploy_local_folder
 - project: YOUR_PROJECT_ID
 - region: asia-northeast1
 ```
+
+### トラブルシューティング
+
+#### ImportError: attempted relative import
+- **原因**: Cloud Run環境で相対インポートが失敗
+- **解決**: すべてのインポートを絶対インポートに変更
+
+#### gunicorn: error: unrecognized arguments
+- **原因**: Procfileの引数順序が不適切
+- **解決**: 上記のProcfile例を正確にコピー
+
+#### Container failed to start
+- **原因**: ポート設定の問題
+- **解決**: Procfileで必ず`$PORT`環境変数を使用
 
 ### Cloud Run 分離デプロイ要件
 

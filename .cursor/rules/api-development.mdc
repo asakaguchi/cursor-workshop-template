@@ -56,20 +56,43 @@ api/               # FastAPI アプリケーション（分離デプロイ）
 - pyproject.toml で依存関係を定義
 - `uv add` コマンドで新しいパッケージを追加
 
-## Cloud Run MCPでのデプロイ
+## Cloud Run デプロイ
 
-### 必須の事前準備
+### 手動デプロイ（推奨）
 
-1. **api/requirements.txt を作成**
+#### 必須ファイルの準備
+
+1. **api/__init__.py**（空ファイル）
+   ```bash
+   touch api/__init__.py
+   ```
+
+2. **api/requirements.txt**
    ```bash
    uv pip compile pyproject.toml --extra api -o api/requirements.txt
    ```
 
-2. **インポートパスを相対インポートに統一**
-   - ❌ `from models import ProductModel`
-   - ✅ `from .models import ProductModel`
+3. **api/Procfile**
+   ```
+   web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app
+   ```
 
-### MCPデプロイコマンド
+4. **インポートパスを絶対インポートに変更**
+   - ❌ `from .models import ProductModel`（相対インポート）
+   - ✅ `from models import ProductModel`（絶対インポート）
+
+#### デプロイコマンド
+
+```bash
+gcloud run deploy product-api \
+  --source ./api \
+  --region asia-northeast1 \
+  --allow-unauthenticated
+```
+
+### MCPでのデプロイ（代替）
+
+上記の準備を完了後：
 
 ```
 mcp__cloud-run__deploy_local_folder
