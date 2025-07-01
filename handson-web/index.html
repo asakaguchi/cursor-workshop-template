@@ -1067,6 +1067,18 @@ gcloud config set project $PROJECT_ID</code></pre>
                             </div>
                         </div>
                         
+                        <div class="bg-yellow-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">Step 1.5: IAM APIの有効化</h4>
+                            <p class="text-sm mb-2">サービスアカウント作成前に、IAM APIを有効化する必要があります。</p>
+                            <div class="command-block">
+                                <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># IAM APIを有効化
+gcloud services enable iam.googleapis.com</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="gcloud services enable iam.googleapis.com">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
                         <div class="bg-green-50 p-4 rounded mb-4">
                             <h4 class="font-semibold mb-2">Step 2: サービスアカウントの作成</h4>
                             <div class="command-block">
