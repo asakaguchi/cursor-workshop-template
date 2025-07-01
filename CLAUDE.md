@@ -491,6 +491,29 @@ ui/pyproject.toml - 本番デプロイ用
 - 自動生成ドキュメントを備えたREST API用のFastAPI
 - Cloud RunへのデプロイはMCP経由で自動化
 
+## Cloud Run MCPでのデプロイ
+
+### 必須の事前準備
+
+1. **api/requirements.txt を作成**
+   ```bash
+   # プロジェクトルートで実行
+   uv pip compile pyproject.toml --extra api -o api/requirements.txt
+   ```
+
+2. **インポートパスを相対インポートに統一**
+   - ❌ `from models import ProductModel`
+   - ✅ `from .models import ProductModel`
+
+### MCPデプロイコマンド
+
+```
+mcp__cloud-run__deploy_local_folder
+- folderPath: ./api
+- project: YOUR_PROJECT_ID
+- region: asia-northeast1
+```
+
 ### Cloud Run 分離デプロイ要件
 
 **重要**: Cloud Run デプロイ時は、APIとUIを分離した独立構造で実装してください：

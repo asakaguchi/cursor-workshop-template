@@ -55,3 +55,25 @@ api/               # FastAPI アプリケーション（分離デプロイ）
 - uv を使用してパッケージを管理
 - pyproject.toml で依存関係を定義
 - `uv add` コマンドで新しいパッケージを追加
+
+## Cloud Run MCPでのデプロイ
+
+### 必須の事前準備
+
+1. **api/requirements.txt を作成**
+   ```bash
+   uv pip compile pyproject.toml --extra api -o api/requirements.txt
+   ```
+
+2. **インポートパスを相対インポートに統一**
+   - ❌ `from models import ProductModel`
+   - ✅ `from .models import ProductModel`
+
+### MCPデプロイコマンド
+
+```
+mcp__cloud-run__deploy_local_folder
+- folderPath: ./api
+- project: YOUR_PROJECT_ID
+- region: asia-northeast1
+```

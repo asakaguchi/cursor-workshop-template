@@ -1079,8 +1079,50 @@ gcloud iam service-accounts create cursor-workshop-app \
                             </div>
                         </div>
                         
+                        <div class="bg-orange-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">Step 3: 必要な権限を付与</h4>
+                            <p class="text-sm mb-2">作業に必要な権限を3つ付与します：</p>
+                            <div class="command-block">
+                                <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># Cloud Run管理者権限（アプリをデプロイするため）
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:cursor-workshop-app@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="roles/run.admin"
+
+# サービスアカウント使用権限（サービスとして動作するため）
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:cursor-workshop-app@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="roles/iam.serviceAccountUser"
+
+# ビルド実行権限（コンテナイメージを作成するため）
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:cursor-workshop-app@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --role="roles/cloudbuild.builds.builder"</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="gcloud projects add-iam-policy-binding $PROJECT_ID \&#10;    --member=&quot;serviceAccount:cursor-workshop-app@${PROJECT_ID}.iam.gserviceaccount.com&quot; \&#10;    --role=&quot;roles/run.admin&quot;&#10;&#10;gcloud projects add-iam-policy-binding $PROJECT_ID \&#10;    --member=&quot;serviceAccount:cursor-workshop-app@${PROJECT_ID}.iam.gserviceaccount.com&quot; \&#10;    --role=&quot;roles/iam.serviceAccountUser&quot;&#10;&#10;gcloud projects add-iam-policy-binding $PROJECT_ID \&#10;    --member=&quot;serviceAccount:cursor-workshop-app@${PROJECT_ID}.iam.gserviceaccount.com&quot; \&#10;    --role=&quot;roles/cloudbuild.builds.builder&quot;">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">Step 4: インパーソネーション権限の設定</h4>
+                            <p class="text-sm mb-2">あなたが専用アカウントを「使える」ようにします：</p>
+                            <div class="command-block">
+                                <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># あなたのメールアドレスを確認
+gcloud config get-value account
+
+# インパーソネーション権限を付与
+gcloud iam service-accounts add-iam-policy-binding \
+    cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com \
+    --member="user:$(gcloud config get-value account)" \
+    --role="roles/iam.serviceAccountTokenCreator"</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="gcloud config get-value account&#10;&#10;gcloud iam service-accounts add-iam-policy-binding \&#10;    cursor-workshop-app@$PROJECT_ID.iam.gserviceaccount.com \&#10;    --member=&quot;user:$(gcloud config get-value account)&quot; \&#10;    --role=&quot;roles/iam.serviceAccountTokenCreator&quot;">
+                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
                         <div class="bg-purple-50 p-4 rounded">
-                            <h4 class="font-semibold mb-2">Step 3: 認証の実行</h4>
+                            <h4 class="font-semibold mb-2">Step 5: 認証の実行</h4>
                             <div class="command-block">
                                 <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># サービスアカウントを使って認証
 gcloud auth application-default login \

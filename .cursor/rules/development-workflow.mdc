@@ -246,3 +246,25 @@ git commit -m "refactor: extract validation logic to separate function"
 
 - feature/task-{issue番号}-{簡潔な説明}
 - 例：feature/task-1-project-setup
+
+## Cloud Run MCPでのデプロイ
+
+### 必須の事前準備
+
+1. **api/requirements.txt を作成**
+   ```bash
+   uv pip compile pyproject.toml --extra api -o api/requirements.txt
+   ```
+
+2. **インポートパスを相対インポートに統一**
+   - ❌ `from models import ProductModel`
+   - ✅ `from .models import ProductModel`
+
+### MCPデプロイコマンド
+
+```
+mcp__cloud-run__deploy_local_folder
+- folderPath: ./api
+- project: YOUR_PROJECT_ID
+- region: asia-northeast1
+```
