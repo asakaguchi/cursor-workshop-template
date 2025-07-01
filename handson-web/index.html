@@ -1134,111 +1134,112 @@ gcloud auth application-default login \
                         </div>
                     </div>
 
-                    <!-- 6.2 APIデプロイ準備 -->
-                    <div class="border-l-4 border-yellow-500 pl-4">
+                    <!-- 6.2 AIによる自動デプロイ -->
+                    <div class="border-l-4 border-purple-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
-                            <i data-lucide="file-text" class="w-5 h-5 mr-2"></i>
-                            6.2 APIデプロイの準備（3分）
+                            <i data-lucide="bot" class="w-5 h-5 mr-2"></i>
+                            6.2 AIによる自動デプロイ（5分）
                         </h3>
                         
-                        <div class="bg-yellow-50 p-4 rounded mb-4">
-                            <p class="font-semibold text-yellow-800 mb-2">🚨 重要な事前準備が必要です！</p>
-                            <p class="text-sm text-gray-700">Cloud Runデプロイには以下のファイルが必要です：</p>
+                        <div class="bg-purple-50 p-4 rounded mb-4">
+                            <p class="font-semibold text-purple-800 mb-2">🤖 AIがすべて自動化してくれます！</p>
+                            <p class="text-sm text-gray-700">面倒な設定ファイル作成やコード修正は一切不要。AIに依頼するだけで完了します。</p>
                         </div>
                         
                         <div class="bg-blue-50 p-4 rounded mb-4">
-                            <h4 class="font-semibold mb-2">Step 1: 必要なファイルを作成</h4>
+                            <h4 class="font-semibold mb-2">Step 1: AIにデプロイを依頼</h4>
+                            <p class="text-sm mb-2">Cursorのチャットで以下のメッセージを送信してください：</p>
                             <div class="command-block">
-                                <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># 空の__init__.pyを作成（Pythonパッケージとして認識させるため）
-touch api/__init__.py
+                                <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>APIをCloud Runにデプロイしてください。
+以下の設定でお願いします：
 
-# requirements.txtを生成（プロジェクトルートで実行）
-uv pip compile pyproject.toml --extra api -o api/requirements.txt
+- リージョン: asia-northeast1（東京）
+- サービス名: product-api
+- 認証なしで公開アクセス可能に設定
 
-# Procfileを作成（起動コマンド定義）
-echo 'web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app' > api/Procfile</code></pre>
-                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="touch api/__init__.py&#10;&#10;uv pip compile pyproject.toml --extra api -o api/requirements.txt&#10;&#10;echo 'web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app' > api/Procfile">
+必要なファイル作成やインポート修正も含めて、全て自動でお願いします。</code></pre>
+                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="APIをCloud Runにデプロイしてください。&#10;以下の設定でお願いします：&#10;&#10;- リージョン: asia-northeast1（東京）&#10;- サービス名: product-api&#10;- 認証なしで公開アクセス可能に設定&#10;&#10;必要なファイル作成やインポート修正も含めて、全て自動でお願いします。">
                                     <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
                                 </button>
                             </div>
                         </div>
                         
-                        <div class="bg-orange-50 p-4 rounded">
-                            <h4 class="font-semibold mb-2">Step 2: インポートパスを修正（重要）</h4>
-                            <p class="text-sm mb-2">すべての相対インポートを絶対インポートに変更してください：</p>
+                        <div class="bg-green-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">Step 2: AIの自動作業を確認</h4>
+                            <p class="text-sm mb-2">AIが以下の作業を自動で実行してくれます：</p>
                             <ul class="text-sm space-y-1">
-                                <li>• ❌ <code>from .models import ProductModel</code>（相対インポート）</li>
-                                <li>• ✅ <code>from models import ProductModel</code>（絶対インポート）</li>
+                                <li>• ✅ 必要ファイル作成（__init__.py, requirements.txt, Procfile）</li>
+                                <li>• ✅ インポートパス修正（相対→絶対インポート）</li>
+                                <li>• ✅ Cloud Runへのデプロイ実行</li>
+                                <li>• ✅ 動作確認用URLの提供</li>
                             </ul>
-                            <p class="text-sm mt-2 text-red-600">理由：Cloud Run環境では相対インポートが失敗します</p>
+                        </div>
+                        
+                        <div class="bg-orange-50 p-4 rounded">
+                            <h4 class="font-semibold mb-2">Step 3: 承認とチェック</h4>
+                            <p class="text-sm mb-2">AIから以下の確認があった場合の対応：</p>
+                            <ul class="text-sm space-y-1">
+                                <li>• <strong>「ファイルを作成しますか？」</strong> → 「はい」</li>
+                                <li>• <strong>「コードを修正しますか？」</strong> → 「お願いします」</li>
+                                <li>• <strong>「デプロイを実行しますか？」</strong> → 「実行してください」</li>
+                            </ul>
+                            <p class="text-sm mt-2 text-blue-600">💡 AIが自動で最適な設定を選択してくれます</p>
                         </div>
                     </div>
 
-                    <!-- 6.3 デプロイ実行 -->
+                    <!-- 6.3 デプロイ完了の確認 -->
                     <div class="border-l-4 border-green-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
-                            <i data-lucide="upload-cloud" class="w-5 h-5 mr-2"></i>
-                            6.3 デプロイ実行（4分）
+                            <i data-lucide="check-circle-2" class="w-5 h-5 mr-2"></i>
+                            6.3 デプロイ完了の確認（2分）
                         </h3>
                         
-                        <div class="bg-purple-50 p-4 rounded mb-4">
-                            <h4 class="font-semibold mb-2">方法1: gcloudコマンドで直接デプロイ（推奨）</h4>
-                            <p class="text-sm mb-2">ターミナルで以下のコマンドを実行：</p>
-                            <div class="command-block">
-                                <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># APIをデプロイ（プロジェクトルートから実行）
-gcloud run deploy product-api \
-  --source ./api \
-  --region asia-northeast1 \
-  --allow-unauthenticated</code></pre>
-                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="gcloud run deploy product-api \&#10;  --source ./api \&#10;  --region asia-northeast1 \&#10;  --allow-unauthenticated">
-                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
-                                </button>
+                        <div class="bg-green-50 p-4 rounded mb-4">
+                            <h4 class="font-semibold mb-2">AIのデプロイ完了待ち</h4>
+                            <p class="text-sm mb-2">AIが作業を完了すると、以下のようなメッセージが表示されます：</p>
+                            <div class="bg-white p-3 rounded border-l-4 border-green-500">
+                                <p class="text-sm font-mono">✅ デプロイが完了しました！<br>
+                                URL: https://product-api-xxxxx.a.run.app</p>
                             </div>
                         </div>
                         
                         <div class="bg-blue-50 p-4 rounded">
-                            <h4 class="font-semibold mb-2">方法2: MCPを使った自動デプロイ（代替）</h4>
-                            <p class="text-sm mb-2">上記の準備が完了したら、チャットで以下を送信：</p>
-                            <div class="command-block">
-                                <pre class="language-text bg-gray-900 text-white p-4 rounded overflow-x-auto"><code>Cloud Run MCPを使って、api/ ディレクトリの商品管理APIをデプロイしてください。
-以下の設定でお願いします。
-
-- リージョン: asia-northeast1（東京）
-- サービス名: product-api
-- 認証なしで公開アクセス可能に設定</code></pre>
-                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="Cloud Run MCPを使って、api/ ディレクトリの商品管理APIをデプロイしてください。&#10;以下の設定でお願いします。&#10;&#10;- リージョン: asia-northeast1（東京）&#10;- サービス名: product-api&#10;- 認証なしで公開アクセス可能に設定">
-                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
-                                </button>
-                            </div>
+                            <h4 class="font-semibold mb-2">成功体験を味わおう</h4>
+                            <p class="text-sm mb-2">この瞬間、あなたは以下を達成しました：</p>
+                            <ul class="text-sm space-y-1">
+                                <li>• 🌍 <strong>グローバル公開</strong>：世界中からアクセス可能なAPI</li>
+                                <li>• 🏢 <strong>企業レベル</strong>：プロが使うインフラで動作</li>
+                                <li>• ⚡ <strong>自動スケール</strong>：負荷に応じて自動拡張</li>
+                                <li>• 🔒 <strong>HTTPS完備</strong>：安全な通信で保護</li>
+                            </ul>
+                            <p class="text-sm mt-2 font-semibold text-blue-700">「1.5時間で本格的なクラウドAPIを構築」という実績です！</p>
                         </div>
                     </div>
 
-                    <!-- 6.3 本番環境での動作確認 -->
+                    <!-- 6.4 本番環境での動作確認 -->
                     <div class="border-l-4 border-purple-500 pl-4">
                         <h3 class="text-lg font-semibold mb-3 flex items-center">
-                            <i data-lucide="check-circle-2" class="w-5 h-5 mr-2"></i>
-                            6.3 本番環境での動作確認（3分）
+                            <i data-lucide="globe" class="w-5 h-5 mr-2"></i>
+                            6.4 本番環境での動作確認（1分）
                         </h3>
                         
                         <div class="bg-blue-50 p-4 rounded mb-4">
-                            <h4 class="font-semibold mb-2">API の動作確認</h4>
-                            <div class="command-block">
-                                <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># ヘルスチェック（APIが生きているか確認）
-curl https://product-api-xxxxx.a.run.app/health</code></pre>
-                                <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="curl https://product-api-xxxxx.a.run.app/health">
-                                    <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
-                                </button>
+                            <h4 class="font-semibold mb-2">Swagger UIでAPIを試そう</h4>
+                            <p class="text-sm mb-2">ブラウザで以下のURLを開いてください（AIが教えてくれたURLの末尾に/docsを追加）：</p>
+                            <div class="bg-white p-3 rounded border-l-4 border-blue-500">
+                                <p class="text-sm font-mono">https://product-api-xxxxx.a.run.app/docs</p>
                             </div>
                         </div>
                         
                         <div class="bg-green-50 p-4 rounded">
-                            <h4 class="font-semibold mb-2">Web UIの確認</h4>
-                            <p class="text-sm">UIのURLをブラウザで開いて、以下を確認してください：</p>
-                            <ul class="text-sm space-y-1 mt-2">
-                                <li>• 「API接続OK」が表示される</li>
-                                <li>• 商品登録ができる</li>
-                                <li>• 商品検索ができる</li>
+                            <h4 class="font-semibold mb-2">🎉 完成お披露目タイム</h4>
+                            <p class="text-sm mb-2">以下の操作で本格的なAPIの動作を確認：</p>
+                            <ul class="text-sm space-y-1">
+                                <li>• <strong>POST /items</strong>：新しい商品を登録してみる</li>
+                                <li>• <strong>GET /items/{id}</strong>：登録した商品を確認してみる</li>
+                                <li>• <strong>GET /health</strong>：ヘルスチェックで動作確認</li>
                             </ul>
+                            <p class="text-sm mt-3 font-semibold text-green-700">🎊 友達にURLを送って見せてあげよう！</p>
                         </div>
                     </div>
 
@@ -1250,9 +1251,9 @@ curl https://product-api-xxxxx.a.run.app/health</code></pre>
                         </div>
                         <ul class="space-y-1 text-sm text-green-700">
                             <li class="flex items-center"><input type="checkbox" class="mr-2"> Google Cloud認証が完了した</li>
-                            <li class="flex items-center"><input type="checkbox" class="mr-2"> APIがCloud Runにデプロイされた</li>
-                            <li class="flex items-center"><input type="checkbox" class="mr-2"> UIがCloud Runにデプロイされた</li>
-                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 本番環境で動作確認できた</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> AIがAPIをCloud Runにデプロイしてくれた</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> Swagger UIで本番環境のAPIを操作できた</li>
+                            <li class="flex items-center"><input type="checkbox" class="mr-2"> 世界中からアクセス可能なAPIが完成した</li>
                         </ul>
                     </div>
                 </div>
