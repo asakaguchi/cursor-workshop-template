@@ -454,18 +454,15 @@ gcloud init</code></pre>
                             <p class="text-sm"><strong>重要:</strong> まず Cursor で <code>Ctrl + Shift + ~</code> を押してターミナルを開いてください。これ以降のコマンドは全て Cursor 内のターミナルで実行します。</p>
                         </div>
                         
-                        <h4 class="font-semibold mb-2">環境をセットアップ：</h4>
+                        <h4 class="font-semibold mb-2">環境をセットアップ</h4>
                         <div class="command-block">
                             <pre class="language-bash bg-gray-900 text-white p-4 rounded overflow-x-auto"><code># プロジェクトに必要な道具を全部そろえる
-uv sync
-
-# 各サブディレクトリでも個別にセットアップ
-cd api && uv sync && cd ..
-cd ui && uv sync && cd ..</code></pre>
-                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="uv sync&#10;cd api && uv sync && cd ..&#10;cd ui && uv sync && cd ..">
+uv sync</code></pre>
+                            <button class="copy-button bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors" data-copy="uv sync">
                                 <i data-lucide="clipboard-copy" class="w-4 h-4"></i>
                             </button>
                         </div>
+                        <p class="text-sm mt-2">これだけで Python インストール、仮想環境作成、依存関係インストールがすべて完了します。</p>
                         
                         <h4 class="font-semibold mb-2 mt-4">品質チェックツールのセットアップ：</h4>
                         <div class="command-block">

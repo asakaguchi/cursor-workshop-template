@@ -53,46 +53,31 @@ APIは以下を実装する必要があります：
 ```bash
 # ワークショップ用の完全環境セットアップ（推奨）
 uv sync --extra all
-
-# または必要な部分のみセットアップ
-uv sync --extra dev          # 開発ツールのみ
-uv sync --extra api          # API開発のみ  
-uv sync --extra ui           # UI開発のみ
-
-# 仮想環境を有効化
-source .venv/bin/activate  # macOS/Linux
-.venv\Scripts\activate     # Windows
 ```
 
 ### パッケージ管理
 
-**重要**: 常にuvを使用し、pipは決して使用しないでください
-
 ```bash
-# ワークショップ環境の同期（推奨）
+# ワークショップ環境のセットアップ
 uv sync --extra all
 
-# 特定のグループのみ同期
-uv sync --extra dev --extra api
+# API開発
+cd api && uv run uvicorn main:app --reload
 
-# 必要に応じて新しい依存関係を追加する場合のみ
-# uv add --optional-group api package_name      # API用
-# uv add --optional-group ui package_name       # UI用  
-# uv add --optional-group dev package_name      # 開発用
+# UI開発
+cd ui && uv run streamlit run main.py
+
+# テスト実行
+uv run pytest
 ```
+
+**重要**: プロジェクトルートの `pyproject.toml` が全体を管理しています。
+各ディレクトリの `pyproject.toml` はデプロイ用です。
 
 ### アプリケーションの実行
 
-```bash
-# FastAPIサーバーの起動（ルートディレクトリから）
-uv run --extra api uvicorn api.main:app --reload
-
-# Streamlit UIの起動
-uv run --extra ui streamlit run ui/main.py
-
-# Swagger UIへのアクセス: http://localhost:8000/docs
-# Streamlit UIへのアクセス: http://localhost:8501
-```
+- Swagger UI: <http://localhost:8000/docs>
+- Streamlit UI: <http://localhost:8501>
 
 ### テスト
 
@@ -449,23 +434,22 @@ uv run --frozen pytest tests/api/ -v  # 実際のテスト実行
 #### 依存関係配置の明確なルール
 
 ```text
-pyproject.toml (ルート) - テスト実行環境
+pyproject.toml (ルート) - 統合依存関係管理
 ├── dependencies: 共通ライブラリ
-├── dev-dependencies: テスト・開発ツール全般
-│   ├── pytest, httpx, asgi-lifespan, trio
-│   ├── ruff, pyright, pre-commit
-│   └── markdownlint-cli
+├── optional-dependencies:
+│   ├── dev: pytest, httpx, asgi-lifespan, trio, ruff, pyright, pre-commit
+│   ├── api: fastapi, uvicorn, pydantic, gunicorn
+│   ├── ui: streamlit, pydantic
+│   └── all: 全て含む（ワークショップ推奨）
 │
-api/pyproject.toml - 本番デプロイ用
-├── dependencies: FastAPI実行に必要な最小限のみ
-│   ├── fastapi>=0.100.0
-│   ├── uvicorn[standard]>=0.23.0
-│   └── pydantic>=2.0.0
+api/ - デプロイ用ディレクトリ
+├── main.py
+├── requirements.txt    # デプロイ時生成
+└── Procfile           # デプロイ時生成
 │
-ui/pyproject.toml - 本番デプロイ用
-├── dependencies: Streamlit実行に必要な最小限のみ
-│   ├── streamlit>=1.28.0
-│   └── pydantic>=2.0.0
+ui/ - デプロイ用ディレクトリ
+├── main.py
+└── requirements.txt    # 必要に応じて生成
 ```
 
 **実行コマンド統一（厳格に遵守）:**
