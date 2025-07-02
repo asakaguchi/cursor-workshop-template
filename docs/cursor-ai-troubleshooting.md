@@ -11,6 +11,142 @@
 しかし、修正前のルールで作業中の Cursor AI は相対インポート（`from .models import ProductModel`）を使用する可能性があります。
 これは Cloud Run 環境でのデプロイ失敗の原因となります。
 
+## プロジェクト構造の理解不足対策
+
+### 🏗️ プロジェクト構造の明確化指示
+
+Cursor AI がプロジェクト構造を理解できていない場合は、以下を指示してください。
+
+```text
+このプロジェクトの構造を理解してください：
+
+📁 プロジェクト構造:
+cursor-workshop-template/
+├── pyproject.toml          # 統合依存関係管理（開発・テスト・デプロイ）
+├── api/                    # FastAPI マイクロサービス
+│   ├── main.py             # FastAPI アプリケーション
+│   ├── models.py           # データモデル（Pydantic）
+│   └── storage.py          # ビジネスロジック
+├── ui/                     # Streamlit マイクロサービス  
+│   └── main.py             # Streamlit アプリケーション
+└── tests/                  # テストコード
+    ├── api/                # API テスト
+    └── ui/                 # UI テスト
+
+🎯 重要な設計原則:
+1. api/ と ui/ は独立したマイクロサービス
+2. 各サービスは個別に Cloud Run にデプロイ
+3. サービス間通信は HTTP API 経由のみ
+4. api/ 内では絶対インポート（from models import ProductModel）
+5. ui/ から api/ モジュールの直接インポートは禁止
+
+🔧 開発環境:
+- ルートの pyproject.toml で全依存関係を管理
+- uv を使用（pip は使用禁止）
+- テストは常にプロジェクトルートから実行
+```
+
+### 🚨 よくある構造理解ミス
+
+#### ミス1: モノリス構造として扱う
+
+**間違った理解:**
+
+```python
+# ❌ 間違い：api から ui を直接呼び出し
+from ui.main import render_page
+```
+
+**正しい指示:**
+
+```text
+api/ と ui/ は完全に独立したサービスです。
+- api/ は REST API のみを提供
+- ui/ は API を HTTP で呼び出してデータを取得
+- 相互の直接インポートは禁止
+```
+
+#### ミス2: ネストした構造として扱う
+
+**間違った理解:**
+
+```python
+# ❌ 間違い：パッケージ名付きインポート
+from api.models import ProductModel
+from ui.components import Header
+```
+
+**正しい指示:**
+
+```text
+api/ ディレクトリ内では絶対インポートを使用:
+- ✅ 正しい: from models import ProductModel
+- ❌ 間違い: from api.models import ProductModel
+
+ui/ ディレクトリ内でも同様:
+- ✅ 正しい: from utils import format_price
+- ❌ 間違い: from ui.utils import format_price
+```
+
+#### ミス3: 共有コードの誤解
+
+**間違った理解:**
+
+```python
+# ❌ 間違い：共有モデルの直接インポート
+from api.models import ProductModel  # UI から
+```
+
+**正しい指示:**
+
+```text
+共有データ構造が必要な場合:
+1. API でデータ形式を定義
+2. UI では API レスポンスを JSON として処理
+3. 必要に応じて UI 側で独自の型定義を作成
+
+例:
+# api/models.py
+class ProductModel(BaseModel):
+    id: int
+    name: str
+    price: float
+
+# ui/main.py  
+response = requests.get(f"{API_URL}/items/1")
+product_data = response.json()  # dict として処理
+```
+
+### 📋 プロジェクト構造確認チェックリスト
+
+Cursor AI に以下を確認させてください。
+
+```text
+プロジェクト構造の理解度チェック:
+
+□ api/ ディレクトリの役割を理解している
+  - FastAPI アプリケーション
+  - 独立したマイクロサービス
+  - 絶対インポートの使用
+
+□ ui/ ディレクトリの役割を理解している  
+  - Streamlit アプリケーション
+  - API を HTTP で呼び出し
+  - 独立したマイクロサービス
+
+□ tests/ ディレクトリの役割を理解している
+  - プロジェクトルートから実行
+  - api/ と ui/ を外部からテスト
+  - 統合テスト環境
+
+□ デプロイ構造を理解している
+  - api/ → Cloud Run サービス1
+  - ui/ → Cloud Run サービス2  
+  - 個別スケーリング可能
+
+理解できていない場合は、再度プロジェクト構造を説明してください。
+```
+
 ## API開発時のトラブルシューティング
 
 ### 🚨 緊急指示：絶対インポートの強制
