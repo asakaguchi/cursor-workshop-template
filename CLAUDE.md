@@ -499,28 +499,32 @@ Cloud Runへのデプロイは、MCPを使用せずに直接gcloudコマンド�
 
 #### 必須の事前準備
 
-1. **api/__init__.py を作成**
+1. **api/\__init__.py を作成**
+
    ```bash
    # 空のファイルを作成（Pythonパッケージとして認識させるため）
    touch api/__init__.py
    ```
 
 2. **api/requirements.txt を作成**
+
    ```bash
    # プロジェクトルートで実行
    uv pip compile pyproject.toml --extra api -o api/requirements.txt
    ```
 
 3. **api/Procfile を作成**
+
    ```bash
    # api/Procfile の内容:
-   echo 'web: gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app' > api/Procfile
+   echo 'web: gunicorn --bind 0.0.0.0:$PORT --workers 4 \
+     --worker-class uvicorn.workers.UvicornWorker main:app' > api/Procfile
    ```
 
 4. **インポートパスを絶対インポートに変更（重要）**
    - ❌ `from .models import ProductModel`（相対インポート）
    - ✅ `from models import ProductModel`（絶対インポート）
-   
+
    **理由**: Cloud Run環境では相対インポートが失敗するため
 
 #### gcloudコマンドでのデプロイ
@@ -537,7 +541,7 @@ gcloud run deploy product-api \
 
 MCPを使用する場合も、上記の事前準備を完了してから実行してください。
 
-```
+```text
 mcp__cloud-run__deploy_local_folder
 - folderPath: ./api
 - project: YOUR_PROJECT_ID
@@ -547,14 +551,17 @@ mcp__cloud-run__deploy_local_folder
 ### トラブルシューティング
 
 #### ImportError: attempted relative import
+
 - **原因**: Cloud Run環境で相対インポートが失敗
 - **解決**: すべてのインポートを絶対インポートに変更
 
 #### gunicorn: error: unrecognized arguments
+
 - **原因**: Procfileの引数順序が不適切
 - **解決**: 上記のProcfile例を正確にコピー
 
 #### Container failed to start
+
 - **原因**: ポート設定の問題
 - **解決**: Procfileで必ず`$PORT`環境変数を使用
 
@@ -644,7 +651,7 @@ project/
 
 **適切な応答例:**
 
-```
+```text
 ✅ "pyproject.toml統合完了。pre-commit最適化に進みます。"
 ✅ "ファイル編集完了。テスト実行中..."
 ✅ "エラー修正。再度コミットします。"
@@ -652,7 +659,7 @@ project/
 
 **避けるべき冗長な応答例:**
 
-```
+```text
 ❌ "はい、承知いたしました。それでは...という手順で進めてまいります。
    まず最初に...について詳しく説明いたします。普段私たちが..."
 ❌ "詳細な手順をご説明します。ステップ1として...ステップ2として..."
